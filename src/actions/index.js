@@ -8,6 +8,7 @@ export const TODO_MODIFY_SUCCESS = "TODO_MODIFY_SUCCESS";
 export const COMMENT_REQUEST = "COMMENT_REQUEST";
 export const ADD_COMMENT = "ADD_COMMENT";
 export const DELETE_COMMENTS = "DELETE_COMMENTS";
+export const COMMENT_REQUEST_CANCELLED = "COMMENT_REQUEST_CANCELLED";
 export const filters_constants = {
   ALL: "ALL",
   ACTIVE: "ACTIVE",
@@ -73,6 +74,12 @@ export function commentRequest(id) {
   return {
     type: COMMENT_REQUEST,
     id
+  };
+}
+
+export function cancellCommentRequest() {
+  return {
+    type: COMMENT_REQUEST_CANCELLED
   };
 }
 

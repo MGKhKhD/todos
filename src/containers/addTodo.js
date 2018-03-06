@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { addTodo } from "../actions/index";
+import { addTodo, cancellCommentRequest } from "../actions/index";
 import { getTodos } from "../reducers/rootReducer";
 export const filters_constants = {
   ALL: "ALL",
@@ -70,6 +70,7 @@ class AddTodo extends Component {
             name="todo"
             value={this.state.todo}
             onChange={e => {
+              this.props.cancellCommentRequest();
               this.setState({ ...this.state, [e.target.name]: e.target.value });
               if (this.state.error !== "") {
                 this.setState({ error: "" });
@@ -92,4 +93,6 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { addTodo })(AddTodo);
+export default connect(mapStateToProps, { addTodo, cancellCommentRequest })(
+  AddTodo
+);

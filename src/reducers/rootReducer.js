@@ -10,7 +10,8 @@ import {
   TODO_MODIFY_SUCCESS,
   COMMENT_REQUEST,
   ADD_COMMENT,
-  DELETE_COMMENTS
+  DELETE_COMMENTS,
+  COMMENT_REQUEST_CANCELLED
 } from "../actions/index";
 
 let initialTodoState = {
@@ -133,6 +134,8 @@ export function commentManagement(state = { status: "", id: -1 }, action) {
   switch (action.type) {
     case COMMENT_REQUEST:
       return { status: "requested", id: action.id };
+    case COMMENT_REQUEST_CANCELLED:
+      return { status: "", id: -1 };
     default:
       return state;
   }
