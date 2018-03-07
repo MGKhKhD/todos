@@ -9,21 +9,36 @@ export const COMMENT_REQUEST = "COMMENT_REQUEST";
 export const ADD_COMMENT = "ADD_COMMENT";
 export const DELETE_COMMENTS = "DELETE_COMMENTS";
 export const COMMENT_REQUEST_CANCELLED = "COMMENT_REQUEST_CANCELLED";
+export const SET_TODO_ERROR = "SET_TODO_ERROR";
+export const CANCEL_TODO_ERROR = "CANCEL_TODO_ERROR";
 export const filters_constants = {
   ALL: "ALL",
   ACTIVE: "ACTIVE",
   COMPLETED: "COMPLETED"
 };
 
-let todoId = 0;
 let commentIndex = 0;
 
+let todoId = 0;
 export function addTodo(text) {
   return {
     type: ADD_TODO,
     text,
     id: todoId++,
     completed: false
+  };
+}
+
+export function setErrorTodo(error) {
+  return {
+    type: SET_TODO_ERROR,
+    error
+  };
+}
+
+export function cancelErrorTodo() {
+  return {
+    type: CANCEL_TODO_ERROR
   };
 }
 

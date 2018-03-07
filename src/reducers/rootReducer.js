@@ -11,7 +11,9 @@ import {
   COMMENT_REQUEST,
   ADD_COMMENT,
   DELETE_COMMENTS,
-  COMMENT_REQUEST_CANCELLED
+  COMMENT_REQUEST_CANCELLED,
+  SET_TODO_ERROR,
+  CANCEL_TODO_ERROR
 } from "../actions/index";
 
 let initialTodoState = {
@@ -197,12 +199,24 @@ export const getTotalCommentsForTodo = state => {
   return commentsForActiveTodo;
 };
 
+export const error = (state = "", action) => {
+  switch (action.type) {
+    case SET_TODO_ERROR:
+      return action.error;
+    case CANCEL_TODO_ERROR:
+      return "";
+    default:
+      return state;
+  }
+};
+
 const rootReducer = combineReducers({
   todos,
   filter,
   modify,
   commentManagement,
-  comments
+  comments,
+  error
 });
 
 export default rootReducer;
