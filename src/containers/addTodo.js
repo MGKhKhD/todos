@@ -33,8 +33,8 @@ class AddTodo extends Component {
   render() {
     return (
       <div>
-        {this.props.error !== "" && (
-          <p style={{ color: "red" }}>{this.props.error}</p>
+        {this.props.errorMessage !== "" && (
+          <p style={{ color: "red" }}>{this.props.errorMessage}</p>
         )}
         <form className="form-inline" onSubmit={this.handleSubmit}>
           <input
@@ -48,7 +48,7 @@ class AddTodo extends Component {
                 this.props.cancellCommentRequest();
               }
               this.setState({ ...this.state, [e.target.name]: e.target.value });
-              if (this.props.error !== "") {
+              if (this.props.errorMessage !== "") {
                 this.props.cancelErrorTodo();
               }
             }}
@@ -64,7 +64,7 @@ class AddTodo extends Component {
 
 function mapStateToProps(state) {
   return {
-    error: state.error,
+    errorMessage: state.error,
     commentStatus: state.commentManagement.status,
     allActiveTodos: getTodos(state.todos.todos, filters_constants.ACTIVE),
     allCompletedTodos: getTodos(state.todos.todos, filters_constants.COMPLETED)
@@ -76,7 +76,7 @@ function mapDispatchToProps(dispatch) {
     cancellCommentRequest: () => dispatch(cancellCommentRequest()),
     cancelErrorTodo: () => dispatch(cancelErrorTodo()),
     addTodo: todo => dispatch(addTodo(todo)),
-    setErrorTodo: error => dispatch(setErrorTodo(error))
+    setErrorTodo: (error = "") => dispatch(setErrorTodo(error))
   };
 }
 
@@ -84,6 +84,7 @@ function mergeProps(stateProps, dispatchProps) {
   const { allActiveTodos, allCompletedTodos } = stateProps;
   const dispatch = dispatchProps;
   return {
+    errorMessage: stateProps.errorMessage ? stateProps.errorMessage : "",
     cancellCommentRequest: () => dispatch.cancellCommentRequest(),
     cancelErrorTodo: () => dispatch.cancelErrorTodo(),
     addTodo: todo => {
