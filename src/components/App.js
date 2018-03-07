@@ -1,10 +1,6 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { getTotalTodos } from "../reducers/rootReducer";
 
-import AddTodo from "../containers/addTodo";
-import TodosList from "../containers/TodosList";
-import Footer from "../containers/Footer";
+import Header from "../containers/Header";
 
 class App extends Component {
   render() {
@@ -19,15 +15,7 @@ class App extends Component {
               width: "30rem"
             }}
           >
-            <div className="card-header">
-              <AddTodo />
-            </div>
-            {this.props.todosCount > 0 && (
-              <div className="card-block">
-                <Footer />
-                <TodosList />
-              </div>
-            )}
+            <Header />
           </div>
         </div>
       </div>
@@ -35,6 +23,4 @@ class App extends Component {
   }
 }
 
-export default connect(state => ({
-  todosCount: getTotalTodos(state)
-}))(App);
+export default App;

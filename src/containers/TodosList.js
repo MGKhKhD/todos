@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getTodos } from "../reducers/rootReducer";
-import { deleteTodo, deleteCommentsOfTodo } from "../actions/index";
+import { getTodos } from "../reducers/todoReducers";
+import { deleteTodo, deleteCommentsOfTodo } from "../actions/todoActions";
 import ModifyLink from "./ModifyLink";
 import LiTag from "./LiTag";
 import CommentTag from "./CommentTag";
@@ -41,7 +41,8 @@ const TodosList = ({
   return <ul className="list-group">{todosElements}</ul>;
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(initState) {
+  const state = initState.todoState;
   return {
     todos: getTodos(state.todos.todos, state.filter),
     modify: state.modify,

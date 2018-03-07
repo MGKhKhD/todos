@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { commentRequest } from "../actions/index";
+import { commentRequest } from "../actions/todoActions";
 
 class CommentTag extends Component {
   render() {

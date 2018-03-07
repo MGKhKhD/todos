@@ -1,19 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { getTodos } from "../reducers/rootReducer";
+import { getTodos } from "../reducers/todoReducers";
 import {
   cancellCommentRequest,
   cancelErrorTodo,
   addTodo,
   setErrorTodo
-} from "../actions/index";
+} from "../actions/todoActions";
 
-export const filters_constants = {
-  ALL: "ALL",
-  ACTIVE: "ACTIVE",
-  COMPLETED: "COMPLETED"
-};
+import { filters_constants } from "../types";
+
+import ExternalPages from "./externalPages/index";
 
 class AddTodo extends Component {
   constructor(props) {
@@ -36,7 +34,7 @@ class AddTodo extends Component {
         {this.props.errorMessage !== "" && (
           <p style={{ color: "red" }}>{this.props.errorMessage}</p>
         )}
-        <form className="form-inline" onSubmit={this.handleSubmit}>
+        <form className="form-inline " onSubmit={this.handleSubmit}>
           <input
             className="form-control mb-2 mr-sm-2 mb-sm-0"
             type="text"
@@ -53,16 +51,18 @@ class AddTodo extends Component {
               }
             }}
           />
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary mr-1">
             Add
           </button>
+          <ExternalPages />
         </form>
       </div>
     );
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(initState) {
+  let state = initState.todoState;
   return {
     errorMessage: state.error,
     commentStatus: state.commentManagement.status,

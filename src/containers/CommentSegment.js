@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import CommentList from "./CommentList";
 import { connect } from "react-redux";
-import { addComment } from "../actions/index";
-import { getTotalCommentsForTodo } from "../reducers/rootReducer";
+import { addComment } from "../actions/todoActions";
+import { getTotalCommentsForTodo } from "../reducers/todoReducers";
 
 class CommentSegment extends Component {
   constructor(props) {
@@ -46,7 +46,7 @@ class CommentSegment extends Component {
 
 function mapStateToProps(state) {
   return {
-    comments: getTotalCommentsForTodo(state)
+    comments: getTotalCommentsForTodo(state.todoState)
   };
 }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { todoModifyRequest, todoModifyCancel } from "../actions/index";
+import { todoModifyRequest, todoModifyCancel } from "../actions/todoActions";
 
 const ModifyLink = ({ id, modify, todoModifyCancel, todoModifyRequest }) => {
   return (
@@ -23,7 +23,7 @@ const ModifyLink = ({ id, modify, todoModifyCancel, todoModifyRequest }) => {
   );
 };
 
-export default connect(state => ({ modify: state.modify }), {
+export default connect(state => ({ modify: state.todoState.modify }), {
   todoModifyCancel,
   todoModifyRequest
 })(ModifyLink);

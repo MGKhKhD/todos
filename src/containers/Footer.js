@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { filters_constants } from "../actions/index";
+import { filters_constants } from "../types";
 import { connect } from "react-redux";
-import { setFilter } from "../actions/index";
-import { getTotalTodosByFilter } from "../reducers/rootReducer";
+import { setFilter } from "../actions/todoActions";
+import { getTotalTodosByFilter } from "../reducers/todoReducers";
 
 class Footer extends Component {
   render() {
@@ -36,7 +36,7 @@ class Footer extends Component {
 
 function mapStateToProps(state) {
   return {
-    totalTodos: getTotalTodosByFilter(state)
+    totalTodos: getTotalTodosByFilter(state.todoState)
   };
 }
 

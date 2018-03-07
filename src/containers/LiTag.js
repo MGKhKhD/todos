@@ -4,7 +4,7 @@ import {
   todoModifyCancel,
   todoModifySuccess,
   todoClick
-} from "../actions/index";
+} from "../actions/todoActions";
 
 class LiTag extends Component {
   constructor(props) {
