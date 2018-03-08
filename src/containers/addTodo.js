@@ -11,7 +11,7 @@ import {
 
 import { filters_constants } from "../types";
 
-import ExternalPages from "./externalPages/index";
+import ExternalPagesHeader from "./externalPages/ExternalPagesHeader";
 
 class AddTodo extends Component {
   constructor(props) {
@@ -54,7 +54,7 @@ class AddTodo extends Component {
           <button type="submit" className="btn btn-primary mr-1">
             Add
           </button>
-          <ExternalPages />
+          <ExternalPagesHeader />
         </form>
       </div>
     );

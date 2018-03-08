@@ -19,3 +19,24 @@ export const filters_constants = {
 
 export const SET_EXTERNAL_PAGES_LINK = "SET_EXTERNAL_PAGES_LINK";
 export const CANCEL_EXTERNAL_PAGES_LINK = "CANCEL_EXTERNAL_PAGES_LINK";
+export const SET_NEWS_COUNTRY = "SET_NEWS_COUNTRY";
+export const SET_NEWS_CATEGORY = "SET_NEWS_CATEGORY";
+
+export const options = [
+  "Read Articles",
+  "Checkout Books",
+  "Serf Youtube",
+  "Stock Market"
+];
+
+export const countryOptions = ["Canada", "USA", "England"];
+
+export const categoryOptions = [
+  "business ",
+  "entertainment",
+  "general",
+  "health",
+  "science",
+  "sports",
+  "technology"
+];

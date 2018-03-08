@@ -6,7 +6,8 @@ import { cancelExternalPageOption } from "../actions/externalPagesActions";
 import AddTodo from "./addTodo";
 import TodosList from "./TodosList";
 import Footer from "./Footer";
-import ExternalPages from "./externalPages/index";
+import ExternalPagesHeader from "./externalPages/ExternalPagesHeader";
+import Pages from "./externalPages/Pages";
 
 class App extends Component {
   render() {
@@ -25,14 +26,21 @@ class App extends Component {
     );
 
     const DataHeader = (
-      <div className="row">
-        <button
-          className="btn btn-primary mr-1 ml-1"
-          onClick={() => this.props.cancelExternalPageOption()}
-        >
-          Back to Todos
-        </button>
-        <ExternalPages />
+      <div>
+        <div className="card-header">
+          <div className="row">
+            <button
+              className="btn btn-primary mr-1 ml-1"
+              onClick={() => this.props.cancelExternalPageOption()}
+            >
+              Back to Todos
+            </button>
+            <ExternalPagesHeader />
+          </div>
+        </div>
+        <div className="card-block">
+          <Pages />
+        </div>
       </div>
     );
     if (this.props.link !== "") {
