@@ -1,17 +1,15 @@
-import React, { Component } from "react";
-import keys from "../../configs";
+import React from "react";
 
 import FooterNewsPage from "./FooterNewsPage";
+import NewsSearchAlarms from "./NewsSearchAlarms";
 
-class NewsMainPage extends Component {
-  render() {
-    return (
-      <div>
-        <FooterNewsPage />
-        News
-      </div>
-    );
-  }
-}
+const NewsMainPage = () => {
+  return (
+    <div>
+      <FooterNewsPage />
+      <NewsSearchAlarms />
+    </div>
+  );
+};
 
 export default NewsMainPage;

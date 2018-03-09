@@ -25,6 +25,7 @@ export const REQUEST_ARTICLES = "REQUEST_ARTICLES";
 export const RECEIVED_ARTICLES = "RECEIVED_ARTICLES";
 export const FAILURE_ARTICLES = "FAILURE_ARTICLES";
 export const REQUEST_NEWS_FEED = "REQUEST_NEWS_FEED";
+export const CANCEL_NEWS_FEED = "CANCEL_NEWS_FEED";
 
 export const options = [
   "Read Articles",

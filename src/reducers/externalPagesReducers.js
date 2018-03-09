@@ -6,7 +6,8 @@ import {
   REQUEST_NEWS_FEED,
   REQUEST_ARTICLES,
   RECEIVED_ARTICLES,
-  FAILURE_ARTICLES
+  FAILURE_ARTICLES,
+  CANCEL_NEWS_FEED
 } from "../types";
 import { combineReducers } from "redux";
 
@@ -41,6 +42,13 @@ function newsSetting(
         country: action.country,
         query: action.query,
         readyForRequest: true
+      };
+    case CANCEL_NEWS_FEED:
+      return {
+        country: "",
+        category: "",
+        query: "",
+        readyForRequest: false
       };
     default:
       return state;
@@ -92,6 +100,7 @@ function articles(state = {}, action) {
           id: action.id,
           country: action.country,
           category: action.category,
+          query: action.query,
           articles: articlesPerQuery(state[action.id], action)
         }
       };
@@ -99,6 +108,45 @@ function articles(state = {}, action) {
       return state;
   }
 }
+
+export const getIdOfActiveSearch = state => {
+  let id = -1;
+
+  const { country, category, query, readyForRequest } = state.newsSetting;
+  if (!readyForRequest) {
+    return id;
+  }
+
+  for (let key in state.queries) {
+    if (
+      state.queries[key].country === country &&
+      state.queries[key].category === category &&
+      state.queries[key].query === query
+    ) {
+      id = state.queries[key].id;
+    }
+  }
+  return id;
+};
+
+export const getFailedReason = state => {
+  const { country, category, query, readyForRequest } = state.newsSetting;
+  let result = "";
+  if (!readyForRequest) {
+    return result;
+  }
+
+  if (state.queries === {}) {
+    return result;
+  } else {
+    const id = getIdOfActiveSearch(state);
+    if (id > -1 && state.queries[id].articles.failed.status) {
+      result = state.queries[id].articles.failed.reason;
+    }
+  }
+
+  return result;
+};
 
 const externalPagesReducers = combineReducers({
   links,
