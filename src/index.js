@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
-import { devToolsEnhancer } from "redux-devtools-extension";
-import rootReducer from "./reducers/rootReducer";
+import { createStore, applyMiddleware } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+import thunkMiddleware from "redux-thunk";
 
+import rootReducer from "./reducers/rootReducer";
 import App from "./components/App";
 import registerServiceWorker from "./registerServiceWorker";
 
@@ -14,7 +15,10 @@ window.jQuery = $;
 window.Popper = Popper;
 require("bootstrap");
 
-const store = createStore(rootReducer, devToolsEnhancer());
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(thunkMiddleware))
+);
 
 ReactDOM.render(
   <Provider store={store}>

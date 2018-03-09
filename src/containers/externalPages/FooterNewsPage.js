@@ -1,15 +1,8 @@
 import React, { Component } from "react";
-import { countryOptions, categoryOptions } from "../../types";
 
-import Dropdown from "../../components/Dropdown";
 import FooterNewsCountry from "./FooterNewsCountry";
 import FooterNewsCategory from "./FooterNewsCategory";
-
-class FooterNewsSearch extends Component {
-  render() {
-    return <input type="text" placeholder="search for keyword..." />;
-  }
-}
+import FooterNewsSearch from "./FooterNewsSearch";
 
 class FooterNewsPage extends Component {
   render() {
@@ -18,7 +11,6 @@ class FooterNewsPage extends Component {
         <FooterNewsCountry />
         <FooterNewsCategory />
         <FooterNewsSearch />
-        <button className="btn btn-danger btn-sm ml-1 mr-1">Send</button>
       </div>
     );
   }
