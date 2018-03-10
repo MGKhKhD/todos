@@ -73,125 +73,176 @@ export function failedData(country, category, query, id, reason) {
   };
 }
 
+function fetchArticlesWithRelaxedCC(query, id, dispatch, getState) {
+  console.log("query given", query);
+  const retrivedCountry = getState().externalState.queries[id].country;
+  const retrivedCategory = getState().externalState.queries[id].category;
+  dispatch(setRequest(retrivedCountry, retrivedCategory, query, id));
+  fetch(
+    `https://newsapi.org/v2/top-headlines?q=${query}&apiKey=${
+      keys.GoogleNewsKey
+    }`
+  )
+    .then(res => res.json())
+    .then(
+      data => {
+        if (data.totalResults > 0) {
+          return dispatch(
+            receivedData(
+              retrivedCountry,
+              retrivedCategory,
+              query,
+              id,
+              data.articles
+            )
+          );
+        }
+
+        return dispatch(
+          failedData(retrivedCountry, retrivedCategory, query, id, "failur")
+        );
+      },
+      error =>
+        dispatch(
+          failedData(retrivedCountry, retrivedCategory, query, id, "failur")
+        )
+    );
+}
+
+function fetchArticlesWithRelaxedQuery(
+  country,
+  category,
+  id,
+  dispatch,
+  getState
+) {
+  let cn;
+  switch (country) {
+    case "Canada":
+      cn = "ca";
+      break;
+    case "USA":
+      cn = "us";
+      break;
+    case "England":
+      cn = "gb";
+      break;
+  }
+  let retrivedQuery = getState().externalState.queries[id].query;
+  dispatch(setRequest(country, category, retrivedQuery, id));
+  fetch(
+    `https://newsapi.org/v2/top-headlines?country=${cn}&category=${category}&apiKey=${
+      keys.GoogleNewsKey
+    }`
+  )
+    .then(res => res.json())
+    .then(
+      data => {
+        if (data.totalResults > 0) {
+          return dispatch(
+            receivedData(country, category, retrivedQuery, id, data.articles)
+          );
+        }
+
+        return dispatch(
+          failedData(country, category, retrivedQuery, id, "failur")
+        );
+      },
+      error =>
+        dispatch(failedData(country, category, retrivedQuery, id, "failur"))
+    );
+}
+
+function ifQueryCached(getState) {
+  let id = getIdOfActiveSearch(getState().externalState);
+  let success = false;
+  if (
+    id > -1 &&
+    getState().externalState.queries &&
+    getState().externalState.queries[id].articles
+  ) {
+    success = getState().externalState.queries[id].articles.succeed;
+  }
+
+  let articles = [];
+  if (success && getState().externalState.queries[id].articles.articles) {
+    articles = getState().externalState.queries[id].articles.articles;
+  }
+  return articles;
+}
+
 let newsQueryId = 0;
+
+function fetchNewArticles(country, category, query, dispatch) {
+  let id = newsQueryId++;
+  console.log(id);
+  dispatch(setRequest(country, category, query, id));
+  let cn;
+  switch (country) {
+    case "Canada":
+      cn = "ca";
+      break;
+    case "USA":
+      cn = "us";
+      break;
+    case "England":
+      cn = "gb";
+      break;
+  }
+  fetch(
+    `https://newsapi.org/v2/top-headlines?country=${cn}&category=${category}&q=${query}&apiKey=${
+      keys.GoogleNewsKey
+    }`
+  )
+    .then(res => res.json())
+    .then(
+      data => {
+        if (data.totalResults > 0) {
+          return dispatch(
+            receivedData(country, category, query, id, data.articles)
+          );
+        } else {
+          return dispatch(failedData(country, category, query, id, "relax"));
+        }
+      },
+      error => dispatch(failedData(country, category, query, id, "failur"))
+    );
+}
 
 export const fetchArticles = ({ country, category, query, reason }) => (
   dispatch,
   getState
 ) => {
+  // check to see if the previous request has reasons to fail and based on
+  // provided option relax new search
   if (reason) {
     let id = getIdOfActiveSearch(getState().externalState);
     if (id > -1) {
       if (query) {
-        const retrivedCountry = getState().externalState.queries[id].country;
-        const retrivedCategory = getState().externalState.queries[id].category;
-        fetch(
-          `https://newsapi.org/v2/top-headlines?q=${query}&apiKey=${
-            keys.GoogleNewsKey
-          }`
-        )
-          .then(res => res.json())
-          .then(
-            data => {
-              if (data.totalResults > 0) {
-                return dispatch(
-                  receivedData(
-                    retrivedCountry,
-                    retrivedCategory,
-                    query,
-                    id,
-                    data.articles
-                  )
-                );
-              }
-            },
-            error =>
-              dispatch(
-                failedData(
-                  retrivedCountry,
-                  retrivedCategory,
-                  query,
-                  id,
-                  "failur"
-                )
-              )
-          );
+        fetchArticlesWithRelaxedCC(query, id, dispatch, getState);
       }
       if (!query) {
-        let cn;
-        switch (country) {
-          case "Canada":
-            cn = "ca";
-            break;
-          case "USA":
-            cn = "us";
-            break;
-          case "England":
-            cn = "gb";
-            break;
-        }
-        let retrivedQuery = getState().externalState.queries[id].query;
-        fetch(
-          `https://newsapi.org/v2/top-headlines?country=${cn}&category=${category}&apiKey=${
-            keys.GoogleNewsKey
-          }`
-        )
-          .then(res => res.json())
-          .then(
-            data => {
-              if (data.totalResults > 0) {
-                return dispatch(
-                  receivedData(
-                    country,
-                    category,
-                    retrivedQuery,
-                    id,
-                    data.articles
-                  )
-                );
-              }
-            },
-            error =>
-              dispatch(
-                failedData(country, category, retrivedQuery, id, "failur")
-              )
-          );
+        fetchArticlesWithRelaxedQuery(
+          country,
+          category,
+          id,
+          dispatch,
+          getState
+        );
       }
     } else {
       dispatch(cancelNewsFeed);
     }
   } else {
-    let id = newsQueryId++;
-    dispatch(setRequest(country, category, query, id));
-    let cn;
-    switch (country) {
-      case "Canada":
-        cn = "ca";
-        break;
-      case "USA":
-        cn = "us";
-        break;
-      case "England":
-        cn = "gb";
-        break;
+    let articles = ifQueryCached(getState);
+    console.log(articles);
+    if (articles.length > 0) {
+      console.log(articles);
+      // there is cached data; abort fetch
+      dispatch(cancelNewsFeed);
+    } else {
+      // if it  is a barnd-new request (no cach, no previous error) add a new id and record the request
+      fetchNewArticles(country, category, query, dispatch);
     }
-    fetch(
-      `https://newsapi.org/v2/top-headlines?country=${cn}&category=${category}&q=${query}&apiKey=${
-        keys.GoogleNewsKey
-      }`
-    )
-      .then(res => res.json())
-      .then(
-        data => {
-          if (data.totalResults > 0) {
-            return dispatch(
-              receivedData(country, category, query, id, data.articles)
-            );
-          } else {
-            return dispatch(failedData(country, category, query, id, "relax"));
-          }
-        },
-        error => dispatch(failedData(country, category, query, id, "failur"))
-      );
   }
 };

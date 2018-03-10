@@ -11,7 +11,12 @@ class FooterNewsSearch extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.readyForRequest) {
-      this.props.fetchArticles(nextProps);
+      const data = {
+        country: nextProps.country,
+        category: nextProps.category,
+        query: nextProps.query
+      };
+      this.props.fetchArticles(data);
     }
     this.setState({ query: "" });
   }
@@ -59,6 +64,7 @@ class FooterNewsSearch extends Component {
 function mapStateToProps(initState) {
   const state = initState.externalState.newsSetting;
   const { country, category, readyForRequest, query } = state;
+
   return {
     country,
     category,
