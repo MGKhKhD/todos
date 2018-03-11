@@ -14,6 +14,8 @@ import {
   CANCEL_TODO_ERROR
 } from "../types";
 
+import { unBookmarkArticle } from "./newsPagesActions";
+
 let commentIndex = 0;
 
 let todoId = 0;
@@ -53,12 +55,48 @@ export function todoClick(id) {
   };
 }
 
-export function deleteTodo(id) {
+export function makeDeleteTodo(id) {
   return {
     type: TODO_DELETE,
     id
   };
 }
+
+export const deleteTodo = (id, fromWhere) => (dispatch, getState) => {
+  const todos = getState().todoState.todos;
+  if (todos !== {}) {
+    if (fromWhere === "todosPage") {
+      const arr = todos.todos;
+      arr.forEach(todo => {
+        if (todo.id === id) {
+          const bookmarks = getState().externalState.bookmarks;
+
+          if (bookmarks !== {}) {
+            for (let key in bookmarks) {
+              if (
+                bookmarks[key].bookmarked &&
+                bookmarks[key].article.title === todo.todo
+              ) {
+                dispatch(
+                  unBookmarkArticle(
+                    bookmarks[key].id,
+                    bookmarks[key].article,
+                    fromWhere
+                  )
+                );
+              }
+            }
+          }
+          dispatch(makeDeleteTodo(id));
+          dispatch(deleteCommentsOfTodo(id));
+        }
+      });
+    } else {
+      dispatch(makeDeleteTodo(id));
+      dispatch(deleteCommentsOfTodo(id));
+    }
+  }
+};
 
 export function todoModifyRequest(id) {
   return {

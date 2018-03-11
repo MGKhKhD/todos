@@ -1,20 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { getTodos } from "../reducers/todoReducers";
-import { deleteTodo, deleteCommentsOfTodo } from "../actions/todoActions";
+import { deleteTodo } from "../actions/todoActions";
 import ModifyLink from "./ModifyLink";
 import LiTag from "./LiTag";
 import CommentTag from "./CommentTag";
 import CommentSegment from "./CommentSegment";
 
-const TodosList = ({
-  todos,
-  todoClick,
-  modify,
-  deleteTodo,
-  comment,
-  deleteCommentsOfTodo
-}) => {
+const TodosList = ({ todos, todoClick, modify, deleteTodo, comment }) => {
   let todosElements = todos.map(todo => (
     <div className="row" key={todo.id}>
       <div className="col">
@@ -26,8 +19,7 @@ const TodosList = ({
             type="button"
             className="btn btn-link float-right"
             onClick={() => {
-              deleteTodo(todo.id);
-              deleteCommentsOfTodo(todo.id);
+              deleteTodo(todo.id, "todosPage");
             }}
           >
             delete
@@ -50,11 +42,6 @@ function mapStateToProps(initState) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  { deleteTodo, deleteCommentsOfTodo },
-  null,
-  {
-    areStatesEqual: (next, prev) => prev === next
-  }
-)(TodosList);
+export default connect(mapStateToProps, { deleteTodo }, null, {
+  areStatesEqual: (next, prev) => prev === next
+})(TodosList);

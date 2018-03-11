@@ -39,14 +39,8 @@ export function todos(state = initialTodoState, action) {
     case TODO_DELETE:
       return {
         ...state,
-        todosIds: [
-          ...state.todosIds.slice(0, action.id),
-          ...state.todosIds.slice(action.id + 1)
-        ],
-        todos: [
-          ...state.todos.slice(0, action.id),
-          ...state.todos.slice(action.id + 1)
-        ]
+        todosIds: state.todosIds.filter(index => index !== action.id),
+        todos: state.todos.filter(todo => todo.id !== action.id)
       };
     case TODO_CLICK:
       return {

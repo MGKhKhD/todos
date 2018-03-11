@@ -44,19 +44,26 @@ export function cancelNewsFeed() {
   };
 }
 
-let bookmarkId = 0;
-
-export const bookmark = article => {
+export const bookmark = (id, article) => {
   return {
     type: BOOKMARK_ARTICLE,
     article,
-    id: bookmarkId++
+    id
   };
 };
 
-export const bookmarkArticle = article => dispatch => {
-  dispatch(bookmark(article));
+export const bookmarkArticle = article => (dispatch, getState) => {
   dispatch(addTodo(article.title));
+
+  const todos = getState().todoState.todos;
+  if (todos !== {}) {
+    const arr = todos.todos;
+    arr.forEach(todo => {
+      if (todo.todo === article.title) {
+        dispatch(bookmark(todo.id, article));
+      }
+    });
+  }
 };
 
 export const unBookmark = (id, article) => {
@@ -66,20 +73,22 @@ export const unBookmark = (id, article) => {
   };
 };
 
-export const unBookmarkArticle = (id, article) => (dispatch, getState) => {
+export const unBookmarkArticle = (id, article, fromWhere) => (
+  dispatch,
+  getState
+) => {
   dispatch(unBookmark(id, article));
-  const todos = getState().todoState.todos;
-  let todoId = -1;
-  if (todos) {
-    const arr = todos.todos;
-    todoId = arr.filter(todo => {
-      if (todo.todo === article.title) {
-        return todo.id;
-      }
-    });
-  }
-  if (todoId > -1) {
-    dispatch(deleteTodo(todoId));
+
+  if (fromWhere === "newsPage") {
+    const todos = getState().todoState.todos;
+    if (todos !== {}) {
+      const arr = todos.todos;
+      arr.forEach(todo => {
+        if (todo.todo === article.title) {
+          dispatch(deleteTodo(todo.id, fromWhere));
+        }
+      });
+    }
   }
 };
 

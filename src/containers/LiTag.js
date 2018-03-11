@@ -41,7 +41,9 @@ class LiTag extends Component {
           style={{ fontSize: "20px" }}
         >
           <strong style={{ color: todo.completed ? "green" : "red" }}>
-            {todo.todo}
+            {todo.todo.length > 20
+              ? todo.todo.substring(0, 20).concat("...")
+              : todo.todo}
           </strong>
         </button>
       );

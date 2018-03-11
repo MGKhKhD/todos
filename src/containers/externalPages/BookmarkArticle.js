@@ -43,9 +43,9 @@ class BookmarkArticle extends Component {
                 id = bookmarks[key].id;
               }
             }
-            this.props.unBookmarkArticle(id, article);
+            this.props.unBookmarkArticle(id, article, "newsPage");
           } else {
-            this.props.bookmarkArticle(this.props.article);
+            this.props.bookmarkArticle(this.props.article, "newsPage");
           }
         }}
       >
