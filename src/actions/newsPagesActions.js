@@ -5,10 +5,13 @@ import {
   REQUEST_ARTICLES,
   RECEIVED_ARTICLES,
   FAILURE_ARTICLES,
-  CANCEL_NEWS_FEED
+  CANCEL_NEWS_FEED,
+  BOOKMARK_ARTICLE,
+  UNBOOKMARK_ARTICLE
 } from "../types";
 
 import { getIdOfActiveSearch } from "../reducers/externalPagesReducers";
+import { addTodo, deleteTodo } from "./todoActions";
 
 import keys from "../configs";
 
@@ -40,6 +43,45 @@ export function cancelNewsFeed() {
     type: CANCEL_NEWS_FEED
   };
 }
+
+let bookmarkId = 0;
+
+export const bookmark = article => {
+  return {
+    type: BOOKMARK_ARTICLE,
+    article,
+    id: bookmarkId++
+  };
+};
+
+export const bookmarkArticle = article => dispatch => {
+  dispatch(bookmark(article));
+  dispatch(addTodo(article.title));
+};
+
+export const unBookmark = (id, article) => {
+  return {
+    type: UNBOOKMARK_ARTICLE,
+    id
+  };
+};
+
+export const unBookmarkArticle = (id, article) => (dispatch, getState) => {
+  dispatch(unBookmark(id, article));
+  const todos = getState().todoState.todos;
+  let todoId = -1;
+  if (todos) {
+    const arr = todos.todos;
+    todoId = arr.filter(todo => {
+      if (todo.todo === article.title) {
+        return todo.id;
+      }
+    });
+  }
+  if (todoId > -1) {
+    dispatch(deleteTodo(todoId));
+  }
+};
 
 export function setRequest(country, category, query, id) {
   return {
@@ -74,7 +116,6 @@ export function failedData(country, category, query, id, reason) {
 }
 
 function fetchArticlesWithRelaxedCC(query, id, dispatch, getState) {
-  console.log("query given", query);
   const retrivedCountry = getState().externalState.queries[id].country;
   const retrivedCategory = getState().externalState.queries[id].category;
   dispatch(setRequest(retrivedCountry, retrivedCategory, query, id));
@@ -175,7 +216,6 @@ let newsQueryId = 0;
 
 function fetchNewArticles(country, category, query, dispatch) {
   let id = newsQueryId++;
-  console.log(id);
   dispatch(setRequest(country, category, query, id));
   let cn;
   switch (country) {
@@ -235,9 +275,7 @@ export const fetchArticles = ({ country, category, query, reason }) => (
     }
   } else {
     let articles = ifQueryCached(getState);
-    console.log(articles);
     if (articles.length > 0) {
-      console.log(articles);
       // there is cached data; abort fetch
       dispatch(cancelNewsFeed);
     } else {

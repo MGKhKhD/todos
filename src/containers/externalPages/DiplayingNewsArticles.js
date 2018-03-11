@@ -2,7 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { getIdOfActiveSearch } from "../../reducers/externalPagesReducers";
 
-const DiplayingNewsArticles = ({ articles }) => {
+import BookmarkArticle from "./BookmarkArticle";
+
+const DiplayingNewsArticles = ({ articles, bookmarkArticle }) => {
   if (articles.length === 0) {
     return null;
   }
@@ -23,6 +25,7 @@ const DiplayingNewsArticles = ({ articles }) => {
             <small className="text-muted">
               Publiched At: {article.publishedAt}
             </small>
+            <BookmarkArticle article={article} />
           </p>
         </div>
       </div>

@@ -7,7 +7,9 @@ import {
   REQUEST_ARTICLES,
   RECEIVED_ARTICLES,
   FAILURE_ARTICLES,
-  CANCEL_NEWS_FEED
+  CANCEL_NEWS_FEED,
+  BOOKMARK_ARTICLE,
+  UNBOOKMARK_ARTICLE
 } from "../types";
 import { combineReducers } from "redux";
 
@@ -130,7 +132,7 @@ export const getIdOfActiveSearch = state => {
 };
 
 export const getFailedReason = state => {
-  const { country, category, query, readyForRequest } = state.newsSetting;
+  const { readyForRequest } = state.newsSetting;
   let result = "";
   if (!readyForRequest) {
     return result;
@@ -148,10 +150,35 @@ export const getFailedReason = state => {
   return result;
 };
 
+function bookmarks(state = {}, action) {
+  switch (action.type) {
+    case BOOKMARK_ARTICLE:
+      return {
+        ...state,
+        [action.id]: {
+          id: action.id,
+          article: action.article,
+          bookmarked: true
+        }
+      };
+    case UNBOOKMARK_ARTICLE:
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          bookmarked: false
+        }
+      };
+    default:
+      return state;
+  }
+}
+
 const externalPagesReducers = combineReducers({
   links,
   newsSetting,
-  queries: articles
+  queries: articles,
+  bookmarks
 });
 
 export default externalPagesReducers;

@@ -16,7 +16,6 @@ const LoadingNewsPage = ({ requested }) => {
 
 function mapStateToProps(state) {
   const id = getIdOfActiveSearch(state.externalState);
-  console.log(id);
   return {
     requested:
       id > -1 ? state.externalState.queries[id].articles.requested : false
