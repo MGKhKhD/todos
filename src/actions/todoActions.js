@@ -19,12 +19,13 @@ import { unBookmarkArticle } from "./newsPagesActions";
 let commentIndex = 0;
 
 let todoId = 0;
-export function addTodo(text) {
+export function addTodo(text, fromWhere) {
   return {
     type: ADD_TODO,
     text,
     id: todoId++,
-    completed: false
+    completed: false,
+    fromWhere
   };
 }
 

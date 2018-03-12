@@ -30,7 +30,7 @@ class BookmarkArticle extends Component {
     const isBookmarked = this.isBookmarked();
     return (
       <button
-        className={`btn btn-${isBookmarked ? "danger" : "dark"} btn-sm mr-1`}
+        className={`btn btn-${isBookmarked ? "danger" : "dark"} btn-sm ml-1`}
         onClick={() => {
           if (isBookmarked) {
             let id;

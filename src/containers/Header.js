@@ -7,7 +7,7 @@ import AddTodo from "./addTodo";
 import TodosList from "./TodosList";
 import Footer from "./Footer";
 import ExternalPagesHeader from "./externalPages/ExternalPagesHeader";
-import Pages from "./externalPages/Pages";
+import Pages from "../components/Pages";
 
 class App extends Component {
   render() {

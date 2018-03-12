@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { getIdOfActiveSearch } from "../../reducers/externalPagesReducers";
 
-import BookmarkArticle from "./BookmarkArticle";
+import ExtraOptionsForArticle from "../../components/ExtraOptionsForArticle";
 
 const DiplayingNewsArticles = ({ articles, bookmarkArticle }) => {
   if (articles.length === 0) {
@@ -21,12 +21,7 @@ const DiplayingNewsArticles = ({ articles, bookmarkArticle }) => {
         <div className="card-body">
           <h5 className="card-title">{article.title}</h5>
           <p className="card-text">{article.description}</p>
-          <p className="card-text">
-            <small className="text-muted">
-              Publiched At: {article.publishedAt}
-            </small>
-            <BookmarkArticle article={article} />
-          </p>
+          <ExtraOptionsForArticle article={article} />
         </div>
       </div>
     )

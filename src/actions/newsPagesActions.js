@@ -53,7 +53,7 @@ export const bookmark = (id, article) => {
 };
 
 export const bookmarkArticle = article => (dispatch, getState) => {
-  dispatch(addTodo(article.title));
+  dispatch(addTodo(article.title, "newsPage"));
 
   const todos = getState().todoState.todos;
   if (todos !== {}) {
@@ -177,6 +177,8 @@ function fetchArticlesWithRelaxedQuery(
     case "England":
       cn = "gb";
       break;
+    default:
+      cn = "us";
   }
   let retrivedQuery = getState().externalState.queries[id].query;
   dispatch(setRequest(country, category, retrivedQuery, id));
@@ -237,6 +239,8 @@ function fetchNewArticles(country, category, query, dispatch) {
     case "England":
       cn = "gb";
       break;
+    default:
+      cn = "us";
   }
   fetch(
     `https://newsapi.org/v2/top-headlines?country=${cn}&category=${category}&q=${query}&apiKey=${

@@ -23,7 +23,7 @@ class AddTodo extends Component {
   handleSubmit(e) {
     e.preventDefault();
     let todo = this.state.todo.trim();
-    this.props.addTodo(todo);
+    this.props.addTodo(todo, "todosPage");
     e.target.value = "";
     this.setState({ todo: "" });
   }
@@ -75,7 +75,7 @@ function mapDispatchToProps(dispatch) {
   return {
     cancellCommentRequest: () => dispatch(cancellCommentRequest()),
     cancelErrorTodo: () => dispatch(cancelErrorTodo()),
-    addTodo: todo => dispatch(addTodo(todo)),
+    addTodo: (todo, fromWhere) => dispatch(addTodo(todo, fromWhere)),
     setErrorTodo: (error = "") => dispatch(setErrorTodo(error))
   };
 }
@@ -87,7 +87,7 @@ function mergeProps(stateProps, dispatchProps) {
     errorMessage: stateProps.errorMessage ? stateProps.errorMessage : "",
     cancellCommentRequest: () => dispatch.cancellCommentRequest(),
     cancelErrorTodo: () => dispatch.cancelErrorTodo(),
-    addTodo: todo => {
+    addTodo: (todo, fromWhere) => {
       let active = allActiveTodos.filter(
         t => t.todo.toLowerCase() === todo.toLowerCase()
       );
@@ -116,7 +116,7 @@ function mergeProps(stateProps, dispatchProps) {
         error = `${todo} is already in completed list`;
         return dispatch.setErrorTodo(error);
       } else if (result === "") {
-        return dispatch.addTodo(todo);
+        return dispatch.addTodo(todo, fromWhere);
       }
     }
   };

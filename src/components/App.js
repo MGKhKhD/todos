@@ -12,7 +12,7 @@ class App extends Component {
             style={{
               backgroundColor: "#e1e9e96b",
               bordeColor: "#333",
-              width: "30rem"
+              width: "50rem"
             }}
           >
             <Header />

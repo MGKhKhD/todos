@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 
-import SelectingPage from "./SelectingPage";
+import SelectingPage from "../containers/externalPages/SelectingPage";
 import NewsMainPage from "./NewsMainPage";
 import BooksMainPage from "./BooksMainPage";
 import YoutubeMainPage from "./YoutubeMainPage";
 import StockMainPage from "./StockMainPage";
 
-import { options } from "../../types";
+import { options } from "../types";
 
 export class Pages extends Component {
   render() {

@@ -14,7 +14,7 @@ const TodosList = ({ todos, todoClick, modify, deleteTodo, comment }) => {
         <li className="list-group-item justify-content-between">
           <CommentTag id={todo.id} />
           <LiTag todo={todo} modify={modify} />
-          <ModifyLink id={todo.id} />
+          {todo.fromWhere === "todosPage" && <ModifyLink id={todo.id} />}
           <button
             type="button"
             className="btn btn-link float-right"

@@ -32,7 +32,8 @@ export function todos(state = initialTodoState, action) {
           {
             todo: action.text,
             id: action.id,
-            completed: action.completed
+            completed: action.completed,
+            fromWhere: action.fromWhere
           }
         ]
       };
