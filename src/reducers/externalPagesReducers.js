@@ -9,7 +9,11 @@ import {
   FAILURE_ARTICLES,
   CANCEL_NEWS_FEED,
   BOOKMARK_ARTICLE,
-  UNBOOKMARK_ARTICLE
+  UNBOOKMARK_ARTICLE,
+  SEARCH_FOR_RELATED_ARTICLES_TO_ARTICLE,
+  FAILURE_ARTICLES_RELATED_TO_ARTICLE,
+  RECEIVED_ARTICLES_RELATED_TO_ARTICLE,
+  ARTICLE_CLICKED_FOR_RELATED_ARTICLES
 } from "../types";
 import { combineReducers } from "redux";
 
@@ -174,11 +178,77 @@ function bookmarks(state = {}, action) {
   }
 }
 
+function clickedArticleForExtraOptions(
+  state = { authorsInfo: [], relatedArticles: [], relatedVideos: [] },
+  action
+) {
+  switch (action.type) {
+    case ARTICLE_CLICKED_FOR_RELATED_ARTICLES:
+      return {
+        ...state,
+        relatedArticles: [...state.relatedArticles, action.article.title]
+      };
+    default:
+      return state;
+  }
+}
+
+function articlesRelatedToArticle(
+  state = {
+    requested: false,
+    failed: false,
+    articles: []
+  },
+  action
+) {
+  switch (action.type) {
+    case SEARCH_FOR_RELATED_ARTICLES_TO_ARTICLE:
+      return {
+        requested: true,
+        failed: false
+      };
+    case RECEIVED_ARTICLES_RELATED_TO_ARTICLE:
+      return {
+        requested: false,
+        failed: false,
+        articles: action.articles
+      };
+    case FAILURE_ARTICLES_RELATED_TO_ARTICLE:
+      return {
+        requested: false,
+        failed: true
+      };
+    default:
+      return state;
+  }
+}
+
+function articlesForArticle(state = {}, action) {
+  switch (action.type) {
+    case SEARCH_FOR_RELATED_ARTICLES_TO_ARTICLE:
+    case FAILURE_ARTICLES_RELATED_TO_ARTICLE:
+    case RECEIVED_ARTICLES_RELATED_TO_ARTICLE:
+      return {
+        ...state,
+        [action.id]: {
+          id: action.id,
+          articleTitle: action.newsTitle,
+          query: action.query,
+          articles: articlesRelatedToArticle(state[action.id], action)
+        }
+      };
+    default:
+      return state;
+  }
+}
+
 const externalPagesReducers = combineReducers({
   links,
   newsSetting,
   queries: articles,
-  bookmarks
+  bookmarks,
+  articlesForArticle,
+  clickedArticleForExtraOptions
 });
 
 export default externalPagesReducers;

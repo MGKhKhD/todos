@@ -7,10 +7,17 @@ import {
   FAILURE_ARTICLES,
   CANCEL_NEWS_FEED,
   BOOKMARK_ARTICLE,
-  UNBOOKMARK_ARTICLE
+  UNBOOKMARK_ARTICLE,
+  SEARCH_FOR_RELATED_ARTICLES_TO_ARTICLE,
+  FAILURE_ARTICLES_RELATED_TO_ARTICLE,
+  RECEIVED_ARTICLES_RELATED_TO_ARTICLE,
+  ARTICLE_CLICKED_FOR_RELATED_ARTICLES
 } from "../types";
 
-import { getIdOfActiveSearch } from "../reducers/externalPagesReducers";
+import {
+  getIdOfActiveSearch,
+  getIdOfActiveArticle
+} from "../reducers/externalPagesReducers";
 import { addTodo, deleteTodo } from "./todoActions";
 
 import keys from "../configs";
@@ -295,5 +302,72 @@ export const fetchArticles = ({ country, category, query, reason }) => (
       // if it  is a barnd-new request (no cach, no previous error) add a new id and record the request
       fetchNewArticles(country, category, query, dispatch);
     }
+  }
+};
+
+export function setArticleForRelatedArticles(article) {
+  return {
+    type: ARTICLE_CLICKED_FOR_RELATED_ARTICLES,
+    article
+  };
+}
+
+export function requestForRelatedArticles(query, id, newsTitle) {
+  return {
+    type: SEARCH_FOR_RELATED_ARTICLES_TO_ARTICLE,
+    id,
+    newsTitle,
+    query
+  };
+}
+
+export function receivedRelatedArticles(query, id, newsTitle, articles) {
+  return {
+    type: RECEIVED_ARTICLES_RELATED_TO_ARTICLE,
+    id,
+    newsTitle,
+    query,
+    articles
+  };
+}
+
+export function failureRelatedArticles(query, id, newsTitle) {
+  return {
+    type: FAILURE_ARTICLES_RELATED_TO_ARTICLE,
+    id,
+    newsTitle,
+    query
+  };
+}
+
+let newsRelatedArticleId = 0;
+
+export const searchForRelatedArticlesToThisArticle = article => (
+  dispatch,
+  getState
+) => {
+  let query = getState().externalState.newsSetting.query;
+  let newsTitle = article.title;
+  let id = newsRelatedArticleId++;
+  dispatch(requestForRelatedArticles(query, id, newsTitle));
+  if (query !== "") {
+    fetch(
+      `https://newsapi.org/v2/everything?q=${query}&apiKey=${
+        keys.GoogleNewsKey
+      }`
+    )
+      .then(res => res.json())
+      .then(
+        data => {
+          if (data.totalResults > 0) {
+            return dispatch(
+              receivedRelatedArticles(query, id, newsTitle, data.articles)
+            );
+          } else {
+            return dispatch(failureRelatedArticles(query, id, newsTitle));
+          }
+        },
+        error => dispatch(failureRelatedArticles(query, id, newsTitle))
+      );
   }
 };

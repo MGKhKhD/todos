@@ -7,10 +7,6 @@ import {
 } from "../../actions/newsPagesActions";
 
 class BookmarkArticle extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   isBookmarked() {
     let result = false;
     const { bookmarks, article } = this.props;
