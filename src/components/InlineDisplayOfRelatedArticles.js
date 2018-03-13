@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+let classOptions = ["primary", "secondary", "success", "info"];
+
 class InlineDisplayOfRelatedArticles extends Component {
   constructor(props) {
     super(props);
@@ -12,14 +14,17 @@ class InlineDisplayOfRelatedArticles extends Component {
     const { start, len } = this.state;
 
     const showingArtciles = articles.slice(start, start + len);
-    showingArtciles.forEach(article =>
+    showingArtciles.forEach((article, index) =>
       rows.push(
-        <div className="card bg-light" key={article.url}>
-          <div className="card-body">
+        <div
+          className={`card border-${classOptions[index % len]}`}
+          key={article.url}
+        >
+          <div className={`card-body text-${classOptions[index % len]}`}>
             <h5 className="card-title">{article.title}</h5>
             <p className="card-text">
               {article.description !== null
-                ? article.description
+                ? article.description.substring(0, 30)
                 : article.source.name}
             </p>
             <p className="card-text">
@@ -33,19 +38,36 @@ class InlineDisplayOfRelatedArticles extends Component {
     return (
       <div className="row">
         <div className="card-group">{rows}</div>
-        <button
-          className="btn btn-dark btn-sm mr-1 ml-1"
-          onClick={() =>
-            this.setState(prevState => ({
-              start:
-                prevState.start + prevState.len < articles.length + 1
-                  ? prevState.start + prevState.len
-                  : 0
-            }))
-          }
-        >
-          Load more
-        </button>
+        {this.state.start <= articles.length / len * (len - 1) && (
+          <button
+            className="btn btn-dark btn-sm mr-1 ml-1 mt-1 mb-1"
+            onClick={() =>
+              this.setState(prevState => ({
+                start:
+                  prevState.start + prevState.len < articles.length + 1
+                    ? prevState.start + prevState.len
+                    : 0
+              }))
+            }
+          >
+            Load more
+          </button>
+        )}
+        {this.state.start !== 0 && (
+          <button
+            className="btn btn-danger btn-sm mr-1 ml-1 mt-1 mb-1"
+            onClick={() =>
+              this.setState(prevState => ({
+                start:
+                  prevState.start - prevState.len > -1
+                    ? prevState.start - prevState.len
+                    : 0
+              }))
+            }
+          >
+            Go Back
+          </button>
+        )}
       </div>
     );
   }
