@@ -5,14 +5,30 @@ import RelatedArticlesToThisArticle from "../containers/externalPages/RelatedArt
 import RelatedVideosToThisArticle from "../containers/externalPages/RelatedVideosToThisArticle";
 import CheckArticleAuthor from "../containers/externalPages/CheckArticleAuthor";
 import CheckoutArticlePublisher from "../containers/externalPages/CheckoutArticlePublisher";
+import RelatedArticlesInSocialMedia from "../containers/externalPages/RelatedArticlesInSocialMedia";
 
-const ExtraOptionsForArticle = ({ article }) => (
+const ExtraOptionsForArticle = ({ article, extraInfo }) => (
   <p className="card-text">
     <CheckArticleAuthor article={article} />
     <CheckoutArticlePublisher article={article} />
     <BookmarkArticle article={article} />
-    <RelatedArticlesToThisArticle article={article} />
-    <RelatedVideosToThisArticle article={article} />
+    {article.title === extraInfo.title &&
+      extraInfo.text !== "" && (
+        <span className="flout-right mr-1">
+          <RelatedArticlesToThisArticle
+            article={article}
+            searchText={extraInfo.text}
+          />
+          <RelatedVideosToThisArticle
+            article={article}
+            searchText={extraInfo.text}
+          />
+          <RelatedArticlesInSocialMedia
+            article={article}
+            searchText={extraInfo.text}
+          />
+        </span>
+      )}
   </p>
 );
 

@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getIdOfActiveSearch } from "../../reducers/externalPagesReducers";
+
+import {
+  insertRelatedArticleInArticleList,
+  removeRelatedArticleInArticleList
+} from "../../actions/newsPagesActions";
 
 import InlineDisplayOfRelatedArticles from "../../components/InlineDisplayOfRelatedArticles";
 
@@ -12,6 +16,20 @@ class DisplayingRelatedArticles extends Component {
       return false;
     }
   }
+
+  handleClick = relatedArticle => {
+    const { addedArticles, article } = this.props;
+    if (
+      addedArticles.mainTitles.length === 0 ||
+      (addedArticles.mainTitles.length > 0 &&
+        addedArticles.mainTitles.indexOf(article.title) === -1)
+    ) {
+      this.props.insertRelatedArticleInArticleList(article, relatedArticle);
+    } else {
+      this.props.removeRelatedArticleInArticleList(article);
+      this.props.insertRelatedArticleInArticleList(article, relatedArticle);
+    }
+  };
 
   render() {
     const { relatedArticles } = this.props;
@@ -31,6 +49,7 @@ class DisplayingRelatedArticles extends Component {
     } else {
       return (
         <InlineDisplayOfRelatedArticles
+          click={this.handleClick}
           articles={relatedArticles.articles.articles}
         />
       );
@@ -52,8 +71,12 @@ function mapStateToProps(state, ownProps) {
   }
 
   return {
-    relatedArticles
+    relatedArticles,
+    addedArticles: state.externalState.addedArticles
   };
 }
 
-export default connect(mapStateToProps)(DisplayingRelatedArticles);
+export default connect(mapStateToProps, {
+  insertRelatedArticleInArticleList,
+  removeRelatedArticleInArticleList
+})(DisplayingRelatedArticles);

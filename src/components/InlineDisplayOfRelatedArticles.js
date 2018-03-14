@@ -31,6 +31,21 @@ class InlineDisplayOfRelatedArticles extends Component {
               <small className="text-muted">{article.author}</small>
             </p>
           </div>
+          <div
+            className={`card-footer bg-transparent border-${
+              classOptions[index % len]
+            }`}
+          >
+            <p>
+              {article.source.name}
+              <button
+                className="btn btn-dark btn-sm btn-link"
+                onClick={() => this.props.click(article)}
+              >
+                Find more
+              </button>
+            </p>
+          </div>
         </div>
       )
     );

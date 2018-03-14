@@ -18,7 +18,10 @@ class RelatedArticlesToThisArticle extends Component {
         disabled={this.state.disabled}
         onClick={() => {
           this.props.setArticleForRelatedArticles(this.props.article);
-          this.props.searchForRelatedArticlesToThisArticle(this.props.article);
+          this.props.searchForRelatedArticlesToThisArticle(
+            this.props.article,
+            this.props.searchText
+          );
           this.setState({ disabled: true });
         }}
       >

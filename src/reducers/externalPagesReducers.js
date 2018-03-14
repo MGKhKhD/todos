@@ -13,7 +13,9 @@ import {
   SEARCH_FOR_RELATED_ARTICLES_TO_ARTICLE,
   FAILURE_ARTICLES_RELATED_TO_ARTICLE,
   RECEIVED_ARTICLES_RELATED_TO_ARTICLE,
-  ARTICLE_CLICKED_FOR_RELATED_ARTICLES
+  ARTICLE_CLICKED_FOR_RELATED_ARTICLES,
+  INSERT_RELATED_ARTICLE_IN_ARTICLE_LIST,
+  REMOVE_RELATED_ARTICLE_IN_ARTICLE_LIST
 } from "../types";
 import { combineReducers } from "redux";
 
@@ -242,13 +244,72 @@ function articlesForArticle(state = {}, action) {
   }
 }
 
+export function addedArticles(
+  state = { mainTitles: [], addedArticles: [] },
+  action
+) {
+  switch (action.type) {
+    case INSERT_RELATED_ARTICLE_IN_ARTICLE_LIST:
+      return {
+        mainTitles: [...state.mainTitles, action.mainArticle.title],
+        addedArticles: [...state.addedArticles, action.relatedArticle]
+      };
+    case REMOVE_RELATED_ARTICLE_IN_ARTICLE_LIST: {
+      let index = state.mainTitles.indexOf(action.mainArticle.title);
+      if (index > -1) {
+        return {
+          mainTitles: state.mainTitles.filter(
+            title => title !== action.mainArticle.title
+          ),
+          addedArticles: [
+            ...state.addedArticles.slice(0, index),
+            ...state.addedArticles.slice(index + 1)
+          ]
+        };
+      } else {
+        return state;
+      }
+    }
+
+    default:
+      return state;
+  }
+}
+
+export const getArticles = (state, id) => {
+  let mainArticles = state.queries[id].articles.articles;
+  let addedArticles = state.addedArticles;
+
+  let articles = [];
+  if (addedArticles.mainTitles.length === 0) {
+    mainArticles.forEach(article =>
+      articles.push({ ...article, type: "main" })
+    );
+  } else {
+    mainArticles.forEach(article => {
+      articles.push({ ...article, type: "main" });
+      addedArticles.mainTitles.forEach((title, index) => {
+        if (title === article.title) {
+          articles.push({
+            ...addedArticles.addedArticles[index],
+            type: "added"
+          });
+        }
+      });
+    });
+  }
+
+  return articles;
+};
+
 const externalPagesReducers = combineReducers({
   links,
   newsSetting,
   queries: articles,
   bookmarks,
   articlesForArticle,
-  clickedArticleForExtraOptions
+  clickedArticleForExtraOptions,
+  addedArticles
 });
 
 export default externalPagesReducers;

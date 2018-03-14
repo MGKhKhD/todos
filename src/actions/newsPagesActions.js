@@ -11,13 +11,12 @@ import {
   SEARCH_FOR_RELATED_ARTICLES_TO_ARTICLE,
   FAILURE_ARTICLES_RELATED_TO_ARTICLE,
   RECEIVED_ARTICLES_RELATED_TO_ARTICLE,
-  ARTICLE_CLICKED_FOR_RELATED_ARTICLES
+  ARTICLE_CLICKED_FOR_RELATED_ARTICLES,
+  INSERT_RELATED_ARTICLE_IN_ARTICLE_LIST,
+  REMOVE_RELATED_ARTICLE_IN_ARTICLE_LIST
 } from "../types";
 
-import {
-  getIdOfActiveSearch,
-  getIdOfActiveArticle
-} from "../reducers/externalPagesReducers";
+import { getIdOfActiveSearch } from "../reducers/externalPagesReducers";
 import { addTodo, deleteTodo } from "./todoActions";
 
 import keys from "../configs";
@@ -342,11 +341,10 @@ export function failureRelatedArticles(query, id, newsTitle) {
 
 let newsRelatedArticleId = 0;
 
-export const searchForRelatedArticlesToThisArticle = article => (
+export const searchForRelatedArticlesToThisArticle = (article, query) => (
   dispatch,
   getState
 ) => {
-  let query = getState().externalState.newsSetting.query;
   let newsTitle = article.title;
   let id = newsRelatedArticleId++;
   dispatch(requestForRelatedArticles(query, id, newsTitle));
@@ -371,3 +369,18 @@ export const searchForRelatedArticlesToThisArticle = article => (
       );
   }
 };
+
+export function insertRelatedArticleInArticleList(mainArticle, relatedArticle) {
+  return {
+    type: INSERT_RELATED_ARTICLE_IN_ARTICLE_LIST,
+    mainArticle,
+    relatedArticle
+  };
+}
+
+export function removeRelatedArticleInArticleList(mainArticle) {
+  return {
+    type: REMOVE_RELATED_ARTICLE_IN_ARTICLE_LIST,
+    mainArticle
+  };
+}
