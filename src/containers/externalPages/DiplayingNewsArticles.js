@@ -11,7 +11,25 @@ import DisplayingRelatedArticles from "./DisplayingRelatedArticles";
 class DiplayingNewsArticles extends Component {
   constructor(props) {
     super(props);
-    this.state = { text: "", title: "" };
+    this.state = { text: "", title: "", showingMessage: true };
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.articles.length === 0) {
+      return false;
+    }
+    return true;
+  }
+
+  componentDidMount() {
+    this.messageTime = setInterval(
+      () => this.setState({ showingMessage: false }),
+      50000
+    );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.messageTime);
   }
 
   selectText = title => {
@@ -29,8 +47,6 @@ class DiplayingNewsArticles extends Component {
 
   render() {
     const { articles, clickedArticleForRelatedArticles } = this.props;
-
-    console.log(articles);
 
     const rows = [];
     articles.forEach(article => {
@@ -83,7 +99,18 @@ class DiplayingNewsArticles extends Component {
       return null;
     }
 
-    return <div className="ml-1 mr-1 mt-1 mb-1">{rows}</div>;
+    return (
+      <div className="ml-1 mr-1 mt-1 mb-1">
+        {this.state.showingMessage && (
+          <div className="alert alert-danger text-center" role="alert">
+            <h2>
+              <strong>Grab text from titles for extra queries</strong>
+            </h2>
+          </div>
+        )}
+        {rows}
+      </div>
+    );
   }
 }
 

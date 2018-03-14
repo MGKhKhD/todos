@@ -5,7 +5,7 @@ import RelatedArticlesToThisArticle from "../containers/externalPages/RelatedArt
 import RelatedVideosToThisArticle from "../containers/externalPages/RelatedVideosToThisArticle";
 import CheckArticleAuthor from "../containers/externalPages/CheckArticleAuthor";
 import CheckoutArticlePublisher from "../containers/externalPages/CheckoutArticlePublisher";
-import RelatedArticlesInSocialMedia from "../containers/externalPages/RelatedArticlesInSocialMedia";
+import RelatedArticlesInSocialMedia from "../containers/socialMedia/RelatedArticlesInSocialMedia";
 
 const ExtraOptionsForArticle = ({ article, extraInfo }) => (
   <p className="card-text">

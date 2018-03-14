@@ -17,7 +17,9 @@ import {
   INSERT_RELATED_ARTICLE_IN_ARTICLE_LIST,
   REMOVE_RELATED_ARTICLE_IN_ARTICLE_LIST
 } from "../types";
+
 import { combineReducers } from "redux";
+import socialPagesReducers from "./socialPagesReducers";
 
 function links(state = "", action) {
   switch (action.type) {
@@ -181,7 +183,11 @@ function bookmarks(state = {}, action) {
 }
 
 function clickedArticleForExtraOptions(
-  state = { authorsInfo: [], relatedArticles: [], relatedVideos: [] },
+  state = {
+    authorsInfo: [],
+    relatedArticles: [],
+    relatedVideos: []
+  },
   action
 ) {
   switch (action.type) {
@@ -309,7 +315,8 @@ const externalPagesReducers = combineReducers({
   bookmarks,
   articlesForArticle,
   clickedArticleForExtraOptions,
-  addedArticles
+  addedArticles,
+  socialPagesReducers
 });
 
 export default externalPagesReducers;

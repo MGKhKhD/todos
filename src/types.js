@@ -42,11 +42,19 @@ export const INSERT_RELATED_ARTICLE_IN_ARTICLE_LIST =
 export const REMOVE_RELATED_ARTICLE_IN_ARTICLE_LIST =
   "REMOVE_RELATED_ARTICLE_IN_ARTICLE_LIST";
 
+export const SEARCH_FOR_RELATED_SOCIAL_POSTS_TO_ARTICLE =
+  "SEARCH_FOR_RELATED_SOCIAL_POSTS_TO_ARTICLE";
+export const RECEIVED_SOCIAL_POSTS_RELATED_TO_ARTICLE =
+  "RECEIVED_SOCIAL_POSTS_RELATED_TO_ARTICLE";
+export const FAILURE_SOCIAL_POSTS_RELATED_TO_ARTICLE =
+  "FAILURE_SOCIAL_POSTS_RELATED_TO_ARTICLE";
+
 export const options = [
   "Read Articles",
   "Checkout Books",
-  "Serf Youtube",
-  "Stock Market"
+  "Stock Market",
+  "Videos",
+  "From Social Media"
 ];
 
 export const countryOptions = ["Canada", "USA", "England"];
@@ -60,3 +68,6 @@ export const categoryOptions = [
   "sports",
   "technology"
 ];
+
+export const redditSortOptions = ["top", "new", "hot", "relevance"];
+export const socialOutlets = ["reddit", "facebook", "twitter", "google"];
