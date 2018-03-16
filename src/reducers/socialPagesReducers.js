@@ -56,6 +56,47 @@ function posts(state = {}, action) {
   }
 }
 
+export const getNewsTitleOfPosts = state => {
+  let newsTitles = [];
+  if (state.posts !== {}) {
+    for (let key in state.posts) {
+      if (newsTitles.length > 0) {
+        if (newsTitles.indexOf(state.posts[key].newsTitle) === -1) {
+          newsTitles.push(state.posts[key].newsTitle);
+        }
+      } else {
+        newsTitles.push(state.posts[key].newsTitle);
+      }
+    }
+  }
+  return newsTitles;
+};
+
+export const getPosts = (state, title, sort, outlet) => {
+  let posts = [];
+  if (state.posts !== {}) {
+    for (let key in state.posts) {
+      if (
+        state.posts[key].newsTitle === title &&
+        state.posts[key].sort === sort &&
+        state.posts[key].outlet === outlet
+      ) {
+        if (
+          !state.posts[key].articles.requested &&
+          !state.posts[key].articles.failed &&
+          state.posts[key].articles.articles
+        ) {
+          posts = state.posts[key].articles.articles;
+        }
+      }
+    }
+  }
+
+  console.log(posts);
+
+  return posts;
+};
+
 const socialPagesReducers = combineReducers({
   posts
 });

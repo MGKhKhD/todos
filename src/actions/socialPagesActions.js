@@ -47,50 +47,17 @@ export function failureRelatedSocialPosts(id, newsTitle, sort, outlet) {
 
 let searchId = 0;
 
-function subredditAxios(newsTitle, sort, dispatch, query) {
+function redditAxios(newsTitle, sort, dispatch, query) {
   let id = searchId++;
-  switch (sort) {
-    case redditSortOptions[0]: {
-      dispatch(requestForRelatedSocialPosts(id, newsTitle, sort, sort));
-      return {
-        fn: axios.get(
-          `https://www.reddit.com/search.json?q=${query}&sort=${sort}&limit=20`
-        ),
-        id
-      };
-    }
-    case redditSortOptions[1]: {
-      dispatch(requestForRelatedSocialPosts(id, newsTitle, sort, sort));
-      return {
-        fn: axios.get(
-          `https://www.reddit.com/search.json?q=${query}&sort=${sort}&limit=20`
-        ),
-        id
-      };
-    }
-    case redditSortOptions[2]: {
-      dispatch(requestForRelatedSocialPosts(id, newsTitle, sort, sort));
-      return {
-        fn: axios.get(
-          `https://www.reddit.com/search.json?q=${query}&sort=${sort}&limit=20`
-        ),
-        id
-      };
-    }
-    default: {
-      dispatch(
-        requestForRelatedSocialPosts(id, newsTitle, sort, redditSortOptions[3])
-      );
-      return {
-        fn: axios.get(
-          `https://www.reddit.com/search.json?q=${query}&sort=${
-            redditSortOptions[3]
-          }&limit=20`
-        ),
-        id
-      };
-    }
-  }
+  dispatch(requestForRelatedSocialPosts(id, newsTitle, sort, socialOutlets[0]));
+  return {
+    fn: axios.get(
+      `https://www.${
+        socialOutlets[0]
+      }.com/search.json?q=${query}&sort=${sort}&limit=20`
+    ),
+    id
+  };
 }
 
 export const searchForRelatedSocialPostsToThisArticle = (
@@ -103,7 +70,7 @@ export const searchForRelatedSocialPostsToThisArticle = (
   let index = [];
   // redditSortOptions = ["top", "new", "hot", "relevance"];
   redditSortOptions.forEach(sort => {
-    let fnCall = subredditAxios(newsTitle, sort, dispatch, query);
+    let fnCall = redditAxios(newsTitle, sort, dispatch, query);
     promise.push(fnCall.fn);
     index.push(fnCall.id);
   });

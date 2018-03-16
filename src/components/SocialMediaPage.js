@@ -1,5 +1,18 @@
 import React from "react";
 
-const SocialMediaPage = () => <React.Fragment>Social</React.Fragment>;
+import DisplayingSocialMediaCards from "../containers/socialMedia/DisplayingSocialMediaCards";
+import DisplayingSocialMediaPosts from "../containers/socialMedia/DisplayingSocialMediaPosts";
+
+const SocialMediaPage = () => (
+  <DisplayingSocialMediaCards
+    render={content => {
+      if (content.redditSort !== "") {
+        return <DisplayingSocialMediaPosts content={content} />;
+      } else {
+        return null;
+      }
+    }}
+  />
+);
 
 export default SocialMediaPage;
