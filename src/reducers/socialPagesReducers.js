@@ -92,8 +92,6 @@ export const getPosts = (state, title, sort, outlet) => {
     }
   }
 
-  console.log(posts);
-
   return posts;
 };
 

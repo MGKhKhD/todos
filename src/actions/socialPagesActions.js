@@ -75,97 +75,45 @@ export const searchForRelatedSocialPostsToThisArticle = (
     index.push(fnCall.id);
   });
 
+  let receivedPosts = {};
   axios.all(promise).then(
     axios.spread(function(topOpt, newOpt, hotOpt, relevanceOpt) {
-      let topData = topOpt.data.data.children.map(child => child.data);
-      let newData = newOpt.data.data.children.map(child => child.data);
-      let hotData = hotOpt.data.data.children.map(child => child.data);
-      let relevanceData = relevanceOpt.data.data.children.map(
+      receivedPosts[`${redditSortOptions[0]}`] = topOpt.data.data.children.map(
         child => child.data
       );
+      receivedPosts[`${redditSortOptions[1]}`] = newOpt.data.data.children.map(
+        child => child.data
+      );
+      receivedPosts[`${redditSortOptions[2]}`] = hotOpt.data.data.children.map(
+        child => child.data
+      );
+      receivedPosts[
+        `${redditSortOptions[3]}`
+      ] = relevanceOpt.data.data.children.map(child => child.data);
 
-      if (topData.length > 0) {
-        return dispatch(
-          receivedRelatedSocialPosts(
-            index[0],
-            newsTitle,
-            topData,
-            redditSortOptions[0],
-            socialOutlets[0]
-          )
-        );
-      } else {
-        return dispatch(
-          failureRelatedSocialPosts(
-            index[0],
-            newsTitle,
-            redditSortOptions[0],
-            socialOutlets[0]
-          )
-        );
-      }
-
-      if (newData.length > 0) {
-        return dispatch(
-          receivedRelatedSocialPosts(
-            index[1],
-            newsTitle,
-            newData,
-            redditSortOptions[1],
-            socialOutlets[0]
-          )
-        );
-      } else {
-        return dispatch(
-          failureRelatedSocialPosts(
-            index[1],
-            newsTitle,
-            redditSortOptions[1],
-            socialOutlets[0]
-          )
-        );
-      }
-
-      if (hotData.length > 0) {
-        return dispatch(
-          receivedRelatedSocialPosts(
-            index[2],
-            newsTitle,
-            hotData,
-            redditSortOptions[2],
-            socialOutlets[0]
-          )
-        );
-      } else {
-        return dispatch(
-          failureRelatedSocialPosts(
-            index[2],
-            newsTitle,
-            redditSortOptions[2],
-            socialOutlets[0]
-          )
-        );
-      }
-
-      if (relevanceData.length > 0) {
-        return dispatch(
-          receivedRelatedSocialPosts(
-            index[3],
-            newsTitle,
-            relevanceData,
-            redditSortOptions[3],
-            socialOutlets[0]
-          )
-        );
-      } else {
-        return dispatch(
-          failureRelatedSocialPosts(
-            index[3],
-            newsTitle,
-            redditSortOptions[3],
-            socialOutlets[0]
-          )
-        );
+      let j = 0;
+      for (let key in receivedPosts) {
+        if (receivedPosts[key].length > 0) {
+          dispatch(
+            receivedRelatedSocialPosts(
+              index[j],
+              newsTitle,
+              receivedPosts[key],
+              redditSortOptions[j],
+              socialOutlets[0]
+            )
+          );
+        } else {
+          dispatch(
+            failureRelatedSocialPosts(
+              index[j],
+              newsTitle,
+              redditSortOptions[j],
+              socialOutlets[0]
+            )
+          );
+        }
+        j++;
       }
     })
   );

@@ -10,7 +10,7 @@ class DisplayingSocialMediaPosts extends Component {
     const { posts } = this.props;
     posts.forEach(post => {
       rows.push(
-        <div className="card mt-1" key={post.title}>
+        <div className="card mt-1" key={post.name}>
           <div className="card-body">
             <h5 className="card-title">{post.title.substring(0, 100)}</h5>
             {!!post.selftext && (
