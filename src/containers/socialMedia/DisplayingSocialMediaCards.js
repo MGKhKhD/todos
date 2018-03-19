@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import { redditSortOptions } from "../../types";
-// redditSortOptions = ["top", "new", "hot", "relevance"];
 
 import { getNewsTitleOfPosts } from "../../reducers/socialPagesReducers";
 
@@ -87,7 +86,6 @@ class DisplayingSocialMediaCards extends Component {
 function mapStateToProps(state) {
   return {
     newsTitles: getNewsTitleOfPosts(state.externalState.socialPagesReducers)
-    // posts: state.externalState.socialPagesReducers.posts
   };
 }
 
