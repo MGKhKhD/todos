@@ -20,6 +20,7 @@ import {
 
 import { combineReducers } from "redux";
 import socialPagesReducers from "./socialPagesReducers";
+import bookReducer from "./booksReducers";
 
 function links(state = "", action) {
   switch (action.type) {
@@ -316,7 +317,8 @@ const externalPagesReducers = combineReducers({
   articlesForArticle,
   clickedArticleForExtraOptions,
   addedArticles,
-  socialPagesReducers
+  socialPagesReducers,
+  books: bookReducer
 });
 
 export default externalPagesReducers;

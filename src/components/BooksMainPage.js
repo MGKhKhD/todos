@@ -1,5 +1,7 @@
 import React from "react";
 
-const BooksMainPage = () => <div>Books</div>;
+import SearchBooks from "../containers/books/SearchBooks";
+
+const BooksMainPage = () => <SearchBooks />;
 
 export default BooksMainPage;
