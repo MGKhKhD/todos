@@ -58,7 +58,9 @@ export const options = [
   "Checkout Books",
   "Stock Market",
   "Videos",
-  "From Social Media"
+  "From Social Media",
+  "Study Plan",
+  "Photo Gallery"
 ];
 
 export const countryOptions = ["Canada", "USA", "England"];

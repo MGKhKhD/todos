@@ -4,30 +4,32 @@ import { connect } from "react-redux";
 import { setFilter } from "../actions/todoActions";
 import { getTotalTodosByFilter } from "../reducers/todoReducers";
 
+import FotterItem from "../components/FotterItem";
+
+const colors = {
+  ALL: "black",
+  ACTIVE: "red",
+  COMPLETED: "green"
+};
+
 class Footer extends Component {
   render() {
+    const items = [];
+
+    for (let item in filters_constants) {
+      items.push(
+        <FotterItem
+          key={colors[item]}
+          onClick={() => this.props.setFilter(filters_constants[item])}
+          color={colors[item]}
+          text={filters_constants[item]}
+        />
+      );
+    }
+
     return (
       <p>
-        <span
-          style={{ color: "black" }}
-          onClick={() => this.props.setFilter(filters_constants.ALL)}
-        >
-          All{" "}
-        </span>
-        {", "}
-        <span
-          style={{ color: "green" }}
-          onClick={() => this.props.setFilter(filters_constants.COMPLETED)}
-        >
-          Completed{" "}
-        </span>{" "}
-        {", "}
-        <span
-          style={{ color: "red" }}
-          onClick={() => this.props.setFilter(filters_constants.ACTIVE)}
-        >
-          Active
-        </span>
+        {items}
         <span className="float-right mr-4">{this.props.totalTodos}</span>
       </p>
     );
