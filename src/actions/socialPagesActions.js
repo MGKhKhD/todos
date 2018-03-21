@@ -54,7 +54,7 @@ function redditAxios(newsTitle, sort, dispatch, query) {
     fn: axios.get(
       `https://www.${
         socialOutlets[0]
-      }.com/search.json?q=${query}&sort=${sort}&limit=20`
+      }.com/search.json?q=${query}&sort=${sort}&limit=100`
     ),
     id
   };

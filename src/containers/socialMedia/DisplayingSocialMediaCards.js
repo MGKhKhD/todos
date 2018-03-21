@@ -1,32 +1,28 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { redditSortOptions } from "../../types";
+import RedditSortOptions from "../../components/RedditSortOptions";
 
 import { getNewsTitleOfPosts } from "../../reducers/socialPagesReducers";
+import { paginateOptions } from "../../types";
+import Dropdown from "../../components/Dropdown";
 
-const RedditOptions = ({ chooseSort }) => {
-  const classes = ["primary", "secondary", "danger", "success"];
-  let elm = [];
-  redditSortOptions.forEach((sort, index) =>
-    elm.push(
-      <span
-        className={`badge badge-pill badge-${classes[index]}`}
-        key={index}
-        onClick={() => chooseSort(sort)}
-      >
-        {sort}
-      </span>
-    )
-  );
-
-  return elm;
-};
+const RedditPaginateOptions = ({ paginate, choosePaginate }) => (
+  <Dropdown
+    options={paginateOptions}
+    name={paginate}
+    onClick={option => choosePaginate(option)}
+    mainButtonClassName="btn-primary"
+  />
+);
 
 class DisplayingSocialMediaCards extends Component {
   constructor(props) {
     super(props);
-    this.state = { clickedReddits: [], redditSort: { sort: "", title: "" } };
+    this.state = {
+      clickedReddits: [],
+      redditSort: { sort: "", title: "", postsPerPage: 5 }
+    };
   }
 
   handleRedditClick = title => {
@@ -56,20 +52,50 @@ class DisplayingSocialMediaCards extends Component {
         <div className="card w-5" key={title}>
           <div className="card-body">
             <p className="card-text">{title}</p>
-            <button
-              className="btn btn-danger btn-sm mr-1 ml-1"
-              onClick={() => this.handleRedditClick(title)}
-            >
-              Reddit
-            </button>
-            {clickedReddits.length > 0 &&
-              clickedReddits.indexOf(title) > -1 && (
-                <RedditOptions
-                  chooseSort={sort =>
-                    this.setState({ redditSort: { sort: sort, title: title } })
-                  }
-                />
-              )}
+            <div className="card-footer bg-transparent border-success">
+              <p>
+                {this.state.redditSort.sort !== "" && (
+                  <span>
+                    Posts per page:{" "}
+                    <RedditPaginateOptions
+                      paginate={this.state.redditSort.postsPerPage}
+                      choosePaginate={paginate =>
+                        this.setState({
+                          redditSort: {
+                            ...this.state.redditSort,
+                            postsPerPage: paginate
+                          }
+                        })
+                      }
+                    />
+                  </span>
+                )}
+                <span>
+                  <button
+                    className="btn btn-danger btn-sm mr-1 ml-1"
+                    onClick={() => this.handleRedditClick(title)}
+                  >
+                    Sort
+                  </button>
+                </span>
+                <span>
+                  {clickedReddits.length > 0 &&
+                    clickedReddits.indexOf(title) > -1 && (
+                      <RedditSortOptions
+                        chooseSort={sort =>
+                          this.setState({
+                            redditSort: {
+                              ...this.state.redditSort,
+                              sort: sort,
+                              title: title
+                            }
+                          })
+                        }
+                      />
+                    )}
+                </span>
+              </p>
+            </div>
           </div>
         </div>
       )
