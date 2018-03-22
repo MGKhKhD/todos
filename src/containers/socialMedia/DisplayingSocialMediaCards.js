@@ -10,7 +10,7 @@ import Dropdown from "../../components/Dropdown";
 const RedditPaginateOptions = ({ paginate, choosePaginate }) => (
   <Dropdown
     options={paginateOptions}
-    name={paginate}
+    name={`PPP: ${paginate}`}
     onClick={option => choosePaginate(option)}
     mainButtonClassName="btn-primary"
   />
@@ -53,10 +53,12 @@ class DisplayingSocialMediaCards extends Component {
           <div className="card-body">
             <p className="card-text">{title}</p>
             <div className="card-footer bg-transparent border-success">
-              <p>
+              <ul className="nav">
+                <li className="nav-item">
+                  Page {this.props.page.current} of {this.props.page.total}
+                </li>
                 {this.state.redditSort.sort !== "" && (
-                  <span>
-                    Posts per page:{" "}
+                  <li className="nav-item dropdown">
                     <RedditPaginateOptions
                       paginate={this.state.redditSort.postsPerPage}
                       choosePaginate={paginate =>
@@ -68,17 +70,17 @@ class DisplayingSocialMediaCards extends Component {
                         })
                       }
                     />
-                  </span>
+                  </li>
                 )}
-                <span>
+                <li className="nav-item">
                   <button
                     className="btn btn-danger btn-sm mr-1 ml-1"
                     onClick={() => this.handleRedditClick(title)}
                   >
                     Sort
                   </button>
-                </span>
-                <span>
+                </li>
+                <li className="nav-item">
                   {clickedReddits.length > 0 &&
                     clickedReddits.indexOf(title) > -1 && (
                       <RedditSortOptions
@@ -93,8 +95,8 @@ class DisplayingSocialMediaCards extends Component {
                         }
                       />
                     )}
-                </span>
-              </p>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -111,7 +113,8 @@ class DisplayingSocialMediaCards extends Component {
 
 function mapStateToProps(state) {
   return {
-    newsTitles: getNewsTitleOfPosts(state.externalState.socialPagesReducers)
+    newsTitles: getNewsTitleOfPosts(state.externalState.socialPagesReducers),
+    page: state.externalState.socialPagesReducers.page
   };
 }
 

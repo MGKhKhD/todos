@@ -4,9 +4,19 @@ import {
   SEARCH_FOR_RELATED_SOCIAL_POSTS_TO_ARTICLE,
   RECEIVED_SOCIAL_POSTS_RELATED_TO_ARTICLE,
   FAILURE_SOCIAL_POSTS_RELATED_TO_ARTICLE,
+  UPDATE_PAGE_TAG,
   redditSortOptions,
   socialOutlets
 } from "../types";
+
+export function updatePageTag(start, length, postsNum) {
+  return {
+    type: UPDATE_PAGE_TAG,
+    start,
+    length,
+    postsNum
+  };
+}
 
 export function requestForRelatedSocialPosts(id, newsTitle, sort, outlet) {
   return {

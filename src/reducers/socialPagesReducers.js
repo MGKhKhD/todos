@@ -1,7 +1,8 @@
 import {
   SEARCH_FOR_RELATED_SOCIAL_POSTS_TO_ARTICLE,
   RECEIVED_SOCIAL_POSTS_RELATED_TO_ARTICLE,
-  FAILURE_SOCIAL_POSTS_RELATED_TO_ARTICLE
+  FAILURE_SOCIAL_POSTS_RELATED_TO_ARTICLE,
+  UPDATE_PAGE_TAG
 } from "../types";
 
 import { combineReducers } from "redux";
@@ -56,6 +57,18 @@ function posts(state = {}, action) {
   }
 }
 
+export function updatePageTag(state = { current: 0, total: 0 }, action) {
+  switch (action.type) {
+    case UPDATE_PAGE_TAG:
+      return {
+        current: action.start === 0 ? 1 : action.start / action.length + 1,
+        total: Math.floor(action.postsNum / action.length)
+      };
+    default:
+      return state;
+  }
+}
+
 export const getNewsTitleOfPosts = state => {
   let newsTitles = [];
   if (state.posts !== {}) {
@@ -96,7 +109,8 @@ export const getPosts = (state, title, sort, outlet) => {
 };
 
 const socialPagesReducers = combineReducers({
-  posts
+  posts,
+  page: updatePageTag
 });
 
 export default socialPagesReducers;

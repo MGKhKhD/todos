@@ -1,22 +1,27 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 
-import PaginateSocialMediaPosts from "../../components/PaginateSocialMediaPosts";
+import PaginateSocialMediaPosts from "./PaginateSocialMediaPosts";
 import SocialMediaPosts from "../../components/SocialMediaPosts";
 
 import { getPosts } from "../../reducers/socialPagesReducers";
+import { updatePageTag } from "../../actions/socialPagesActions";
 import { socialOutlets } from "../../types";
 
-const DisplayingSocialMediaPosts = ({ posts, resetPaginate }) => {
+const DisplayingSocialMediaPosts = ({ posts, resetPaginate, content }) => {
   if (posts.length === 0) {
     return <div>No data to show </div>;
   } else {
     return (
       <PaginateSocialMediaPosts
         resetPaginate={resetPaginate}
-        length={5}
+        length={content.postsPerPage}
         posts={posts}
-        render={selectedPosts => <SocialMediaPosts posts={selectedPosts} />}
+        render={start => (
+          <SocialMediaPosts
+            posts={posts.slice(start, start + content.postsPerPage)}
+          />
+        )}
       />
     );
   }
