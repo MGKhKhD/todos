@@ -4,6 +4,10 @@ import {
   getIdOfActiveSearch,
   getArticles
 } from "../../reducers/externalPagesReducers";
+import {
+  getNewsTitleOfPosts,
+  checkIfARequestMade
+} from "../../reducers/socialPagesReducers";
 
 import ExtraOptionsForArticle from "../../components/ExtraOptionsForArticle";
 import DisplayingRelatedArticles from "./DisplayingRelatedArticles";
@@ -28,6 +32,13 @@ class DiplayingNewsArticles extends Component {
     );
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isTextGrabbed) {
+      clearInterval(this.messageTime);
+      this.setState({ showingMessage: false });
+    }
+  }
+
   componentWillUnmount() {
     clearInterval(this.messageTime);
   }
@@ -46,7 +57,11 @@ class DiplayingNewsArticles extends Component {
   };
 
   render() {
-    const { articles, clickedArticleForRelatedArticles } = this.props;
+    const {
+      articles,
+      clickedArticleForRelatedArticles,
+      newsTitles
+    } = this.props;
 
     const rows = [];
     articles.forEach(article => {
@@ -74,6 +89,14 @@ class DiplayingNewsArticles extends Component {
               />
               {isActiveForRelatedArticle && (
                 <DisplayingRelatedArticles article={article} />
+              )}
+              {newsTitles.indexOf(article.title) > -1 && (
+                <div className="card-footer bg-transparent border-success">
+                  <strong style={{ color: "green" }}>
+                    {" "}
+                    Realted posts are added to Social Media Page.{" "}
+                  </strong>
+                </div>
               )}
             </div>
           </div>
@@ -121,7 +144,9 @@ function mapStateToProps(state) {
   return {
     articles: success ? getArticles(state.externalState, id) : [],
     clickedArticleForRelatedArticles:
-      state.externalState.clickedArticleForExtraOptions.relatedArticles
+      state.externalState.clickedArticleForExtraOptions.relatedArticles,
+    newsTitles: getNewsTitleOfPosts(state.externalState.socialPagesReducers),
+    isTextGrabbed: checkIfARequestMade(state.externalState.socialPagesReducers)
   };
 }
 

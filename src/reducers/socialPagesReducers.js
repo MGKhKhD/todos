@@ -62,12 +62,24 @@ export function updatePageTag(state = { current: 0, total: 0 }, action) {
     case UPDATE_PAGE_TAG:
       return {
         current: action.start === 0 ? 1 : action.start / action.length + 1,
-        total: Math.floor(action.postsNum / action.length)
+        total:
+          action.postsNum % action.length === 0
+            ? action.postsNum / action.length
+            : Math.floor(action.postsNum / action.length) + 1
       };
     default:
       return state;
   }
 }
+
+export const checkIfARequestMade = state => {
+  let result = false;
+  if (state.posts !== {} && state.posts[0]) {
+    result = true;
+  }
+  console.log(result);
+  return result;
+};
 
 export const getNewsTitleOfPosts = state => {
   let newsTitles = [];

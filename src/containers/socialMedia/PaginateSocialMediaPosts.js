@@ -22,17 +22,25 @@ class PaginateSocialMediaPosts extends Component {
 
   handleClick(direction) {
     const { length, posts } = this.props;
-    direction === "forward"
-      ? this.setState(prevState => ({
-          start:
-            prevState.start + length < posts.length + 1
-              ? prevState.start + length
-              : 0
-        }))
-      : this.setState(prevState => ({
-          start: prevState.start - length > -1 ? prevState.start - length : 0
-        }));
-    this.props.updatePageTag(this.state.start, length, posts.length);
+    const { start } = this.state;
+    let newStart;
+
+    if (direction === "forward") {
+      if (start + length < posts.length + 1) {
+        newStart = start + length;
+      } else {
+        newStart = 0;
+      }
+    } else {
+      if (start - length > -1) {
+        newStart = start - length;
+      } else {
+        newStart = 0;
+      }
+    }
+
+    this.props.updatePageTag(newStart, length, posts.length);
+    this.setState({ start: newStart });
   }
 
   render() {

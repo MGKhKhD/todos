@@ -76,6 +76,6 @@ export const categoryOptions = [
   "technology"
 ];
 
-export const paginateOptions = [5, 10, 15, 20, 50, 100];
+export const paginateOptions = [5, 10, 20, 50, 100];
 export const redditSortOptions = ["top", "new", "hot", "relevance"];
 export const socialOutlets = ["reddit", "facebook", "twitter", "google"];

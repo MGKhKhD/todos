@@ -10,9 +10,9 @@ import Dropdown from "../../components/Dropdown";
 const RedditPaginateOptions = ({ paginate, choosePaginate }) => (
   <Dropdown
     options={paginateOptions}
-    name={`PPP: ${paginate}`}
+    name={paginate}
     onClick={option => choosePaginate(option)}
-    mainButtonClassName="btn-primary"
+    mainButtonClassName="btn-secondary"
   />
 );
 
@@ -53,12 +53,13 @@ class DisplayingSocialMediaCards extends Component {
           <div className="card-body">
             <p className="card-text">{title}</p>
             <div className="card-footer bg-transparent border-success">
-              <ul className="nav">
+              <ul className="nav nav-justified">
                 <li className="nav-item">
                   Page {this.props.page.current} of {this.props.page.total}
                 </li>
                 {this.state.redditSort.sort !== "" && (
                   <li className="nav-item dropdown">
+                    Posts per page:
                     <RedditPaginateOptions
                       paginate={this.state.redditSort.postsPerPage}
                       choosePaginate={paginate =>
@@ -79,8 +80,6 @@ class DisplayingSocialMediaCards extends Component {
                   >
                     Sort
                   </button>
-                </li>
-                <li className="nav-item">
                   {clickedReddits.length > 0 &&
                     clickedReddits.indexOf(title) > -1 && (
                       <RedditSortOptions
