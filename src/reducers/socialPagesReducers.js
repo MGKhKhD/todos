@@ -77,7 +77,7 @@ export const checkIfARequestMade = state => {
   if (state.posts !== {} && state.posts[0]) {
     result = true;
   }
-  console.log(result);
+
   return result;
 };
 

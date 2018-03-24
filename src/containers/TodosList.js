@@ -7,12 +7,13 @@ import LiTag from "./LiTag";
 import CommentTag from "./CommentTag";
 import CommentSegment from "./CommentSegment";
 
-const TodosList = ({ todos, todoClick, modify, deleteTodo, comment }) => {
+const TodosList = () => {
+  const { todos, todoClick, modify, deleteTodo, comment } = this.props;
   let todosElements = todos.map(todo => (
     <div className="row" key={todo.id}>
       <div className="col">
         <li className="list-group-item justify-content-between">
-          <CommentTag id={todo.id} />
+          <CommentTag id={todo.id} comment={comment} />
           <LiTag todo={todo} modify={modify} />
           {todo.fromWhere === "todosPage" && <ModifyLink id={todo.id} />}
           <button

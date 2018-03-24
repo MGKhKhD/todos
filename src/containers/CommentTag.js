@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { commentRequest } from "../actions/todoActions";
+import { commentRequest, cancellCommentRequest } from "../actions/todoActions";
 
 class CommentTag extends Component {
   render() {
@@ -8,9 +8,13 @@ class CommentTag extends Component {
       <button
         type="button"
         className="btn btn-link float-left"
-        data-toggle="modal"
-        data-target="#exampleModal"
-        onClick={() => this.props.commentRequest(this.props.id)}
+        onClick={() => {
+          if (this.props.comment.status === "requested") {
+            this.props.cancellCommentRequest();
+          } else {
+            this.props.commentRequest(this.props.id);
+          }
+        }}
       >
         #
       </button>
@@ -18,4 +22,6 @@ class CommentTag extends Component {
   }
 }
 
-export default connect(null, { commentRequest })(CommentTag);
+export default connect(null, { commentRequest, cancellCommentRequest })(
+  CommentTag
+);

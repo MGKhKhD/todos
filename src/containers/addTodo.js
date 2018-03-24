@@ -12,6 +12,7 @@ import {
 import { filters_constants } from "../types";
 
 import ExternalPagesHeader from "./externalPages/ExternalPagesHeader";
+import Message from "../components/Message";
 
 class AddTodo extends Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class AddTodo extends Component {
     return (
       <div>
         {this.props.errorMessage !== "" && (
-          <p style={{ color: "red" }}>{this.props.errorMessage}</p>
+          <Message alert="danger" message={this.props.errorMessage} tag="h3" />
         )}
         <form className="form-inline " onSubmit={this.handleSubmit}>
           <input

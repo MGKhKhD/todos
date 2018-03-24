@@ -65,6 +65,26 @@ export function todos(state = initialTodoState, action) {
           }
         })
       };
+    case SET_FILTER: {
+      if (action.filter === filters_constants.TOGGLE_ALL) {
+        let superStatus = state.todos.every(todo => todo.completed);
+        return {
+          ...state,
+          todos: state.todos.map(todo => {
+            return { ...todo, completed: !superStatus };
+          })
+        };
+      } else if (action.filter === filters_constants.DELETE_COMPLETED) {
+        let newTodos = state.todos.filter(todo => todo.completed);
+        let newIds = [];
+        newTodos.forEach(todo => newIds.push(todo.id));
+        return {
+          ...state,
+          todosIds: newIds,
+          todos: newTodos
+        };
+      }
+    }
     default:
       return state;
   }
