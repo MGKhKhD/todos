@@ -5,7 +5,6 @@ import PaginateSocialMediaPosts from "./PaginateSocialMediaPosts";
 import SocialMediaPosts from "../../components/SocialMediaPosts";
 
 import { getPosts } from "../../reducers/socialPagesReducers";
-import { updatePageTag } from "../../actions/socialPagesActions";
 import { socialOutlets } from "../../types";
 
 const DisplayingSocialMediaPosts = ({ posts, resetPaginate, content }) => {

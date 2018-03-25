@@ -17,8 +17,8 @@ import {
 import { unBookmarkArticle } from "./newsPagesActions";
 
 let commentIndex = 0;
-
 let todoId = 0;
+
 export function addTodo(text, fromWhere) {
   return {
     type: ADD_TODO,
@@ -64,6 +64,15 @@ export function makeDeleteTodo(id) {
 }
 
 export const deleteTodo = (id, fromWhere) => (dispatch, getState) => {
+  if (getState().todoState.commentManagement.status === "requested") {
+    dispatch(cancellCommentRequest());
+  }
+
+  if (getState().todoState.modify.status === "requested") {
+    const id = getState().todoState.modify.id;
+    dispatch(todoModifyCancel(id));
+  }
+
   const todos = getState().todoState.todos;
   if (todos !== {}) {
     if (fromWhere === "todosPage") {
@@ -99,12 +108,19 @@ export const deleteTodo = (id, fromWhere) => (dispatch, getState) => {
   }
 };
 
-export function todoModifyRequest(id) {
+function makeTodoModifyRequest(id) {
   return {
     type: TODO_MODIFY_REQUEST,
     id
   };
 }
+
+export const todoModifyRequest = id => (dispatch, getState) => {
+  if (getState().todoState.commentManagement.status === "requested") {
+    dispatch(cancellCommentRequest());
+  }
+  dispatch(makeTodoModifyRequest(id));
+};
 
 export function todoModifyCancel(id) {
   return {
@@ -121,12 +137,20 @@ export function todoModifySuccess(id, text) {
   };
 }
 
-export function commentRequest(id) {
+function makeCommentRequest(id) {
   return {
     type: COMMENT_REQUEST,
     id
   };
 }
+
+export const commentRequest = id => (dispatch, getState) => {
+  if (getState().todoState.modify.status === "requested") {
+    const index = getState().todoState.modify.id;
+    dispatch(todoModifyCancel(index));
+  }
+  dispatch(makeCommentRequest(id));
+};
 
 export function cancellCommentRequest() {
   return {

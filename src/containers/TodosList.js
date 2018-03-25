@@ -7,8 +7,7 @@ import LiTag from "./LiTag";
 import CommentTag from "./CommentTag";
 import CommentSegment from "./CommentSegment";
 
-const TodosList = () => {
-  const { todos, todoClick, modify, deleteTodo, comment } = this.props;
+const TodosList = ({ todos, modify, deleteTodo, comment }) => {
   let todosElements = todos.map(todo => (
     <div className="row" key={todo.id}>
       <div className="col">

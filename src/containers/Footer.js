@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Motion, spring, presets } from "react-motion";
+
 import { filters_constants } from "../types";
 import { connect } from "react-redux";
 import { setFilter } from "../actions/todoActions";
@@ -13,6 +15,31 @@ const colors = {
   TOGGLE_ALL: "grey",
   DELETE_COMPLETED: "blue"
 };
+
+class CountingTagHeader extends Component {
+  render() {
+    return (
+      <Motion
+        defaultStyle={{ x: 0 }}
+        style={{
+          x: spring(this.props.totalTodos, {
+            ...presets.gentle,
+            precision: 10
+          })
+        }}
+      >
+        {value => (
+          <span
+            className="float-right mr-4"
+            style={{ color: this.props.color }}
+          >
+            {value.x} todos left
+          </span>
+        )}
+      </Motion>
+    );
+  }
+}
 
 class Footer extends Component {
   constructor(props) {
@@ -49,9 +76,7 @@ class Footer extends Component {
     return (
       <p>
         {items}
-        <span className="float-right mr-4" style={{ color: color }}>
-          {this.props.totalTodos} todos left
-        </span>
+        <CountingTagHeader color={color} totalTodos={this.props.totalTodos} />
       </p>
     );
   }

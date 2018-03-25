@@ -65,7 +65,7 @@ export function todos(state = initialTodoState, action) {
           }
         })
       };
-    case SET_FILTER: {
+    case SET_FILTER:
       if (action.filter === filters_constants.TOGGLE_ALL) {
         let superStatus = state.todos.every(todo => todo.completed);
         return {
@@ -74,8 +74,10 @@ export function todos(state = initialTodoState, action) {
             return { ...todo, completed: !superStatus };
           })
         };
-      } else if (action.filter === filters_constants.DELETE_COMPLETED) {
-        let newTodos = state.todos.filter(todo => todo.completed);
+      }
+    case SET_FILTER:
+      if (action.filter === filters_constants.DELETE_COMPLETED) {
+        let newTodos = state.todos.filter(todo => !todo.completed);
         let newIds = [];
         newTodos.forEach(todo => newIds.push(todo.id));
         return {
@@ -84,7 +86,6 @@ export function todos(state = initialTodoState, action) {
           todos: newTodos
         };
       }
-    }
     default:
       return state;
   }

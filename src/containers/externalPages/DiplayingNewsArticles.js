@@ -86,11 +86,7 @@ class DiplayingNewsArticles extends Component {
   };
 
   render() {
-    const {
-      articles,
-      clickedArticleForRelatedArticles,
-      newsTitles
-    } = this.props;
+    const { articles, clickedArticleForRelatedArticles } = this.props;
 
     const rows = [];
     articles.forEach(article => {

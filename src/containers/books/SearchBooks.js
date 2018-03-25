@@ -15,7 +15,7 @@ class SearchBooks extends Component {
   handleKeyPress = e => {
     if (this.state.query === "") return;
 
-    if (e.charCode == 32) {
+    if (e.charCode === 32) {
       fetch(`http://localhost:4200/api/goodread?q=${this.state.query}`)
         .then(response => response.json())
         .then(books => {
@@ -31,7 +31,7 @@ class SearchBooks extends Component {
         });
     }
 
-    if (e.charCode == 13) {
+    if (e.charCode === 13) {
       this.props.fetchBooks(this.state.query);
       e.target.value = "";
     }
