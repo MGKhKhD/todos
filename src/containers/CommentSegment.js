@@ -23,16 +23,17 @@ class CommentSegment extends Component {
           }}
         >
           <textarea
-            placeholder="add comments..."
+            placeholder="add comment..."
             name="comment"
             onChange={e =>
               this.setState({ ...this.state, [e.target.name]: e.target.value })
             }
-            className="form-control"
+            className="form-control col-10"
+            value={this.state.comment}
           />
           <input
             type="submit"
-            className="btn btn-primary ml-1 mr-1"
+            className="btn btn-dark ml-1 mr-1 flout-right"
             value="Add"
           />
         </form>

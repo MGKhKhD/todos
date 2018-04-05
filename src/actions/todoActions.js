@@ -16,10 +16,10 @@ import {
 
 import { unBookmarkArticle } from "./newsPagesActions";
 
-let commentIndex = 0;
-let todoId = 0;
+let commentIndex = 4; //based on mockdata
+let todoId = 2; //based on mock data
 
-export function addTodo(text, fromWhere) {
+export function makeAddTodo(text, fromWhere) {
   return {
     type: ADD_TODO,
     text,
@@ -28,6 +28,18 @@ export function addTodo(text, fromWhere) {
     fromWhere
   };
 }
+
+export const addTodo = (text, fromWhere) => (dispatch, getState) => {
+  if (getState().todoState.commentManagement.status === "requested") {
+    dispatch(cancellCommentRequest());
+  }
+
+  if (getState().todoState.modify.status === "requested") {
+    const id = getState().todoState.modify.id;
+    dispatch(todoModifyCancel(id));
+  }
+  dispatch(makeAddTodo(text, fromWhere));
+};
 
 export function setErrorTodo(error) {
   return {

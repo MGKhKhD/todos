@@ -16,10 +16,12 @@ import {
   filters_constants
 } from "../types";
 
-let initialTodoState = {
-  todosIds: [],
-  todos: []
-};
+import { initialTodoState, initialCommentState } from "../mockedData";
+
+// let initialTodoState = {
+//   todosIds: [],
+//   todos: []
+// };
 
 export function todos(state = initialTodoState, action) {
   switch (action.type) {
@@ -159,10 +161,10 @@ export function commentManagement(state = { status: "", id: -1 }, action) {
   }
 }
 
-let initialCommentState = {
-  commentIds: [],
-  comments: []
-};
+// let initialCommentState = {
+//   commentIds: [],
+//   comments: []
+// };
 
 export function comments(state = initialCommentState, action) {
   switch (action.type) {
