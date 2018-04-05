@@ -8,6 +8,17 @@ class CommentSegment extends Component {
   constructor(props) {
     super(props);
     this.state = { comment: "" };
+    this.textArea = null;
+    this.setTextAreaRef = element => {
+      this.textArea = element;
+    };
+    this.focusTextArea = () => {
+      if (this.textArea) this.textArea.focus();
+    };
+  }
+
+  componentDidMount() {
+    this.focusTextArea();
   }
 
   render() {
@@ -23,6 +34,7 @@ class CommentSegment extends Component {
           }}
         >
           <textarea
+            ref={this.setTextAreaRef}
             placeholder="add comment..."
             name="comment"
             onChange={e =>

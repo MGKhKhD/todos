@@ -19,6 +19,24 @@ class AddTodo extends Component {
     super(props);
     this.state = { todo: "" };
     this.handleSubmit = this.handleSubmit.bind(this);
+
+    this.inputText = null;
+    this.setInputRef = element => {
+      this.inputText = element;
+    };
+    this.setFocus = () => {
+      if (this.inputText) this.inputText.focus();
+    };
+  }
+
+  componentDidMount() {
+    this.setFocus();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.commentStatus !== "" && nextProps.commentStatus === "") {
+      this.setFocus();
+    }
   }
 
   handleSubmit(e) {
@@ -37,6 +55,7 @@ class AddTodo extends Component {
         )}
         <form className="form-inline " onSubmit={this.handleSubmit}>
           <input
+            ref={this.setInputRef}
             className="form-control mb-2 mr-sm-2 mb-sm-0"
             type="text"
             placeholder="Add todo"
@@ -82,9 +101,10 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mergeProps(stateProps, dispatchProps) {
-  const { allActiveTodos, allCompletedTodos } = stateProps;
+  const { allActiveTodos, allCompletedTodos, commentStatus } = stateProps;
   const dispatch = dispatchProps;
   return {
+    commentStatus: commentStatus,
     errorMessage: stateProps.errorMessage ? stateProps.errorMessage : "",
     cancellCommentRequest: () => dispatch.cancellCommentRequest(),
     cancelErrorTodo: () => dispatch.cancelErrorTodo(),

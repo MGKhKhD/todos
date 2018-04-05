@@ -10,7 +10,11 @@ class CommentTag extends Component {
         className="btn btn-link float-left"
         onClick={() => {
           if (this.props.comment.status === "requested") {
-            this.props.cancellCommentRequest();
+            if (this.props.commentManagement.id === this.props.id) {
+              this.props.cancellCommentRequest();
+            } else {
+              this.props.commentRequest(this.props.id);
+            }
           } else {
             this.props.commentRequest(this.props.id);
           }
@@ -22,6 +26,13 @@ class CommentTag extends Component {
   }
 }
 
-export default connect(null, { commentRequest, cancellCommentRequest })(
-  CommentTag
-);
+function mapStateToProps(state) {
+  return {
+    commentManagement: state.todoState.commentManagement
+  };
+}
+
+export default connect(mapStateToProps, {
+  commentRequest,
+  cancellCommentRequest
+})(CommentTag);
