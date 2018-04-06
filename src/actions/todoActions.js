@@ -11,7 +11,9 @@ import {
   DELETE_COMMENTS,
   COMMENT_REQUEST_CANCELLED,
   SET_TODO_ERROR,
-  CANCEL_TODO_ERROR
+  CANCEL_TODO_ERROR,
+  SET_COMMENT_MODIFY,
+  DELETE_A_COMMENT
 } from "../types";
 
 import { unBookmarkArticle } from "./newsPagesActions";
@@ -183,5 +185,19 @@ export function deleteCommentsOfTodo(id) {
   return {
     type: DELETE_COMMENTS,
     todoIndex: id
+  };
+}
+
+export function setCommentModify(id) {
+  return {
+    type: SET_COMMENT_MODIFY,
+    commentId: id
+  };
+}
+
+export function deleteComment(id) {
+  return {
+    type: DELETE_A_COMMENT,
+    commentId: id
   };
 }

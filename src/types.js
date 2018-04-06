@@ -11,6 +11,8 @@ export const DELETE_COMMENTS = "DELETE_COMMENTS";
 export const COMMENT_REQUEST_CANCELLED = "COMMENT_REQUEST_CANCELLED";
 export const SET_TODO_ERROR = "SET_TODO_ERROR";
 export const CANCEL_TODO_ERROR = "CANCEL_TODO_ERROR";
+export const SET_COMMENT_MODIFY = "SET_COMMENT_MODIFY";
+export const DELETE_A_COMMENT = "DELETE_A_COMMENT";
 export const filters_constants = {
   ALL: "ALL",
   ACTIVE: "ACTIVE",

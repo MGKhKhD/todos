@@ -13,6 +13,8 @@ import {
   COMMENT_REQUEST_CANCELLED,
   SET_TODO_ERROR,
   CANCEL_TODO_ERROR,
+  SET_COMMENT_MODIFY,
+  DELETE_A_COMMENT,
   filters_constants
 } from "../types";
 
@@ -196,6 +198,15 @@ export function comments(state = initialCommentState, action) {
         }),
         comments: state.comments.filter(
           comment => effectiveComments.indexOf(comment) === -1
+        )
+      };
+    }
+    case DELETE_A_COMMENT: {
+      return {
+        ...state,
+        commentIds: state.commentIds.filter(id => id !== action.commentId),
+        comments: state.comments.filter(
+          comment => comment.id !== action.commentId
         )
       };
     }
