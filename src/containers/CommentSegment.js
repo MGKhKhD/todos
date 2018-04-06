@@ -37,27 +37,26 @@ class CommentSegment extends Component {
     }
   }
 
+  handleSubmit = e => {
+    e.preventDefault();
+    if (this.props.commentManagement.status === "needModify") {
+      this.props.modifyComment(
+        this.state.comment.trim(),
+        this.props.id,
+        this.props.commentManagement.commentId
+      );
+      this.props.cancelModifyComment();
+    } else {
+      this.props.addComment(this.state.comment.trim(), this.props.id);
+    }
+    this.setState({ comment: "" });
+    e.target.value = "";
+  };
+
   render() {
     return (
       <div>
-        <form
-          className="form-inline"
-          onSubmit={e => {
-            e.preventDefault();
-            if (this.props.commentManagement.status === "needModify") {
-              this.props.modifyComment(
-                this.state.comment.trim(),
-                this.props.id,
-                this.props.commentManagement.commentId
-              );
-              this.props.cancelModifyComment();
-            } else {
-              this.props.addComment(this.state.comment.trim(), this.props.id);
-            }
-            this.setState({ comment: "" });
-            e.target.value = "";
-          }}
-        >
+        <form className="form-inline" onSubmit={this.handleSubmit}>
           <textarea
             ref={this.setTextAreaRef}
             placeholder="add comment..."

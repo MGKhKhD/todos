@@ -3,22 +3,24 @@ import { connect } from "react-redux";
 import { commentRequest, cancellCommentRequest } from "../actions/todoActions";
 
 class CommentTag extends Component {
+  handleClick() {
+    if (this.props.comment.status === "requested") {
+      if (this.props.commentManagement.id === this.props.id) {
+        this.props.cancellCommentRequest();
+      } else {
+        this.props.commentRequest(this.props.id);
+      }
+    } else {
+      this.props.commentRequest(this.props.id);
+    }
+  }
+
   render() {
     return (
       <button
         type="button"
         className="btn btn-link float-left"
-        onClick={() => {
-          if (this.props.comment.status === "requested") {
-            if (this.props.commentManagement.id === this.props.id) {
-              this.props.cancellCommentRequest();
-            } else {
-              this.props.commentRequest(this.props.id);
-            }
-          } else {
-            this.props.commentRequest(this.props.id);
-          }
-        }}
+        onClick={() => this.handleClick()}
       >
         #
       </button>

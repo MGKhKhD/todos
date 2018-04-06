@@ -1,13 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { getTodos } from "../reducers/todoReducers";
-import { deleteTodo } from "../actions/todoActions";
+import { deleteTodo, archiveTodo } from "../actions/todoActions";
 import ModifyLink from "./ModifyLink";
 import LiTag from "./LiTag";
 import CommentTag from "./CommentTag";
 import CommentSegment from "./CommentSegment";
 
-const TodosList = ({ todos, modify, deleteTodo, comment }) => {
+const TodosList = ({ todos, modify, deleteTodo, comment, archiveTodo }) => {
   let todosElements = todos.map(todo => (
     <div className="row" key={todo.id}>
       <div className="col">
@@ -23,6 +23,15 @@ const TodosList = ({ todos, modify, deleteTodo, comment }) => {
             }}
           >
             delete
+          </button>
+          <button
+            type="button"
+            className="btn btn-link float-right"
+            onClick={() => {
+              archiveTodo(todo.id);
+            }}
+          >
+            Archive
           </button>
           {comment.status !== "" &&
             comment.id === todo.id && <CommentSegment id={comment.id} />}
@@ -42,6 +51,6 @@ function mapStateToProps(initState) {
   };
 }
 
-export default connect(mapStateToProps, { deleteTodo }, null, {
+export default connect(mapStateToProps, { deleteTodo, archiveTodo }, null, {
   areStatesEqual: (next, prev) => prev === next
 })(TodosList);

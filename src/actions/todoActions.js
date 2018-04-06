@@ -3,6 +3,7 @@ import {
   SET_FILTER,
   TODO_CLICK,
   TODO_DELETE,
+  ARCHIVE_TODO,
   TODO_MODIFY_REQUEST,
   TODO_MODIFY_CANCEL,
   TODO_MODIFY_SUCCESS,
@@ -15,7 +16,8 @@ import {
   SET_COMMENT_MODIFY,
   DELETE_A_COMMENT,
   MODIFY_COMMENT,
-  CANCEL_MODIFY_COMMENT
+  CANCEL_MODIFY_COMMENT,
+  ARCHIVE_COMMENTS_OF_TODO
 } from "../types";
 
 import { unBookmarkArticle } from "./newsPagesActions";
@@ -29,6 +31,7 @@ export function makeAddTodo(text, fromWhere) {
     text,
     id: todoId++,
     completed: false,
+    archived: false,
     fromWhere
   };
 }
@@ -218,3 +221,40 @@ export function deleteComment(id) {
     commentId: id
   };
 }
+
+export function makeArchiveTodo(todo, archiveId) {
+  return {
+    type: ARCHIVE_TODO,
+    todo,
+    archiveId
+  };
+}
+
+export function makeArchiveCommentsOfTodo(id, archivedComments, archiveId) {
+  return {
+    type: ARCHIVE_COMMENTS_OF_TODO,
+    todoId: id,
+    archivedComments,
+    archiveId
+  };
+}
+
+let archiveId = 0;
+export const archiveTodo = id => (dispatch, getState) => {
+  archiveId++;
+  const state = getState().todoState;
+
+  let commentsForTodo = [];
+  if (state.comments.comments.length > 0) {
+    commentsForTodo = state.comments.comments.filter(
+      comment => comment.todoIndex === id
+    );
+  }
+
+  if (commentsForTodo.length > 0)
+    dispatch(makeArchiveCommentsOfTodo(id, commentsForTodo, archiveId));
+
+  const todo = state.todos.todos.filter(todo => todo.id === id);
+  dispatch(makeArchiveTodo(todo, archiveId));
+  dispatch(deleteTodo(id, "todosPage"));
+};

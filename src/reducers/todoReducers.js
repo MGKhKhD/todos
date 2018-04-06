@@ -4,6 +4,8 @@ import {
   SET_FILTER,
   TODO_CLICK,
   TODO_DELETE,
+  ARCHIVE_TODO,
+  ARCHIVE_COMMENTS_OF_TODO,
   TODO_MODIFY_REQUEST,
   TODO_MODIFY_CANCEL,
   TODO_MODIFY_SUCCESS,
@@ -266,13 +268,40 @@ export const error = (state = "", action) => {
   }
 };
 
+export function archiveTodos(state = [], action) {
+  switch (action.type) {
+    case ARCHIVE_TODO:
+      return [...state, { todo: action.todo, id: action.archiveId }];
+    default:
+      return state;
+  }
+}
+
+export function archiveComments(state = [], action) {
+  switch (action.type) {
+    case ARCHIVE_COMMENTS_OF_TODO:
+      return [
+        ...state,
+        {
+          todoId: action.todoId,
+          archivedComments: action.archivedComments,
+          archiveId: action.archiveId
+        }
+      ];
+    default:
+      return state;
+  }
+}
+
 const todoReducers = combineReducers({
   todos,
   filter,
   modify,
   commentManagement,
   comments,
-  error
+  error,
+  archiveTodos,
+  archiveComments
 });
 
 export default todoReducers;
