@@ -24,7 +24,7 @@ const TodosList = ({ todos, modify, deleteTodo, comment }) => {
           >
             delete
           </button>
-          {comment.status === "requested" &&
+          {comment.status !== "" &&
             comment.id === todo.id && <CommentSegment id={comment.id} />}
         </li>
       </div>

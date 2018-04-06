@@ -13,7 +13,9 @@ import {
   SET_TODO_ERROR,
   CANCEL_TODO_ERROR,
   SET_COMMENT_MODIFY,
-  DELETE_A_COMMENT
+  DELETE_A_COMMENT,
+  MODIFY_COMMENT,
+  CANCEL_MODIFY_COMMENT
 } from "../types";
 
 import { unBookmarkArticle } from "./newsPagesActions";
@@ -178,6 +180,21 @@ export function addComment(comment, id) {
     comment,
     id: commentIndex++,
     todoIndex: id
+  };
+}
+
+export function modifyComment(comment, id, commentId) {
+  return {
+    type: MODIFY_COMMENT,
+    comment,
+    commentId,
+    todoIndex: id
+  };
+}
+
+export function cancelModifyComment() {
+  return {
+    type: CANCEL_MODIFY_COMMENT
   };
 }
 

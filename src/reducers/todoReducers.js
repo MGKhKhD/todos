@@ -15,7 +15,9 @@ import {
   CANCEL_TODO_ERROR,
   SET_COMMENT_MODIFY,
   DELETE_A_COMMENT,
-  filters_constants
+  filters_constants,
+  MODIFY_COMMENT,
+  CANCEL_MODIFY_COMMENT
 } from "../types";
 
 import { initialTodoState, initialCommentState } from "../mockedData";
@@ -152,12 +154,19 @@ export function modify(state = { status: "", id: -1 }, action) {
   }
 }
 
-export function commentManagement(state = { status: "", id: -1 }, action) {
+export function commentManagement(
+  state = { status: "", id: -1, commentId: -1 },
+  action
+) {
   switch (action.type) {
     case COMMENT_REQUEST:
-      return { status: "requested", id: action.id };
+      return { commentId: -1, status: "requested", id: action.id };
     case COMMENT_REQUEST_CANCELLED:
-      return { status: "", id: -1 };
+      return { commentId: -1, status: "", id: -1 };
+    case SET_COMMENT_MODIFY:
+      return { ...state, status: "needModify", commentId: action.commentId };
+    case CANCEL_MODIFY_COMMENT:
+      return { ...state, status: "requested", commentId: -1 };
     default:
       return state;
   }
@@ -210,6 +219,24 @@ export function comments(state = initialCommentState, action) {
         )
       };
     }
+    case MODIFY_COMMENT: {
+      const oldIds = state.commentIds.filter(id => id !== action.commentId);
+      const oldComments = state.comments.filter(
+        comment => comment.id !== action.commentId
+      );
+      return {
+        ...state,
+        commentIds: [...oldIds, action.commentId],
+        comments: [
+          ...oldComments,
+          {
+            comment: action.comment,
+            id: action.commentId,
+            todoIndex: action.todoIndex
+          }
+        ]
+      };
+    }
     default:
       return state;
   }
@@ -218,7 +245,7 @@ export function comments(state = initialCommentState, action) {
 export const getTotalCommentsForTodo = state => {
   let commentsForActiveTodo = [];
   if (
-    state.commentManagement.status === "requested" &&
+    state.commentManagement.status !== "" &&
     state.comments.comments.length > 0
   ) {
     commentsForActiveTodo = state.comments.comments.filter(

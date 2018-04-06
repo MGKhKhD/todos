@@ -13,6 +13,8 @@ export const SET_TODO_ERROR = "SET_TODO_ERROR";
 export const CANCEL_TODO_ERROR = "CANCEL_TODO_ERROR";
 export const SET_COMMENT_MODIFY = "SET_COMMENT_MODIFY";
 export const DELETE_A_COMMENT = "DELETE_A_COMMENT";
+export const MODIFY_COMMENT = "MODIFY_COMMENT";
+export const CANCEL_MODIFY_COMMENT = "CANCEL_MODIFY_COMMENT";
 export const filters_constants = {
   ALL: "ALL",
   ACTIVE: "ACTIVE",

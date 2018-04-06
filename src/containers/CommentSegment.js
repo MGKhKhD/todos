@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import CommentList from "./CommentList";
 import { connect } from "react-redux";
-import { addComment } from "../actions/todoActions";
+import {
+  addComment,
+  modifyComment,
+  cancelModifyComment
+} from "../actions/todoActions";
 import { getTotalCommentsForTodo } from "../reducers/todoReducers";
 
 class CommentSegment extends Component {
@@ -21,6 +25,18 @@ class CommentSegment extends Component {
     this.focusTextArea();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.commentManagement.status === "needModify") {
+      this.focusTextArea();
+      const oldComment = nextProps.comments.filter(
+        comment => comment.id === nextProps.commentManagement.commentId
+      );
+      this.setState({
+        comment: oldComment[0].comment
+      });
+    }
+  }
+
   render() {
     return (
       <div>
@@ -28,7 +44,16 @@ class CommentSegment extends Component {
           className="form-inline"
           onSubmit={e => {
             e.preventDefault();
-            this.props.addComment(this.state.comment.trim(), this.props.id);
+            if (this.props.commentManagement.status === "needModify") {
+              this.props.modifyComment(
+                this.state.comment.trim(),
+                this.props.id,
+                this.props.commentManagement.commentId
+              );
+              this.props.cancelModifyComment();
+            } else {
+              this.props.addComment(this.state.comment.trim(), this.props.id);
+            }
             this.setState({ comment: "" });
             e.target.value = "";
           }}
@@ -46,7 +71,11 @@ class CommentSegment extends Component {
           <input
             type="submit"
             className="btn btn-dark ml-1 mr-1 flout-right"
-            value="Add"
+            value={
+              this.props.commentManagement.status === "needModify"
+                ? "Modify"
+                : "Add"
+            }
           />
         </form>
         {!!this.props.comments && (
@@ -59,10 +88,16 @@ class CommentSegment extends Component {
 
 function mapStateToProps(state) {
   return {
-    comments: getTotalCommentsForTodo(state.todoState)
+    comments: getTotalCommentsForTodo(state.todoState),
+    commentManagement: state.todoState.commentManagement
   };
 }
 
-export default connect(mapStateToProps, { addComment }, null, {
-  areStatesEqual: (next, prev) => prev === next
-})(CommentSegment);
+export default connect(
+  mapStateToProps,
+  { addComment, modifyComment, cancelModifyComment },
+  null,
+  {
+    areStatesEqual: (next, prev) => prev === next
+  }
+)(CommentSegment);
