@@ -31,7 +31,7 @@ const TodosList = ({ todos, modify, deleteTodo, comment, archiveTodo }) => {
               archiveTodo(todo.id);
             }}
           >
-            Archive
+            archive
           </button>
           {comment.status !== "" &&
             comment.id === todo.id && <CommentSegment id={comment.id} />}
@@ -45,7 +45,7 @@ const TodosList = ({ todos, modify, deleteTodo, comment, archiveTodo }) => {
 function mapStateToProps(initState) {
   const state = initState.todoState;
   return {
-    todos: getTodos(state.todos.todos, state.filter),
+    todos: getTodos(state, state.filter),
     modify: state.modify,
     comment: state.commentManagement
   };

@@ -255,6 +255,6 @@ export const archiveTodo = id => (dispatch, getState) => {
     dispatch(makeArchiveCommentsOfTodo(id, commentsForTodo, archiveId));
 
   const todo = state.todos.todos.filter(todo => todo.id === id);
-  dispatch(makeArchiveTodo(todo, archiveId));
+  dispatch(makeArchiveTodo(todo[0], archiveId));
   dispatch(deleteTodo(id, "todosPage"));
 };

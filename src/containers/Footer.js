@@ -13,7 +13,8 @@ const colors = {
   ACTIVE: "red",
   COMPLETED: "green",
   TOGGLE_ALL: "grey",
-  DELETE_COMPLETED: "blue"
+  DELETE_COMPLETED: "blue",
+  ARCHIVES: "brown"
 };
 
 class CountingTagHeader extends Component {
@@ -33,7 +34,10 @@ class CountingTagHeader extends Component {
             className="float-right mr-4"
             style={{ color: this.props.color }}
           >
-            {value.x} todos left
+            {value.x} todos{" "}
+            {this.props.activeFilter === filters_constants.ARCHIVES
+              ? "archived"
+              : "left"}
           </span>
         )}
       </Motion>
@@ -76,7 +80,11 @@ class Footer extends Component {
     return (
       <p>
         {items}
-        <CountingTagHeader color={color} totalTodos={this.props.totalTodos} />
+        <CountingTagHeader
+          color={color}
+          totalTodos={this.props.totalTodos}
+          activeFilter={this.state.clicked}
+        />
       </p>
     );
   }

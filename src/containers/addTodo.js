@@ -86,8 +86,8 @@ function mapStateToProps(initState) {
   return {
     errorMessage: state.error,
     commentStatus: state.commentManagement.status,
-    allActiveTodos: getTodos(state.todos.todos, filters_constants.ACTIVE),
-    allCompletedTodos: getTodos(state.todos.todos, filters_constants.COMPLETED)
+    allActiveTodos: getTodos(state, filters_constants.ACTIVE),
+    allCompletedTodos: getTodos(state, filters_constants.COMPLETED)
   };
 }
 

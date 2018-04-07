@@ -108,27 +108,32 @@ export function filter(state = filters_constants.ALL, action) {
   }
 }
 
-export const getTodos = (state, filter) => {
+export const getTodos = (initState, filter) => {
+  let state = initState.todos;
   switch (filter) {
     case filters_constants.ALL:
-      return state;
+      return state.todos;
     case filters_constants.COMPLETED: {
-      let todos = state.filter(todo => todo.completed);
+      let todos = state.todos.filter(todo => todo.completed);
       return todos;
     }
     case filters_constants.ACTIVE: {
-      let todos = state.filter(todo => !todo.completed);
+      let todos = state.todos.filter(todo => !todo.completed);
       return todos;
     }
+    case filters_constants.ARCHIVES: {
+      return initState.archiveTodos.todos;
+    }
     default:
-      return state;
+      return state.todos;
   }
 };
 
-export const getTotalTodos = state => state.todos.todosIds.length;
+export const getTotalTodos = state =>
+  state.todos.todosIds.length + state.archiveTodos.todosIds.length;
 
-export const getTotalTodosByFilter = state => {
-  let { filter, todos } = state;
+export const getTotalTodosByFilter = initState => {
+  let { filter, todos } = initState;
   switch (filter) {
     case filters_constants.ALL:
       return todos.todosIds.length;
@@ -140,6 +145,8 @@ export const getTotalTodosByFilter = state => {
       const effectiveTodos = todos.todos.filter(todo => !todo.completed);
       return effectiveTodos.length;
     }
+    case filters_constants.ARCHIVES:
+      return initState.archiveTodos.todosIds.length;
     default:
       return todos.todosIds.length;
   }
@@ -268,10 +275,22 @@ export const error = (state = "", action) => {
   }
 };
 
-export function archiveTodos(state = [], action) {
+export function archiveTodos(state = { todosIds: [], todos: [] }, action) {
   switch (action.type) {
-    case ARCHIVE_TODO:
-      return [...state, { todo: action.todo, id: action.archiveId }];
+    case ARCHIVE_TODO: {
+      const { todo } = action;
+      return {
+        ...state,
+        todosIds: [...state.todosIds, action.archiveId],
+        todos: [
+          ...state.todos,
+          {
+            ...todo,
+            archiveId: action.archiveId
+          }
+        ]
+      };
+    }
     default:
       return state;
   }
