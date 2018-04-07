@@ -6,7 +6,8 @@ import {
   cancellCommentRequest,
   cancelErrorTodo,
   addTodo,
-  setErrorTodo
+  setErrorTodo,
+  setFilter
 } from "../actions/todoActions";
 
 import { filters_constants } from "../types";
@@ -47,6 +48,19 @@ class AddTodo extends Component {
     this.setState({ todo: "" });
   }
 
+  handleChange = e => {
+    if (this.props.commentStatus !== "") {
+      this.props.cancellCommentRequest();
+    }
+    if (this.props.filter === filters_constants.ARCHIVES) {
+      this.props.setFilter(filters_constants.ALL);
+    }
+    this.setState({ ...this.state, [e.target.name]: e.target.value });
+    if (this.props.errorMessage !== "") {
+      this.props.cancelErrorTodo();
+    }
+  };
+
   render() {
     return (
       <div>
@@ -61,15 +75,7 @@ class AddTodo extends Component {
             placeholder="Add todo"
             name="todo"
             value={this.state.todo}
-            onChange={e => {
-              if (this.props.commentStatus !== "") {
-                this.props.cancellCommentRequest();
-              }
-              this.setState({ ...this.state, [e.target.name]: e.target.value });
-              if (this.props.errorMessage !== "") {
-                this.props.cancelErrorTodo();
-              }
-            }}
+            onChange={this.handleChange}
           />
           <button type="submit" className="btn btn-primary mr-1">
             Add
@@ -87,7 +93,9 @@ function mapStateToProps(initState) {
     errorMessage: state.error,
     commentStatus: state.commentManagement.status,
     allActiveTodos: getTodos(state, filters_constants.ACTIVE),
-    allCompletedTodos: getTodos(state, filters_constants.COMPLETED)
+    allCompletedTodos: getTodos(state, filters_constants.COMPLETED),
+    allArchivedTodos: getTodos(state, filters_constants.ARCHIVES),
+    filter: state.filter
   };
 }
 
@@ -96,23 +104,41 @@ function mapDispatchToProps(dispatch) {
     cancellCommentRequest: () => dispatch(cancellCommentRequest()),
     cancelErrorTodo: () => dispatch(cancelErrorTodo()),
     addTodo: (todo, fromWhere) => dispatch(addTodo(todo, fromWhere)),
-    setErrorTodo: (error = "") => dispatch(setErrorTodo(error))
+    setErrorTodo: (error = "") => dispatch(setErrorTodo(error)),
+    setFilter: filter => dispatch(setFilter(filter))
   };
 }
 
 function mergeProps(stateProps, dispatchProps) {
-  const { allActiveTodos, allCompletedTodos, commentStatus } = stateProps;
+  const {
+    allActiveTodos,
+    allCompletedTodos,
+    allArchivedTodos,
+    commentStatus,
+    filter
+  } = stateProps;
   const dispatch = dispatchProps;
   return {
+    filter: filter,
     commentStatus: commentStatus,
     errorMessage: stateProps.errorMessage ? stateProps.errorMessage : "",
     cancellCommentRequest: () => dispatch.cancellCommentRequest(),
     cancelErrorTodo: () => dispatch.cancelErrorTodo(),
+    setFilter: filter => dispatch.setFilter(filter),
     addTodo: (todo, fromWhere) => {
+      let error;
+      if (todo === "") {
+        error = "Please add todo and then submit";
+        return dispatch.setErrorTodo(error);
+      }
+
       let active = allActiveTodos.filter(
         t => t.todo.toLowerCase() === todo.toLowerCase()
       );
       let completed = allCompletedTodos.filter(
+        t => t.todo.toLowerCase() === todo.toLowerCase()
+      );
+      let archived = allArchivedTodos.filter(
         t => t.todo.toLowerCase() === todo.toLowerCase()
       );
 
@@ -122,12 +148,8 @@ function mergeProps(stateProps, dispatchProps) {
         result = "active";
       } else if (completed && completed.length > 0) {
         result = "completed";
-      }
-
-      let error;
-      if (todo === "") {
-        error = "Please add todo and then submit";
-        return dispatch.setErrorTodo(error);
+      } else if (archived && archived.length > 0) {
+        result = "archived";
       }
 
       if (result === "active") {
@@ -138,6 +160,9 @@ function mergeProps(stateProps, dispatchProps) {
         return dispatch.setErrorTodo(error);
       } else if (result === "") {
         return dispatch.addTodo(todo, fromWhere);
+      } else if (result === "archived") {
+        error = `${todo} is archived. Reactivate todo instead.`;
+        return dispatch.setErrorTodo(error);
       }
     }
   };

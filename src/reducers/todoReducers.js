@@ -4,6 +4,7 @@ import {
   SET_FILTER,
   TODO_CLICK,
   TODO_DELETE,
+  ARCHIVE_TODO_DELETE,
   ARCHIVE_TODO,
   ARCHIVE_COMMENTS_OF_TODO,
   TODO_MODIFY_REQUEST,
@@ -19,7 +20,9 @@ import {
   DELETE_A_COMMENT,
   filters_constants,
   MODIFY_COMMENT,
-  CANCEL_MODIFY_COMMENT
+  CANCEL_MODIFY_COMMENT,
+  TOGGLE_ALL_TODOS,
+  DELETE_ALL_COMPLETED_TODOS
 } from "../types";
 
 import { initialTodoState, initialCommentState } from "../mockedData";
@@ -73,27 +76,25 @@ export function todos(state = initialTodoState, action) {
           }
         })
       };
-    case SET_FILTER:
-      if (action.filter === filters_constants.TOGGLE_ALL) {
-        let superStatus = state.todos.every(todo => todo.completed);
-        return {
-          ...state,
-          todos: state.todos.map(todo => {
-            return { ...todo, completed: !superStatus };
-          })
-        };
-      }
-    case SET_FILTER:
-      if (action.filter === filters_constants.DELETE_COMPLETED) {
-        let newTodos = state.todos.filter(todo => !todo.completed);
-        let newIds = [];
-        newTodos.forEach(todo => newIds.push(todo.id));
-        return {
-          ...state,
-          todosIds: newIds,
-          todos: newTodos
-        };
-      }
+    case TOGGLE_ALL_TODOS: {
+      let superStatus = state.todos.every(todo => todo.completed);
+      return {
+        ...state,
+        todos: state.todos.map(todo => {
+          return { ...todo, completed: !superStatus };
+        })
+      };
+    }
+    case DELETE_ALL_COMPLETED_TODOS: {
+      let newTodos = state.todos.filter(todo => !todo.completed);
+      let newIds = [];
+      newTodos.forEach(todo => newIds.push(todo.id));
+      return {
+        ...state,
+        todosIds: newIds,
+        todos: newTodos
+      };
+    }
     default:
       return state;
   }
@@ -291,6 +292,12 @@ export function archiveTodos(state = { todosIds: [], todos: [] }, action) {
         ]
       };
     }
+    case ARCHIVE_TODO_DELETE:
+      return {
+        ...state,
+        todosIds: state.todosIds.filter(index => index !== action.archiveId),
+        todos: state.todos.filter(todo => todo.archiveId !== action.archiveId)
+      };
     default:
       return state;
   }

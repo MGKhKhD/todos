@@ -56,27 +56,32 @@ class CommentSegment extends Component {
   render() {
     return (
       <div>
-        <form className="form-inline" onSubmit={this.handleSubmit}>
-          <textarea
-            ref={this.setTextAreaRef}
-            placeholder="add comment..."
-            name="comment"
-            onChange={e =>
-              this.setState({ ...this.state, [e.target.name]: e.target.value })
-            }
-            className="form-control col-10"
-            value={this.state.comment}
-          />
-          <input
-            type="submit"
-            className="btn btn-dark ml-1 mr-1 flout-right"
-            value={
-              this.props.commentManagement.status === "needModify"
-                ? "Modify"
-                : "Add"
-            }
-          />
-        </form>
+        {this.props.restricted && (
+          <form className="form-inline" onSubmit={this.handleSubmit}>
+            <textarea
+              ref={this.setTextAreaRef}
+              placeholder="add comment..."
+              name="comment"
+              onChange={e =>
+                this.setState({
+                  ...this.state,
+                  [e.target.name]: e.target.value
+                })
+              }
+              className="form-control col-10"
+              value={this.state.comment}
+            />
+            <input
+              type="submit"
+              className="btn btn-dark ml-1 mr-1 flout-right"
+              value={
+                this.props.commentManagement.status === "needModify"
+                  ? "Modify"
+                  : "Add"
+              }
+            />
+          </form>
+        )}
         {!!this.props.comments && (
           <CommentList comments={this.props.comments} />
         )}

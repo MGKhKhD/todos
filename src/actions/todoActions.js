@@ -3,6 +3,7 @@ import {
   SET_FILTER,
   TODO_CLICK,
   TODO_DELETE,
+  ARCHIVE_TODO_DELETE,
   ARCHIVE_TODO,
   TODO_MODIFY_REQUEST,
   TODO_MODIFY_CANCEL,
@@ -17,7 +18,11 @@ import {
   DELETE_A_COMMENT,
   MODIFY_COMMENT,
   CANCEL_MODIFY_COMMENT,
-  ARCHIVE_COMMENTS_OF_TODO
+  ARCHIVE_COMMENTS_OF_TODO,
+  filters_constants,
+  UNDO_ARCHIVED_TODO,
+  TOGGLE_ALL_TODOS,
+  DELETE_ALL_COMPLETED_TODOS
 } from "../types";
 
 import { unBookmarkArticle } from "./newsPagesActions";
@@ -25,19 +30,20 @@ import { unBookmarkArticle } from "./newsPagesActions";
 let commentIndex = 4; //based on mockdata
 let todoId = 2; //based on mock data
 
-export function makeAddTodo(text, fromWhere) {
+export function makeAddTodo(text, fromWhere, ...args) {
+  let completed;
+  if (args.length > 0) completed = args[0];
   return {
     type: ADD_TODO,
     text,
     id: todoId++,
-    completed: false,
-    archived: false,
+    completed: completed || false,
     fromWhere
   };
 }
 
 export const addTodo = (text, fromWhere) => (dispatch, getState) => {
-  if (getState().todoState.commentManagement.status === "requested") {
+  if (getState().todoState.commentManagement.status !== "") {
     dispatch(cancellCommentRequest());
   }
 
@@ -61,12 +67,33 @@ export function cancelErrorTodo() {
   };
 }
 
-export function setFilter(filter) {
+export function makeSetFilter(filter) {
   return {
     type: SET_FILTER,
     filter
   };
 }
+
+export function toggleAllTodos() {
+  return {
+    type: TOGGLE_ALL_TODOS
+  };
+}
+
+export function deleteAllCompleted() {
+  return {
+    type: DELETE_ALL_COMPLETED_TODOS
+  };
+}
+
+export const setFilter = filter => dispatch => {
+  dispatch(makeSetFilter(filter));
+  if (filter === filters_constants.TOGGLE_ALL) {
+    dispatch(toggleAllTodos());
+  } else if (filter === filters_constants.DELETE_COMPLETED) {
+    dispatch(deleteAllCompleted());
+  }
+};
 
 export function todoClick(id) {
   return {
@@ -82,47 +109,100 @@ export function makeDeleteTodo(id) {
   };
 }
 
-export const deleteTodo = (id, fromWhere) => (dispatch, getState) => {
-  if (getState().todoState.commentManagement.status === "requested") {
-    dispatch(cancellCommentRequest());
-  }
+export function makeDeleteArchiveTodo(archiveId) {
+  return {
+    type: ARCHIVE_TODO_DELETE,
+    archiveId
+  };
+}
 
-  if (getState().todoState.modify.status === "requested") {
-    const id = getState().todoState.modify.id;
-    dispatch(todoModifyCancel(id));
-  }
+export const deleteTodo = (id, fromWhere, archiveId) => (
+  dispatch,
+  getState
+) => {
+  if (!archiveId) {
+    // delete from on-progress lists of todos
+    // if todo is a bookmark article, in the case of unbookmark it will be deleted from
+    // newsPagesActions
+    if (getState().todoState.commentManagement.status !== "") {
+      dispatch(cancellCommentRequest());
+    }
 
-  const todos = getState().todoState.todos;
-  if (todos !== {}) {
-    if (fromWhere === "todosPage") {
-      const arr = todos.todos;
-      arr.forEach(todo => {
-        if (todo.id === id) {
-          const bookmarks = getState().externalState.bookmarks;
+    if (getState().todoState.modify.status === "requested") {
+      const id = getState().todoState.modify.id;
+      dispatch(todoModifyCancel(id));
+    }
 
-          if (bookmarks !== {}) {
-            for (let key in bookmarks) {
-              if (
-                bookmarks[key].bookmarked &&
-                bookmarks[key].article.title === todo.todo
-              ) {
-                dispatch(
-                  unBookmarkArticle(
-                    bookmarks[key].id,
-                    bookmarks[key].article,
-                    fromWhere
-                  )
-                );
+    const todos = getState().todoState.todos;
+    if (todos !== {}) {
+      if (fromWhere === "todosPage") {
+        const arr = todos.todos;
+        arr.forEach(todo => {
+          if (todo.id === id) {
+            const bookmarks = getState().externalState.bookmarks;
+
+            if (bookmarks !== {}) {
+              for (let key in bookmarks) {
+                if (
+                  bookmarks[key].bookmarked &&
+                  bookmarks[key].article.title === todo.todo
+                ) {
+                  dispatch(
+                    unBookmarkArticle(
+                      bookmarks[key].id,
+                      bookmarks[key].article,
+                      fromWhere
+                    )
+                  );
+                }
               }
             }
+            dispatch(makeDeleteTodo(id));
+            dispatch(deleteCommentsOfTodo(id));
           }
-          dispatch(makeDeleteTodo(id));
-          dispatch(deleteCommentsOfTodo(id));
-        }
-      });
-    } else {
-      dispatch(makeDeleteTodo(id));
-      dispatch(deleteCommentsOfTodo(id));
+        });
+      } else {
+        dispatch(makeDeleteTodo(id));
+        dispatch(deleteCommentsOfTodo(id));
+      }
+    }
+  } else {
+    // delete from archived todos
+    if (getState().todoState.commentManagement.status === "requested") {
+      dispatch(cancellCommentRequest());
+    }
+    const todos = getState().todoState.archiveTodos;
+    if (todos !== {}) {
+      if (fromWhere === "todosPage") {
+        const arr = todos.todos;
+        arr.forEach(todo => {
+          if (todo.id === id) {
+            const bookmarks = getState().externalState.bookmarks;
+
+            if (bookmarks !== {}) {
+              for (let key in bookmarks) {
+                if (
+                  bookmarks[key].bookmarked &&
+                  bookmarks[key].article.title === todo.todo
+                ) {
+                  dispatch(
+                    unBookmarkArticle(
+                      bookmarks[key].id,
+                      bookmarks[key].article,
+                      fromWhere
+                    )
+                  );
+                }
+              }
+            }
+            dispatch(makeDeleteArchiveTodo(archiveId));
+            //dispatch(deleteCommentsOfTodo(id));
+          }
+        });
+      } else {
+        dispatch(makeDeleteArchiveTodo(archiveId));
+        //dispatch(deleteCommentsOfTodo(id));
+      }
     }
   }
 };
@@ -240,6 +320,7 @@ export function makeArchiveCommentsOfTodo(id, archivedComments, archiveId) {
 }
 
 let archiveId = 0;
+
 export const archiveTodo = id => (dispatch, getState) => {
   archiveId++;
   const state = getState().todoState;
@@ -257,4 +338,14 @@ export const archiveTodo = id => (dispatch, getState) => {
   const todo = state.todos.todos.filter(todo => todo.id === id);
   dispatch(makeArchiveTodo(todo[0], archiveId));
   dispatch(deleteTodo(id, "todosPage"));
+};
+
+export const reactivateTodo = ({
+  todo,
+  fromWhere,
+  completed,
+  archiveId
+}) => dispatch => {
+  dispatch(makeDeleteArchiveTodo(archiveId));
+  dispatch(makeAddTodo(todo, fromWhere, completed));
 };
