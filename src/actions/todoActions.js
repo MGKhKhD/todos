@@ -20,12 +20,12 @@ import {
   CANCEL_MODIFY_COMMENT,
   ARCHIVE_COMMENTS_OF_TODO,
   filters_constants,
-  UNDO_ARCHIVED_TODO,
   TOGGLE_ALL_TODOS,
   DELETE_ALL_COMPLETED_TODOS
 } from "../types";
 
 import { unBookmarkArticle } from "./newsPagesActions";
+import { getAllTodosByFilter } from "../selectors/todoSelectors";
 
 let commentIndex = 4; //based on mockdata
 let todoId = 2; //based on mock data
@@ -42,24 +42,62 @@ export function makeAddTodo(text, fromWhere, ...args) {
   };
 }
 
-export const addTodo = (text, fromWhere) => (dispatch, getState) => {
-  if (getState().todoState.commentManagement.status !== "") {
-    dispatch(cancellCommentRequest());
-  }
-
-  if (getState().todoState.modify.status === "requested") {
-    const id = getState().todoState.modify.id;
-    dispatch(todoModifyCancel(id));
-  }
-  dispatch(makeAddTodo(text, fromWhere));
-};
-
 export function setErrorTodo(error) {
   return {
     type: SET_TODO_ERROR,
     error
   };
 }
+
+export const addTodo = (text, fromWhere) => (dispatch, getState) => {
+  let initState = getState().todoState;
+
+  if (initState.commentManagement.status !== "") {
+    dispatch(cancellCommentRequest());
+  }
+
+  if (initState.modify.status === "requested") {
+    const id = initState.modify.id;
+    dispatch(todoModifyCancel(id));
+  }
+
+  let allActiveTodos = getAllTodosByFilter(
+    initState,
+    filters_constants.ACTIVE
+  ).filter(t => t.todo.toLowerCase() === text.toLowerCase());
+  let allCompletedTodos = getAllTodosByFilter(
+    initState,
+    filters_constants.COMPLETED
+  ).filter(t => t.todo.toLowerCase() === text.toLowerCase());
+  let allArchivedTodos = getAllTodosByFilter(
+    initState,
+    filters_constants.ARCHIVES
+  ).filter(t => t.todo.toLowerCase() === text.toLowerCase());
+
+  let result = "";
+
+  if (allActiveTodos && allActiveTodos.length > 0) {
+    result = "active";
+  } else if (allCompletedTodos && allCompletedTodos.length > 0) {
+    result = "completed";
+  } else if (allArchivedTodos && allArchivedTodos.length > 0) {
+    result = "archived";
+  }
+
+  let error;
+  if (result === "active") {
+    error = `${text} is already in active list!`;
+    dispatch(setErrorTodo(error));
+  } else if (result === "completed") {
+    error = `${text} is already in completed list`;
+    dispatch(setErrorTodo(error));
+  } else if (result === "archived") {
+    error = `${text} is archived. Reactivate todo instead.`;
+    dispatch(setErrorTodo(error));
+  } else {
+    dispatch(makeAddTodo(text, fromWhere));
+  }
+};
 
 export function cancelErrorTodo() {
   return {

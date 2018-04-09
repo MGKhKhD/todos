@@ -1,8 +1,5 @@
 import faker from "faker";
 
-let TODO_COUNT = 2;
-let COMMENT_COUNT = 4;
-
 let todosIds = [0, 1];
 let todos = [];
 

@@ -69,3 +69,21 @@ export const getTodos = createSelector(
     }
   }
 );
+
+export const getAllTodosByFilter = ({ todos, archiveTodos }, filter) => {
+  switch (filter) {
+    case filters_constants.ALL:
+      return todos.todos;
+    case filters_constants.COMPLETED: {
+      return todos.todos.filter(todo => todo.completed);
+    }
+    case filters_constants.ACTIVE: {
+      return todos.todos.filter(todo => !todo.completed);
+    }
+    case filters_constants.ARCHIVES: {
+      return archiveTodos.todos;
+    }
+    default:
+      return todos.todos;
+  }
+};
