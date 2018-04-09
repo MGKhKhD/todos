@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getTotalTodos } from "../reducers/todoReducers";
+import { getTotalTodos } from "../selectors/todoSelectors";
 import { cancelExternalPageOption } from "../actions/externalPagesActions";
 
 import TodoHeader from "../components/TodoHeader";

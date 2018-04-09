@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { getTodos } from "../reducers/todoReducers";
+import { getTodos } from "../selectors/todoSelectors";
 import {
   cancellCommentRequest,
   cancelErrorTodo,
@@ -92,9 +92,9 @@ function mapStateToProps(initState) {
   return {
     errorMessage: state.error,
     commentStatus: state.commentManagement.status,
-    allActiveTodos: getTodos(state, filters_constants.ACTIVE),
-    allCompletedTodos: getTodos(state, filters_constants.COMPLETED),
-    allArchivedTodos: getTodos(state, filters_constants.ARCHIVES),
+    allActiveTodos: getTodos(initState, filters_constants.ACTIVE),
+    allCompletedTodos: getTodos(initState, filters_constants.COMPLETED),
+    allArchivedTodos: getTodos(initState, filters_constants.ARCHIVES),
     filter: state.filter
   };
 }

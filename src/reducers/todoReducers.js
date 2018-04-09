@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+
 import {
   ADD_TODO,
   SET_FILTER,
@@ -109,50 +110,6 @@ export function filter(state = filters_constants.ALL, action) {
   }
 }
 
-export const getTodos = (initState, filter) => {
-  let state = initState.todos;
-  switch (filter) {
-    case filters_constants.ALL:
-      return state.todos;
-    case filters_constants.COMPLETED: {
-      let todos = state.todos.filter(todo => todo.completed);
-      return todos;
-    }
-    case filters_constants.ACTIVE: {
-      let todos = state.todos.filter(todo => !todo.completed);
-      return todos;
-    }
-    case filters_constants.ARCHIVES: {
-      return initState.archiveTodos.todos;
-    }
-    default:
-      return state.todos;
-  }
-};
-
-export const getTotalTodos = state =>
-  state.todos.todosIds.length + state.archiveTodos.todosIds.length;
-
-export const getTotalTodosByFilter = initState => {
-  let { filter, todos } = initState;
-  switch (filter) {
-    case filters_constants.ALL:
-      return todos.todosIds.length;
-    case filters_constants.COMPLETED: {
-      const effectiveTodos = todos.todos.filter(todo => todo.completed);
-      return effectiveTodos.length;
-    }
-    case filters_constants.ACTIVE: {
-      const effectiveTodos = todos.todos.filter(todo => !todo.completed);
-      return effectiveTodos.length;
-    }
-    case filters_constants.ARCHIVES:
-      return initState.archiveTodos.todosIds.length;
-    default:
-      return todos.todosIds.length;
-  }
-};
-
 export function modify(state = { status: "", id: -1 }, action) {
   switch (action.type) {
     case TODO_MODIFY_REQUEST:
@@ -251,19 +208,6 @@ export function comments(state = initialCommentState, action) {
       return state;
   }
 }
-
-export const getTotalCommentsForTodo = state => {
-  let commentsForActiveTodo = [];
-  if (
-    state.commentManagement.status !== "" &&
-    state.comments.comments.length > 0
-  ) {
-    commentsForActiveTodo = state.comments.comments.filter(
-      comment => comment.todoIndex === state.commentManagement.id
-    );
-  }
-  return commentsForActiveTodo;
-};
 
 export const error = (state = "", action) => {
   switch (action.type) {

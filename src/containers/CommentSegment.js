@@ -6,7 +6,8 @@ import {
   modifyComment,
   cancelModifyComment
 } from "../actions/todoActions";
-import { getTotalCommentsForTodo } from "../reducers/todoReducers";
+
+import { getTotalCommentsForTodo } from "../selectors/todoSelectors";
 
 class CommentSegment extends Component {
   constructor(props) {

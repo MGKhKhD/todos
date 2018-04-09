@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getTodos } from "../reducers/todoReducers";
+import { getTodos } from "../selectors/todoSelectors";
 import {
   deleteTodo,
   archiveTodo,
@@ -63,7 +63,7 @@ const TodosList = ({
 function mapStateToProps(initState) {
   const state = initState.todoState;
   return {
-    todos: getTodos(state, state.filter),
+    todos: getTodos(initState),
     modify: state.modify,
     comment: state.commentManagement
   };

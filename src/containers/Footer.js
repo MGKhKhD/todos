@@ -4,7 +4,7 @@ import { Motion, spring, presets } from "react-motion";
 import { filters_constants } from "../types";
 import { connect } from "react-redux";
 import { setFilter } from "../actions/todoActions";
-import { getTotalTodosByFilter } from "../reducers/todoReducers";
+import { getTotalTodosByFilter } from "../selectors/todoSelectors";
 
 import FotterItem from "../components/FotterItem";
 
