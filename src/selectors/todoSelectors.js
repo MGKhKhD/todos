@@ -2,6 +2,9 @@ import { createSelector } from "reselect";
 
 import { filters_constants } from "../types";
 
+export const getSingleTodo = ({ todos }, todoId) =>
+  todos.filter(({ id }) => id === todoId);
+
 export const getTotalTodosByFilter = createSelector(
   [state => state.todos, state => state.archiveTodos, state => state.filter],
   (todos, archive, filter) => {

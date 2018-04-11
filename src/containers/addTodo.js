@@ -1,6 +1,5 @@
 import { connect } from "react-redux";
 
-import { getTodos } from "../selectors/todoSelectors";
 import {
   cancellCommentRequest,
   cancelErrorTodo,
@@ -8,7 +7,6 @@ import {
   setErrorTodo,
   setFilter
 } from "../actions/todoActions";
-import { filters_constants } from "../types";
 
 import AddTodo from "../components/AddTodo";
 

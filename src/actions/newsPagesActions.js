@@ -86,12 +86,19 @@ export const unBookmarkArticle = (id, article, fromWhere) => (
   dispatch(unBookmark(id, article));
 
   if (fromWhere === "newsPage") {
-    const todos = getState().todoState.todos;
+    const state = getState().todoState;
+    const { todos, archiveTodos } = state;
     if (todos !== {}) {
-      const arr = todos.todos;
-      arr.forEach(todo => {
+      todos.todos.forEach(todo => {
         if (todo.todo === article.title) {
           dispatch(deleteTodo(todo.id, fromWhere));
+        }
+      });
+    }
+    if (archiveTodos !== {}) {
+      archiveTodos.todos.forEach(todo => {
+        if (todo.todo === article.title) {
+          dispatch(deleteTodo(todo.id, fromWhere, todo.archiveId));
         }
       });
     }

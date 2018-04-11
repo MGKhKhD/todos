@@ -31,6 +31,8 @@ export const filters_constants = {
   ARCHIVES: "ARCHIVES"
 };
 
+export const OPENED_TODO_BOARD = "OPENED_TODO_BOARD";
+
 export const SET_EXTERNAL_PAGES_LINK = "SET_EXTERNAL_PAGES_LINK";
 export const CANCEL_EXTERNAL_PAGES_LINK = "CANCEL_EXTERNAL_PAGES_LINK";
 export const SET_NEWS_COUNTRY = "SET_NEWS_COUNTRY";

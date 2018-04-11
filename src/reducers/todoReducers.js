@@ -24,7 +24,8 @@ import {
   CANCEL_MODIFY_COMMENT,
   TOGGLE_ALL_TODOS,
   DELETE_ALL_COMPLETED_TODOS,
-  DELETE_ARCHIVE_COMMENTS_OF_TODO
+  DELETE_ARCHIVE_COMMENTS_OF_TODO,
+  OPENED_TODO_BOARD
 } from "../types";
 
 import { initialTodoState, initialCommentState } from "../mockedData";
@@ -277,6 +278,15 @@ export function archiveComments(
   }
 }
 
+export function todoBoard(state = { todoId: -1 }, action) {
+  switch (action.type) {
+    case OPENED_TODO_BOARD:
+      return { todoId: action.todoId };
+    default:
+      return state;
+  }
+}
+
 const todoReducers = combineReducers({
   todos,
   filter,
@@ -285,7 +295,8 @@ const todoReducers = combineReducers({
   comments,
   error,
   archiveTodos,
-  archiveComments
+  archiveComments,
+  todoBoard
 });
 
 export default todoReducers;

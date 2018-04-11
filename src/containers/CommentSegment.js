@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import {
   addComment,
   modifyComment,
-  cancelModifyComment
+  cancelModifyComment,
+  openTodoBoard
 } from "../actions/todoActions";
 
 import { getTotalCommentsForTodo } from "../selectors/todoSelectors";
@@ -69,7 +70,7 @@ class CommentSegment extends Component {
                   [e.target.name]: e.target.value
                 })
               }
-              className="form-control col-10"
+              className="form-control col-8"
               value={this.state.comment}
             />
             <input
@@ -81,6 +82,13 @@ class CommentSegment extends Component {
                   : "Add"
               }
             />
+            <button
+              type="button"
+              className="btn btn-danger ml-1 mr-1 flout-right"
+              onClick={() => this.props.openTodoBoard(this.props.id)}
+            >
+              Todo board
+            </button>
           </form>
         )}
         {!!this.props.comments && (
@@ -103,7 +111,7 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  { addComment, modifyComment, cancelModifyComment },
+  { addComment, modifyComment, cancelModifyComment, openTodoBoard },
   null,
   {
     areStatesEqual: (next, prev) => prev === next

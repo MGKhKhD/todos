@@ -22,10 +22,11 @@ import {
   filters_constants,
   TOGGLE_ALL_TODOS,
   DELETE_ALL_COMPLETED_TODOS,
-  DELETE_ARCHIVE_COMMENTS_OF_TODO
+  DELETE_ARCHIVE_COMMENTS_OF_TODO,
+  OPENED_TODO_BOARD
 } from "../types";
 
-import { unBookmarkArticle } from "./newsPagesActions";
+import { unBookmarkArticle, bookmarkArticle } from "./newsPagesActions";
 import { getAllTodosByFilter } from "../selectors/todoSelectors";
 
 let commentIndex = 4; //based on mockdata
@@ -155,6 +156,27 @@ export function makeDeleteArchiveTodo(archiveId) {
   };
 }
 
+export const makeUnbookmarkArticle = (
+  fromWhere,
+  todo,
+  dispatch,
+  { bookmarks }
+) => {
+  if (bookmarks !== {}) {
+    for (let key in bookmarks) {
+      if (bookmarks[key].bookmarked && bookmarks[key].article.title === todo) {
+        dispatch(
+          unBookmarkArticle(
+            bookmarks[key].id,
+            bookmarks[key].article,
+            fromWhere
+          )
+        );
+      }
+    }
+  }
+};
+
 export const deleteTodo = (id, fromWhere, archiveId) => (
   dispatch,
   getState
@@ -178,24 +200,12 @@ export const deleteTodo = (id, fromWhere, archiveId) => (
         const arr = todos.todos;
         arr.forEach(todo => {
           if (todo.id === id) {
-            const bookmarks = getState().externalState.bookmarks;
-
-            if (bookmarks !== {}) {
-              for (let key in bookmarks) {
-                if (
-                  bookmarks[key].bookmarked &&
-                  bookmarks[key].article.title === todo.todo
-                ) {
-                  dispatch(
-                    unBookmarkArticle(
-                      bookmarks[key].id,
-                      bookmarks[key].article,
-                      fromWhere
-                    )
-                  );
-                }
-              }
-            }
+            makeUnbookmarkArticle(
+              fromWhere,
+              todo.todo,
+              dispatch,
+              getState().externalState
+            );
             dispatch(makeDeleteTodo(id));
             dispatch(deleteCommentsOfTodo(id));
           }
@@ -216,31 +226,19 @@ export const deleteTodo = (id, fromWhere, archiveId) => (
         const arr = todos.todos;
         arr.forEach(todo => {
           if (todo.id === id) {
-            const bookmarks = getState().externalState.bookmarks;
-
-            if (bookmarks !== {}) {
-              for (let key in bookmarks) {
-                if (
-                  bookmarks[key].bookmarked &&
-                  bookmarks[key].article.title === todo.todo
-                ) {
-                  dispatch(
-                    unBookmarkArticle(
-                      bookmarks[key].id,
-                      bookmarks[key].article,
-                      fromWhere
-                    )
-                  );
-                }
-              }
-            }
+            makeUnbookmarkArticle(
+              fromWhere,
+              todo.todo,
+              dispatch,
+              getState().externalState
+            );
             dispatch(makeDeleteArchiveTodo(archiveId));
-            //dispatch(deleteCommentsOfTodo(id));
+            dispatch(deleteArchiveCommentsOfTodo(archiveId));
           }
         });
       } else {
         dispatch(makeDeleteArchiveTodo(archiveId));
-        //dispatch(deleteCommentsOfTodo(id));
+        dispatch(deleteArchiveCommentsOfTodo(archiveId));
       }
     }
   }
@@ -358,25 +356,28 @@ export function makeArchiveCommentsOfTodo(id, archivedComments, archiveId) {
   };
 }
 
+const findCommentsForTodo = (id, comments) => {
+  let commentsForTodo = [];
+  if (comments.length > 0) {
+    commentsForTodo = comments.filter(comment => comment.todoIndex === id);
+  }
+  return commentsForTodo;
+};
+
 let archiveId = 0;
 
 export const archiveTodo = id => (dispatch, getState) => {
   archiveId++;
   const state = getState().todoState;
 
-  let commentsForTodo = [];
-  if (state.comments.comments.length > 0) {
-    commentsForTodo = state.comments.comments.filter(
-      comment => comment.todoIndex === id
-    );
-  }
+  const commentsForTodo = findCommentsForTodo(id, state.comments.comments);
 
   if (commentsForTodo.length > 0)
     dispatch(makeArchiveCommentsOfTodo(id, commentsForTodo, archiveId));
 
   const todo = state.todos.todos.filter(todo => todo.id === id);
   dispatch(makeArchiveTodo(todo[0], archiveId));
-  dispatch(deleteTodo(id, "todosPage"));
+  dispatch(deleteTodo(id, todo[0].fromWhere));
 };
 
 export const reactivateTodo = ({ todo, fromWhere, completed, archiveId }) => (
@@ -388,14 +389,11 @@ export const reactivateTodo = ({ todo, fromWhere, completed, archiveId }) => (
     item => item.archiveId === archiveId
   );
   const todoId = archiveTodo[0].id;
-  console.log("old", todoId);
 
-  let commentsForTodo = [];
-  if (state.archiveComments.commentIds.length > 0) {
-    commentsForTodo = state.archiveComments.comments.filter(
-      comment => comment.todoIndex === todoId
-    );
-  }
+  const commentsForTodo = findCommentsForTodo(
+    todoId,
+    state.archiveComments.comments
+  );
 
   dispatch(makeDeleteArchiveTodo(archiveId));
   dispatch(makeAddTodo(todo, fromWhere, completed));
@@ -416,5 +414,12 @@ export function deleteArchiveCommentsOfTodo(archiveId) {
   return {
     type: DELETE_ARCHIVE_COMMENTS_OF_TODO,
     archiveId
+  };
+}
+
+export function openTodoBoard(todoId) {
+  return {
+    type: OPENED_TODO_BOARD,
+    todoId
   };
 }
