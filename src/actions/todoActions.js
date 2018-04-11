@@ -21,7 +21,8 @@ import {
   ARCHIVE_COMMENTS_OF_TODO,
   filters_constants,
   TOGGLE_ALL_TODOS,
-  DELETE_ALL_COMPLETED_TODOS
+  DELETE_ALL_COMPLETED_TODOS,
+  DELETE_ARCHIVE_COMMENTS_OF_TODO
 } from "../types";
 
 import { unBookmarkArticle } from "./newsPagesActions";
@@ -378,12 +379,42 @@ export const archiveTodo = id => (dispatch, getState) => {
   dispatch(deleteTodo(id, "todosPage"));
 };
 
-export const reactivateTodo = ({
-  todo,
-  fromWhere,
-  completed,
-  archiveId
-}) => dispatch => {
+export const reactivateTodo = ({ todo, fromWhere, completed, archiveId }) => (
+  dispatch,
+  getState
+) => {
+  const state = getState().todoState;
+  const archiveTodo = state.archiveTodos.todos.filter(
+    item => item.archiveId === archiveId
+  );
+  const todoId = archiveTodo[0].id;
+  console.log("old", todoId);
+
+  let commentsForTodo = [];
+  if (state.archiveComments.commentIds.length > 0) {
+    commentsForTodo = state.archiveComments.comments.filter(
+      comment => comment.todoIndex === todoId
+    );
+  }
+
   dispatch(makeDeleteArchiveTodo(archiveId));
   dispatch(makeAddTodo(todo, fromWhere, completed));
+
+  const newState = getState().todoState;
+  const newTodo = newState.todos.todos.filter(item => item.todo === todo);
+  const newTodoId = newTodo[0].id;
+
+  if (commentsForTodo.length > 0) {
+    commentsForTodo.forEach(comment => {
+      dispatch(addComment(comment.comment, newTodoId));
+    });
+    dispatch(deleteArchiveCommentsOfTodo(archiveId));
+  }
 };
+
+export function deleteArchiveCommentsOfTodo(archiveId) {
+  return {
+    type: DELETE_ARCHIVE_COMMENTS_OF_TODO,
+    archiveId
+  };
+}

@@ -23,7 +23,8 @@ import {
   MODIFY_COMMENT,
   CANCEL_MODIFY_COMMENT,
   TOGGLE_ALL_TODOS,
-  DELETE_ALL_COMPLETED_TODOS
+  DELETE_ALL_COMPLETED_TODOS,
+  DELETE_ARCHIVE_COMMENTS_OF_TODO
 } from "../types";
 
 import { initialTodoState, initialCommentState } from "../mockedData";
@@ -247,17 +248,30 @@ export function archiveTodos(state = { todosIds: [], todos: [] }, action) {
   }
 }
 
-export function archiveComments(state = [], action) {
+export function archiveComments(
+  state = { commentIds: [], comments: [] },
+  action
+) {
   switch (action.type) {
-    case ARCHIVE_COMMENTS_OF_TODO:
-      return [
+    case ARCHIVE_COMMENTS_OF_TODO: {
+      let archivedComments = action.archivedComments.map(comment => ({
+        ...comment,
+        archiveId: action.archiveId
+      }));
+      return {
         ...state,
-        {
-          todoId: action.todoId,
-          archivedComments: action.archivedComments,
-          archiveId: action.archiveId
-        }
-      ];
+        commentIds: [...state.commentIds, action.archiveId],
+        comments: [...state.comments, ...archivedComments]
+      };
+    }
+    case DELETE_ARCHIVE_COMMENTS_OF_TODO: {
+      return {
+        commentIds: state.commentIds.filter(idx => idx !== action.archiveId),
+        comments: state.comments.filter(
+          comment => comment.archiveId !== action.archiveId
+        )
+      };
+    }
     default:
       return state;
   }

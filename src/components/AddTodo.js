@@ -50,11 +50,23 @@ class AddTodo extends Component {
     }
   };
 
+  handleClick = e => {
+    if (this.props.errorMessage !== "") {
+      this.props.cancelErrorTodo();
+      this.props.setFilter(filters_constants.ALL);
+    }
+  };
+
   render() {
     return (
       <div>
         {this.props.errorMessage !== "" && (
-          <Message alert="danger" message={this.props.errorMessage} tag="h3" />
+          <Message
+            alert="danger"
+            message={this.props.errorMessage}
+            tag="h4"
+            onClick={this.handleClick}
+          />
         )}
         <form className="form-inline " onSubmit={this.handleSubmit}>
           <input

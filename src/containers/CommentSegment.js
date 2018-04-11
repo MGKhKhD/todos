@@ -84,7 +84,10 @@ class CommentSegment extends Component {
           </form>
         )}
         {!!this.props.comments && (
-          <CommentList comments={this.props.comments} />
+          <CommentList
+            comments={this.props.comments}
+            restricted={this.props.restricted}
+          />
         )}
       </div>
     );

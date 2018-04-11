@@ -71,12 +71,13 @@ class CommentList extends Component {
           >
             {comment.comment}
           </span>
-          {this.state.clickedComment === comment.id && (
-            <React.Fragment>
-              <br />
-              {filterItems}
-            </React.Fragment>
-          )}
+          {this.state.clickedComment === comment.id &&
+            this.props.restricted && (
+              <React.Fragment>
+                <br />
+                {filterItems}
+              </React.Fragment>
+            )}
         </li>
       );
     });
