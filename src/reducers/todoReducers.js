@@ -26,7 +26,8 @@ import {
   DELETE_ALL_COMPLETED_TODOS,
   DELETE_ARCHIVE_COMMENTS_OF_TODO,
   OPENED_TODO_BOARD,
-  MOVE_COMMENT
+  MOVE_COMMENT,
+  ADD_TO_BLOCK_LIST_OF_TODO
 } from "../types";
 
 import { initialTodoState, initialCommentState } from "../mockedData";
@@ -298,6 +299,20 @@ export function todoBoard(state = { todoId: -1 }, action) {
   }
 }
 
+export function blockingInfo(state = {}, action) {
+  switch (action.type) {
+    case ADD_TO_BLOCK_LIST_OF_TODO:
+      return {
+        ...state,
+        [`${action.idOfBlocking}`]: !state[`${action.idOfBlocking}`]
+          ? [action.idOfBlockedBy]
+          : [...state[`${action.idOfBlocking}`], action.idOfBlockedBy]
+      };
+    default:
+      return state;
+  }
+}
+
 const todoReducers = combineReducers({
   todos,
   filter,
@@ -307,7 +322,8 @@ const todoReducers = combineReducers({
   error,
   archiveTodos,
   archiveComments,
-  todoBoard
+  todoBoard,
+  blockingInfo
 });
 
 export default todoReducers;

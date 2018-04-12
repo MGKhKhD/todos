@@ -32,6 +32,8 @@ export const filters_constants = {
   ARCHIVES: "ARCHIVES"
 };
 
+export const ADD_TO_BLOCK_LIST_OF_TODO = "ADD_TO_BLOCK_LIST_OF_TODO";
+
 export const OPENED_TODO_BOARD = "OPENED_TODO_BOARD";
 
 export const SET_EXTERNAL_PAGES_LINK = "SET_EXTERNAL_PAGES_LINK";

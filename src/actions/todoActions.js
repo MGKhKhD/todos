@@ -24,7 +24,8 @@ import {
   DELETE_ALL_COMPLETED_TODOS,
   DELETE_ARCHIVE_COMMENTS_OF_TODO,
   OPENED_TODO_BOARD,
-  MOVE_COMMENT
+  MOVE_COMMENT,
+  ADD_TO_BLOCK_LIST_OF_TODO
 } from "../types";
 
 import { unBookmarkArticle } from "./newsPagesActions";
@@ -425,5 +426,13 @@ export function openTodoBoard(todoId) {
   return {
     type: OPENED_TODO_BOARD,
     todoId
+  };
+}
+
+export function todoBlocksIt(idOfBlocking, idOfBlockedBy) {
+  return {
+    type: ADD_TO_BLOCK_LIST_OF_TODO,
+    idOfBlocking,
+    idOfBlockedBy
   };
 }
