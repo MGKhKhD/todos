@@ -5,10 +5,10 @@ import RedditSortOptions from "../../components/RedditSortOptions";
 
 import { getNewsTitleOfPosts } from "../../reducers/socialPagesReducers";
 import { paginateOptions } from "../../types";
-import Dropdown from "../../components/Dropdown";
+import BasicComponents from "../../components/BasicComponents";
 
 const RedditPaginateOptions = ({ paginate, choosePaginate }) => (
-  <Dropdown
+  <BasicComponents.Dropdown
     options={paginateOptions}
     name={paginate}
     onClick={option => choosePaginate(option)}

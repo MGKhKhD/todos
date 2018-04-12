@@ -22,7 +22,10 @@ class CommentTag extends Component {
         className="btn btn-link float-left"
         onClick={() => this.handleClick()}
       >
-        #
+        {this.props.comment.status === "requested" &&
+        this.props.commentManagement.id === this.props.id
+          ? "V"
+          : "^"}
       </button>
     );
   }

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { filters_constants } from "../types";
 
 import ExternalPagesHeader from "../containers/externalPages/ExternalPagesHeader";
-import Message from "./Message";
+import BasicComponents from "./BasicComponents";
 
 class AddTodo extends Component {
   constructor(props) {
@@ -51,6 +51,7 @@ class AddTodo extends Component {
   };
 
   handleClick = e => {
+    e.preventDefault();
     if (this.props.errorMessage !== "") {
       this.props.cancelErrorTodo();
       this.props.setFilter(filters_constants.ALL);
@@ -61,12 +62,15 @@ class AddTodo extends Component {
     return (
       <div>
         {this.props.errorMessage !== "" && (
-          <Message
+          <BasicComponents.Message
             alert="danger"
             message={this.props.errorMessage}
             tag="h4"
-            onClick={this.handleClick}
-          />
+          >
+            <a className="float-right" href="" onClick={this.handleClick}>
+              X
+            </a>
+          </BasicComponents.Message>
         )}
         <form className="form-inline " onSubmit={this.handleSubmit}>
           <input

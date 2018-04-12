@@ -48,7 +48,7 @@ class SearchBooks extends Component {
             {",  Author: "}
             {option.author.name}
           </p>
-          <img src={option.smallImage} />
+          <img src={option.smallImage} alt="small cover" />
         </li>
       )
     );

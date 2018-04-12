@@ -23,10 +23,11 @@ import {
   TOGGLE_ALL_TODOS,
   DELETE_ALL_COMPLETED_TODOS,
   DELETE_ARCHIVE_COMMENTS_OF_TODO,
-  OPENED_TODO_BOARD
+  OPENED_TODO_BOARD,
+  MOVE_COMMENT
 } from "../types";
 
-import { unBookmarkArticle, bookmarkArticle } from "./newsPagesActions";
+import { unBookmarkArticle } from "./newsPagesActions";
 import { getAllTodosByFilter } from "../selectors/todoSelectors";
 
 let commentIndex = 4; //based on mockdata
@@ -156,12 +157,7 @@ export function makeDeleteArchiveTodo(archiveId) {
   };
 }
 
-export const makeUnbookmarkArticle = (
-  fromWhere,
-  todo,
-  dispatch,
-  { bookmarks }
-) => {
+const makeUnbookmarkArticle = (fromWhere, todo, dispatch, { bookmarks }) => {
   if (bookmarks !== {}) {
     for (let key in bookmarks) {
       if (bookmarks[key].bookmarked && bookmarks[key].article.title === todo) {
@@ -300,6 +296,14 @@ export function addComment(comment, id) {
     comment,
     id: commentIndex++,
     todoIndex: id
+  };
+}
+
+export function moveComment(commentId, todoId) {
+  return {
+    type: MOVE_COMMENT,
+    commentId,
+    todoId
   };
 }
 

@@ -1,13 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import Dropdown from "../../components/Dropdown";
+import BasicComponents from "../../components/BasicComponents";
 import { setNewsCountry } from "../../actions/newsPagesActions";
 import { countryOptions } from "../../types";
 
 const FooterNewsCountry = ({ setNewsCountry, country }) => {
   return (
-    <Dropdown
+    <BasicComponents.Dropdown
       options={countryOptions}
       name={country !== "" ? country : "Country"}
       onClick={option => setNewsCountry(option)}

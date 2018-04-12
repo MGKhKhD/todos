@@ -3,7 +3,7 @@ import React from "react";
 import AddTodo from "../containers/addTodo";
 import TodosList from "../containers/TodosList";
 import Footer from "../containers/Footer";
-import Message from "./Message";
+import BasicComponents from "./BasicComponents";
 import TodoBoardMainPage from "../containers/todoBoardPage/TodoBoardMainPage";
 
 import { filters_constants } from "../types";
@@ -31,7 +31,10 @@ const TodoHeader = ({ todoCount, todoBoard, filter }) => {
           <Footer />
           {todoCount > 0 && <TodosList />}
           {todoCount === 0 && (
-            <Message message={setMessage(filter)} alert="danger" />
+            <BasicComponents.Message
+              message={setMessage(filter)}
+              alert="danger"
+            />
           )}
         </div>
       </div>

@@ -11,8 +11,7 @@ import {
 
 import ExtraOptionsForArticle from "../../components/ExtraOptionsForArticle";
 import DisplayingRelatedArticles from "./DisplayingRelatedArticles";
-import Message from "../../components/Message";
-import Card from "../../components/Card";
+import BasicComponents from "../../components/BasicComponents";
 
 class DiplayingNewsArticles extends Component {
   constructor(props) {
@@ -94,7 +93,7 @@ class DiplayingNewsArticles extends Component {
         const isActiveForRelatedArticle =
           clickedArticleForRelatedArticles.indexOf(article.title) > -1;
         rows.push(
-          <Card
+          <BasicComponents.Card
             key={article.url}
             imageUrl={article.urlToImage}
             title={article.title}
@@ -109,18 +108,18 @@ class DiplayingNewsArticles extends Component {
             )}
             {this.state.showingFooter === article.title && (
               <div className="card-footer bg-transparent border-success">
-                <Message
+                <BasicComponents.Message
                   message="Realted posts are added to Social Media Page"
                   alert="success"
                   tag="p"
                 />
               </div>
             )}
-          </Card>
+          </BasicComponents.Card>
         );
       } else if (article.type === "added") {
         rows.push(
-          <Card
+          <BasicComponents.Card
             key={article.url}
             imageUrl={article.urlToImage}
             title={article.title}
@@ -137,7 +136,7 @@ class DiplayingNewsArticles extends Component {
     return (
       <div className="ml-1 mr-1 mt-1 mb-1">
         {this.state.showingMessage && (
-          <Message
+          <BasicComponents.Message
             message="Grab text from title for further queries."
             alert="danger"
           />
@@ -162,44 +161,3 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(DiplayingNewsArticles);
-
-/*
-
-          <div
-            className="card mt-1"
-            key={article.url}
-            onMouseOver={() => this.handleMouseOver(article.title)}
-            onMouseLeave={() => this.handleMouseLeave(article.title)}
-          >
-            <img
-              className="card-img-top"
-              src={article.urlToImage}
-              alt="Card image cap"
-            />
-            <div className="card-body">
-              <h5
-                className="card-title"
-                onMouseUp={() => this.selectText(article.title)}
-              >
-                {article.title}
-              </h5>
-              <p className="card-text">{article.description}</p>
-              <ExtraOptionsForArticle
-                article={article}
-                extraInfo={this.state}
-              />
-              {isActiveForRelatedArticle && (
-                <DisplayingRelatedArticles article={article} />
-              )}
-              {this.state.showingFooter === article.title && (
-                <div className="card-footer bg-transparent border-success">
-                  <strong style={{ color: "green" }}>
-                    {" "}
-                    Realted posts are added to Social Media Page.{" "}
-                  </strong>
-                </div>
-              )}
-            </div>
-          </div>
-
-*/

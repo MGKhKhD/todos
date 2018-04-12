@@ -1,9 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { setCommentModify, deleteComment } from "../actions/todoActions";
+import {
+  setCommentModify,
+  deleteComment,
+  moveComment
+} from "../actions/todoActions";
+import { getTodos } from "../selectors/todoSelectors";
 
 import FotterItem from "../components/FotterItem";
+import BasicComponents from "../components/BasicComponents";
 
 class CommentList extends Component {
   constructor(props) {
@@ -11,7 +17,9 @@ class CommentList extends Component {
     this.state = {
       clickedComment: -1,
       underModification: -1,
-      numberComments: this.props.comments.length
+      numberComments: this.props.comments.length,
+      movingComment: { from: -1, to: -1, status: false },
+      availableDestinations: []
     };
   }
 
@@ -30,20 +38,68 @@ class CommentList extends Component {
     } else if (item === "Modify") {
       this.props.setCommentModify(id);
       this.setState({ underModification: id });
+    } else if (item === "Move to") {
+      this.setDropDown(id);
     }
   }
+
+  setDropDown = id => {
+    if (!this.state.movingComment.status) {
+      this.setState({
+        movingComment: { status: true, from: id }
+      });
+    } else if (this.state.movingComment.status) {
+      this.setState({
+        movingComment: { status: false, from: -1 }
+      });
+    }
+  };
 
   liClick(id) {
     if (this.state.clickedComment !== id) {
       this.setState({ clickedComment: id });
-    } else {
+    } else if (
+      this.state.clickedComment === id &&
+      !this.state.movingComment.status
+    ) {
       this.setState({ clickedComment: -1 });
+    }
+    if (
+      this.state.clickedComment === id &&
+      this.state.movingComment.status &&
+      this.state.movingComment.from !== id
+    ) {
+      this.setState({ clickedComment: id });
+      this.setState({
+        movingComment: { status: false, from: -1 }
+      });
     }
   }
 
+  setOptions = () => {
+    const { todos, commentManagement } = this.props;
+    let destinations = [];
+    if (this.state.movingComment.status) {
+      destinations = todos.filter(({ id }) => id !== commentManagement.id);
+      console.log(destinations);
+    }
+    this.setState({ availableDestinations: destinations });
+  };
+
+  dropDownClick = option => {
+    const idx = this.state.availableDestinations.options.indexOf(option);
+    this.props.moveComment(
+      this.state.movingComment.from,
+      this.state.availableDestinations.destinations[idx].id
+    );
+  };
+
   render() {
-    const items = ["Delete", "Modify"];
+    const items = ["Delete", "Modify", "Move to"];
     const { comments } = this.props;
+    const { availableDestinations } = this.state;
+    console.log(availableDestinations);
+
     const rows = [];
     comments.forEach(comment => {
       const filterItems = [];
@@ -58,26 +114,39 @@ class CommentList extends Component {
         )
       );
       rows.push(
-        <li
-          key={comment.id}
-          className="list-group-item"
-          onClick={() => this.liClick(comment.id)}
-        >
+        <li key={comment.id} className="list-group-item">
           <span
             style={{
               color:
                 this.state.underModification === comment.id ? "blue" : "black"
             }}
           >
-            {comment.comment}
+            {this.state.underModification === comment.id
+              ? this.props.changingComment
+              : comment.comment}
           </span>
-          {this.state.clickedComment === comment.id &&
-            this.props.restricted && (
-              <React.Fragment>
-                <br />
-                {filterItems}
-              </React.Fragment>
-            )}
+          <div className="row">
+            <span onClick={() => this.liClick(comment.id)}>
+              {this.state.clickedComment === -1 ? ">>>>" : "<<<<"}
+            </span>
+            {this.state.clickedComment === comment.id &&
+              this.props.restricted && (
+                <React.Fragment>
+                  <br />
+                  {filterItems}
+                  {this.state.movingComment.status && (
+                    <BasicComponents.Dropdown
+                      options={availableDestinations.map(dest =>
+                        dest.todo.substring(0, 20).concat("...")
+                      )}
+                      name="destination"
+                      onClick={option => this.dropDownClick(option)}
+                      mainButtonClassName="btn-secondary"
+                    />
+                  )}
+                </React.Fragment>
+              )}
+          </div>
         </li>
       );
     });
@@ -93,10 +162,13 @@ class CommentList extends Component {
 
 function mapStateToProps(state) {
   return {
-    commentManagement: state.todoState.commentManagement
+    commentManagement: state.todoState.commentManagement,
+    todos: getTodos(state)
   };
 }
 
-export default connect(mapStateToProps, { setCommentModify, deleteComment })(
-  CommentList
-);
+export default connect(mapStateToProps, {
+  setCommentModify,
+  deleteComment,
+  moveComment
+})(CommentList);

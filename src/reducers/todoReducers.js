@@ -25,7 +25,8 @@ import {
   TOGGLE_ALL_TODOS,
   DELETE_ALL_COMPLETED_TODOS,
   DELETE_ARCHIVE_COMMENTS_OF_TODO,
-  OPENED_TODO_BOARD
+  OPENED_TODO_BOARD,
+  MOVE_COMMENT
 } from "../types";
 
 import { initialTodoState, initialCommentState } from "../mockedData";
@@ -206,6 +207,16 @@ export function comments(state = initialCommentState, action) {
         ]
       };
     }
+    case MOVE_COMMENT:
+      return {
+        ...state,
+        comments: state.comments.map(comment => {
+          if (comment.id === action.commentId) {
+            return { ...comment, todoIndex: action.todoId };
+          }
+          return comment;
+        })
+      };
     default:
       return state;
   }

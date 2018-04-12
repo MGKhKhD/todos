@@ -95,6 +95,7 @@ class CommentSegment extends Component {
           <CommentList
             comments={this.props.comments}
             restricted={this.props.restricted}
+            changingComment={this.state.comment}
           />
         )}
       </div>
