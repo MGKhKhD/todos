@@ -18,8 +18,7 @@ class CommentList extends Component {
       clickedComment: -1,
       underModification: -1,
       numberComments: this.props.comments.length,
-      movingComment: { from: -1, to: -1, status: false },
-      availableDestinations: []
+      movingComment: { from: -1, to: -1, status: false }
     };
   }
 
@@ -76,29 +75,29 @@ class CommentList extends Component {
     }
   }
 
-  setOptions = () => {
-    const { todos, commentManagement } = this.props;
+  setOptions = (todos, commentManagement) => {
     let destinations = [];
     if (this.state.movingComment.status) {
       destinations = todos.filter(({ id }) => id !== commentManagement.id);
-      console.log(destinations);
     }
-    this.setState({ availableDestinations: destinations });
+    return destinations;
   };
 
-  dropDownClick = option => {
-    const idx = this.state.availableDestinations.options.indexOf(option);
-    this.props.moveComment(
-      this.state.movingComment.from,
-      this.state.availableDestinations.destinations[idx].id
+  dropDownClick = (option, destinations) => {
+    const options = destinations.map(dest =>
+      dest.todo.substring(0, 20).concat("...")
     );
+    const idx = options.indexOf(option);
+    this.props.moveComment(this.state.movingComment.from, destinations[idx].id);
   };
 
   render() {
     const items = ["Delete", "Modify", "Move to"];
-    const { comments } = this.props;
-    const { availableDestinations } = this.state;
-    console.log(availableDestinations);
+    const { comments, todos, commentManagement } = this.props;
+    const destinations = this.setOptions(todos, commentManagement);
+    const options = destinations.map(dest =>
+      dest.todo.substring(0, 20).concat("...")
+    );
 
     const rows = [];
     comments.forEach(comment => {
@@ -136,11 +135,11 @@ class CommentList extends Component {
                   {filterItems}
                   {this.state.movingComment.status && (
                     <BasicComponents.Dropdown
-                      options={availableDestinations.map(dest =>
-                        dest.todo.substring(0, 20).concat("...")
-                      )}
+                      options={options}
                       name="destination"
-                      onClick={option => this.dropDownClick(option)}
+                      onClick={option =>
+                        this.dropDownClick(option, destinations)
+                      }
                       mainButtonClassName="btn-secondary"
                     />
                   )}

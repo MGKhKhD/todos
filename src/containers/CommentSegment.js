@@ -110,11 +110,9 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  { addComment, modifyComment, cancelModifyComment, openTodoBoard },
-  null,
-  {
-    areStatesEqual: (next, prev) => prev === next
-  }
-)(CommentSegment);
+export default connect(mapStateToProps, {
+  addComment,
+  modifyComment,
+  cancelModifyComment,
+  openTodoBoard
+})(CommentSegment);
