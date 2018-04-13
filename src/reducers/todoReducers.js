@@ -27,7 +27,9 @@ import {
   DELETE_ARCHIVE_COMMENTS_OF_TODO,
   OPENED_TODO_BOARD,
   MOVE_COMMENT,
-  ADD_TO_BLOCK_LIST_OF_TODO
+  ADD_TO_BLOCK_LIST_OF_TODO,
+  DELETE_TODO_FROM_BLOCKING_ENTRY,
+  DELETE_TODO_FROM_BLOCKEDBY_LIST_OF_TODO
 } from "../types";
 
 import { initialTodoState, initialCommentState } from "../mockedData";
@@ -308,6 +310,27 @@ export function blockingInfo(state = {}, action) {
           ? [action.idOfBlockedBy]
           : [...state[`${action.idOfBlocking}`], action.idOfBlockedBy]
       };
+    case DELETE_TODO_FROM_BLOCKING_ENTRY: {
+      let newState = {};
+      for (let key in state) {
+        if (key !== action.idOfBlocking) {
+          newState = { ...newState, [key]: [...state[key]] };
+        }
+      }
+      return newState;
+    }
+    case DELETE_TODO_FROM_BLOCKEDBY_LIST_OF_TODO: {
+      let newState = {};
+      for (let key in state) {
+        if (key === action.idOfBlockedBy) {
+          newState = {
+            ...newState,
+            [key]: state[key].filter(idx => idx !== action.idOfBlocking)
+          };
+        }
+      }
+      return newState;
+    }
     default:
       return state;
   }

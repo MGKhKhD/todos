@@ -25,7 +25,9 @@ import {
   DELETE_ARCHIVE_COMMENTS_OF_TODO,
   OPENED_TODO_BOARD,
   MOVE_COMMENT,
-  ADD_TO_BLOCK_LIST_OF_TODO
+  ADD_TO_BLOCK_LIST_OF_TODO,
+  DELETE_TODO_FROM_BLOCKING_ENTRY,
+  DELETE_TODO_FROM_BLOCKEDBY_LIST_OF_TODO
 } from "../types";
 
 import { unBookmarkArticle } from "./newsPagesActions";
@@ -174,6 +176,33 @@ const makeUnbookmarkArticle = (fromWhere, todo, dispatch, { bookmarks }) => {
   }
 };
 
+export function deleteTodoFromBlockingEntry(idOfBlocking) {
+  return {
+    type: DELETE_TODO_FROM_BLOCKING_ENTRY,
+    idOfBlocking
+  };
+}
+
+export function deleteTodoFromBlockedByListOfTodo(idOfBlocking, idOfBlockedBy) {
+  return {
+    type: DELETE_TODO_FROM_BLOCKEDBY_LIST_OF_TODO,
+    idOfBlockedBy,
+    idOfBlocking
+  };
+}
+
+const persistWithBlockState = (dispatch, getState, id) => {
+  const { blockingInfo } = getState().todoState;
+  if (blockingInfo[id]) {
+    dispatch(deleteTodoFromBlockingEntry(id));
+  }
+  for (let key in blockingInfo) {
+    if (blockingInfo[key].indexOf(id) > -1) {
+      dispatch(deleteTodoFromBlockedByListOfTodo(key, id));
+    }
+  }
+};
+
 export const deleteTodo = (id, fromWhere, archiveId) => (
   dispatch,
   getState
@@ -211,6 +240,8 @@ export const deleteTodo = (id, fromWhere, archiveId) => (
         dispatch(makeDeleteTodo(id));
         dispatch(deleteCommentsOfTodo(id));
       }
+      // make sure todo is removed from blockingInfo state too
+      persistWithBlockState(dispatch, getState, id);
     }
   } else {
     // delete from archived todos
@@ -383,6 +414,7 @@ export const archiveTodo = id => (dispatch, getState) => {
   const todo = state.todos.todos.filter(todo => todo.id === id);
   dispatch(makeArchiveTodo(todo[0], archiveId));
   dispatch(deleteTodo(id, todo[0].fromWhere));
+  persistWithBlockState(dispatch, getState, id);
 };
 
 export const reactivateTodo = ({ todo, fromWhere, completed, archiveId }) => (

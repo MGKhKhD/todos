@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { todoBlocksIt } from "../actions/todoActions";
+import {
+  todoBlocksIt,
+  deleteTodoFromBlockedByListOfTodo
+} from "../actions/todoActions";
 
 import BasicComponents from "../components/BasicComponents";
 
@@ -35,7 +38,12 @@ class Blocks extends Component {
   };
 
   render() {
-    const { id, todos, todoBlocksIt } = this.props;
+    const {
+      id,
+      todos,
+      todoBlocksIt,
+      deleteTodoFromBlockedByListOfTodo
+    } = this.props;
 
     const availableTodos = [];
     const blokingTodos = [];
@@ -62,7 +70,10 @@ class Blocks extends Component {
         blokingTodos.push(
           <li key={todo.id} className="list-group-item">
             <span>{todo.todo}</span>
-            <span className="float-right">
+            <span
+              className="float-right"
+              onClick={() => deleteTodoFromBlockedByListOfTodo(id, todo.id)}
+            >
               <strong>X</strong>
             </span>
           </li>
@@ -103,4 +114,7 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { todoBlocksIt })(Blocks);
+export default connect(mapStateToProps, {
+  todoBlocksIt,
+  deleteTodoFromBlockedByListOfTodo
+})(Blocks);
