@@ -55,7 +55,9 @@ class Blocks extends Component {
       ) {
         availableTodos.push(
           <li key={todo.id} className="list-group-item">
-            <span>{todo.todo}</span>
+            <span style={{ color: todo.completed ? "green" : "red" }}>
+              {todo.todo}
+            </span>
             <span
               className="float-right"
               onClick={() => todoBlocksIt(id, todo.id)}
@@ -69,7 +71,9 @@ class Blocks extends Component {
       if (todo.id !== id && this.checkIfBlockeing(id, todo.id)) {
         blokingTodos.push(
           <li key={todo.id} className="list-group-item">
-            <span>{todo.todo}</span>
+            <span style={{ color: todo.completed ? "green" : "red" }}>
+              {todo.todo}
+            </span>
             <span
               className="float-right"
               onClick={() => deleteTodoFromBlockedByListOfTodo(id, todo.id)}

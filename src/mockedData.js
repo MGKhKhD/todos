@@ -10,7 +10,7 @@ todosIds.forEach(id =>
   todos.push({
     todo: Math.random() > 0.5 ? faker.lorem.sentence() : faker.lorem.word(),
     id: id,
-    completed: Math.random() > 0.8 ? true : false,
+    completed: false,
     fromWhere: "todosPage"
   })
 );

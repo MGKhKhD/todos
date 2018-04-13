@@ -7,6 +7,9 @@ import {
   reactivateTodo,
   cancellCommentRequest
 } from "../actions/todoActions";
+
+import { filters_constants } from "../types";
+
 import ModifyLink from "./ModifyLink";
 import LiTag from "./LiTag";
 import CommentTag from "./CommentTag";
@@ -110,7 +113,8 @@ class TodosList extends Component {
       deleteTodo,
       comment,
       archiveTodo,
-      reactivateTodo
+      reactivateTodo,
+      filter
     } = this.props;
 
     let todosElements = todos.map(todo => (
@@ -118,27 +122,29 @@ class TodosList extends Component {
         <div className="col">
           <li className="list-group-item justify-content-between">
             <CommentTag id={todo.id} comment={comment} />
-            <LiTag todo={todo} modify={modify} />
+            <LiTag todo={todo} modify={modify} todos={todos} />
             {todo.fromWhere === "todosPage" &&
               !todo.archiveId && <ModifyLink id={todo.id} />}
-            {!todo.archiveId && (
-              <button
-                type="button"
-                className="btn btn-link float-right"
-                onClick={() => this.handleBlocking(todo.id)}
-              >
-                Blocks
-              </button>
-            )}
-            {!todo.archiveId && (
-              <button
-                type="button"
-                className="btn btn-link float-right"
-                onClick={() => this.handleBlockedBy(todo.id)}
-              >
-                Blocked-by
-              </button>
-            )}
+            {!todo.archiveId &&
+              filter === filters_constants.ALL && (
+                <button
+                  type="button"
+                  className="btn btn-link float-right"
+                  onClick={() => this.handleBlocking(todo.id)}
+                >
+                  Blocks
+                </button>
+              )}
+            {!todo.archiveId &&
+              filter === filters_constants.ALL && (
+                <button
+                  type="button"
+                  className="btn btn-link float-right"
+                  onClick={() => this.handleBlockedBy(todo.id)}
+                >
+                  Blocked-by
+                </button>
+              )}
             <button
               type="button"
               className="btn btn-link float-right"
@@ -165,13 +171,14 @@ class TodosList extends Component {
               comment.id === todo.id && (
                 <CommentSegment id={comment.id} restricted={!todo.archiveId} />
               )}
-            {comment.id !== todo.id && (
-              <BlocksTodoList
-                blockStat={this.state.blockStat}
-                id={todo.id}
-                todos={todos}
-              />
-            )}
+            {comment.id !== todo.id &&
+              filter === filters_constants.ALL && (
+                <BlocksTodoList
+                  blockStat={this.state.blockStat}
+                  id={todo.id}
+                  todos={todos}
+                />
+              )}
           </li>
         </div>
       </div>
@@ -186,7 +193,8 @@ function mapStateToProps(initState) {
   return {
     todos: getTodos(initState),
     modify: state.modify,
-    comment: state.commentManagement
+    comment: state.commentManagement,
+    filter: state.filter
   };
 }
 

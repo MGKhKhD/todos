@@ -197,8 +197,8 @@ const persistWithBlockState = (dispatch, getState, id) => {
     dispatch(deleteTodoFromBlockingEntry(id));
   }
   for (let key in blockingInfo) {
-    if (blockingInfo[key].indexOf(id) > -1) {
-      dispatch(deleteTodoFromBlockedByListOfTodo(key, id));
+    if (parseInt(key, 10) !== id && blockingInfo[key].indexOf(id) > -1) {
+      dispatch(deleteTodoFromBlockedByListOfTodo(parseInt(key, 10), id));
     }
   }
 };

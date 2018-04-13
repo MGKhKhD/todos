@@ -11,6 +11,35 @@ class LiTag extends Component {
     super(props);
     this.state = { todo: this.props.todo.todo };
   }
+
+  handleClick = idx => {
+    //first che if the idx is blocked by and active todo
+    const { blockingInfo, todos } = this.props;
+    let result = false;
+    for (let key in blockingInfo) {
+      if (
+        key &&
+        parseInt(key, 10) !== idx &&
+        blockingInfo[key].indexOf(idx) > -1
+      ) {
+        if (
+          todos.filter(
+            ({ completed, id }) => id === parseInt(key, 10) && !completed
+          ).length > 0
+        ) {
+          result = true;
+        }
+      }
+    }
+
+    if (!result) {
+      // todo is not blocked
+      this.props.todoClick(idx);
+      return;
+    }
+    return;
+  };
+
   render() {
     const { todo, modify } = this.props;
 
@@ -37,7 +66,7 @@ class LiTag extends Component {
       return (
         <button
           className="btn btn-link"
-          onClick={() => this.props.todoClick(todo.id)}
+          onClick={() => this.handleClick(todo.id)}
           style={{ fontSize: "20px" }}
         >
           <strong style={{ color: todo.completed ? "green" : "red" }}>
@@ -51,7 +80,13 @@ class LiTag extends Component {
   }
 }
 
-export default connect(null, {
+function mapStateToProps(state) {
+  return {
+    blockingInfo: state.todoState.blockingInfo
+  };
+}
+
+export default connect(mapStateToProps, {
   todoModifyCancel,
   todoModifySuccess,
   todoClick
