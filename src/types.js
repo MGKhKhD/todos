@@ -31,6 +31,7 @@ export const filters_constants = {
   DELETE_COMPLETED: "DELETE_COMPLETED",
   ARCHIVES: "ARCHIVES"
 };
+export const comment_items = ["Delete", "Modify", "Move to"];
 
 export const ADD_TO_BLOCK_LIST_OF_TODO = "ADD_TO_BLOCK_LIST_OF_TODO";
 export const DELETE_TODO_FROM_BLOCKING_ENTRY =

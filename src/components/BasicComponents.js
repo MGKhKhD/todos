@@ -1,6 +1,14 @@
 import React from "react";
 
 const BasicComponents = {
+  Repeat: function Repeat({ numItems, children }) {
+    let rows = [];
+    for (let idx = 0; idx < numItems; idx++) {
+      rows.push(children(idx));
+    }
+    return <React.Fragment>{rows}</React.Fragment>;
+  },
+
   Card: function Card(props) {
     return (
       <div
@@ -20,20 +28,25 @@ const BasicComponents = {
     );
   },
 
-  Dropdown: function Dropdown(props) {
-    const dropdowns = [];
-    props.options.forEach(option =>
-      dropdowns.push(
-        <button
-          key={option}
-          className={`dropdown-item ${props.itemsClassName}`}
-          type="button"
-          onClick={() => props.onClick(option)}
-        >
-          {option}
-        </button>
-      )
+  DropdownElements: function DropdownElements(props) {
+    return (
+      <BasicComponents.Repeat numItems={props.options.length}>
+        {idx => (
+          <button
+            key={props.options[idx]}
+            className={`dropdown-item ${props.itemsClassName}`}
+            type="button"
+            onClick={() => props.onClick(props.options[idx])}
+          >
+            {props.options[idx]}
+          </button>
+        )}
+      </BasicComponents.Repeat>
     );
+  },
+
+  Dropdown: function Dropdown(props) {
+    const { mainButtonClassName, name, ...rest } = props;
     return (
       <div className="dropdown mr-1 ml-1">
         <button
@@ -47,7 +60,7 @@ const BasicComponents = {
           {props.name}
         </button>
         <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
-          {dropdowns}
+          <BasicComponents.DropdownElements {...rest} />
         </div>
       </div>
     );
