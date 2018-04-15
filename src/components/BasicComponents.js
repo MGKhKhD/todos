@@ -9,6 +9,26 @@ const BasicComponents = {
     return <React.Fragment>{rows}</React.Fragment>;
   },
 
+  List: function List({ numItems, children }) {
+    let rows = [];
+    for (let idx = 0; idx < numItems; idx++) {
+      rows.push(children(idx));
+    }
+    return <ul className="list-group mt-1 mb-1">{rows}</ul>;
+  },
+
+  ListGroup: function ListGroup(props) {
+    return (
+      <BasicComponents.List numItems={props.items.length}>
+        {idx => (
+          <li className="list-group-item" key={idx}>
+            {props.children(idx, props)}
+          </li>
+        )}
+      </BasicComponents.List>
+    );
+  },
+
   Card: function Card(props) {
     return (
       <div

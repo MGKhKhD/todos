@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import CommentList from "./CommentList";
+import CommentList from "./todos/CommentList";
 import { connect } from "react-redux";
 import {
   addComment,
