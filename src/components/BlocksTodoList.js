@@ -1,8 +1,10 @@
 import React from "react";
 import BlockedBy from "../containers/BlockedBy";
 import Blocks from "../containers/Blocks";
+import { withCondition } from "./HOC";
 
-const BlocksTodoList = ({ blockStat, id, todos }) => {
+const BlocksTodoList = ({ blockStat, todo, todos }) => {
+  const id = todo.id;
   if (
     blockStat.filter(({ todoId, blocks }) => todoId === id && blocks).length > 0
   ) {
@@ -17,4 +19,4 @@ const BlocksTodoList = ({ blockStat, id, todos }) => {
   }
 };
 
-export default BlocksTodoList;
+export default withCondition(BlocksTodoList);

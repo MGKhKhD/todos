@@ -9,6 +9,7 @@ import {
 } from "../actions/todoActions";
 
 import { getTotalCommentsForTodo } from "../selectors/todoSelectors";
+import { withCondition } from "../components/HOC";
 
 class CommentSegment extends Component {
   constructor(props) {
@@ -110,9 +111,11 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {
-  addComment,
-  modifyComment,
-  cancelModifyComment,
-  openTodoBoard
-})(CommentSegment);
+export default withCondition(
+  connect(mapStateToProps, {
+    addComment,
+    modifyComment,
+    cancelModifyComment,
+    openTodoBoard
+  })(CommentSegment)
+);
