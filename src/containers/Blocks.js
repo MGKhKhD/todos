@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { shallowCompareStateAndPropsForUpdate } from "../utils";
 
 import {
   todoBlocksIt,
@@ -10,10 +11,7 @@ import BasicComponents from "../components/BasicComponents";
 
 class Blocks extends Component {
   shouldComponentUpdate(nextProps) {
-    if (this.props.blockingInfo === nextProps.blockingInfo) {
-      return false;
-    }
-    return true;
+    return shallowCompareStateAndPropsForUpdate.call(this, nextProps);
   }
 
   checkIfBlockedBy = (currentId, todoId) => {
