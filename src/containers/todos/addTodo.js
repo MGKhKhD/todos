@@ -6,9 +6,9 @@ import {
   addTodo,
   setErrorTodo,
   setFilter
-} from "../actions/todoActions";
+} from "../../actions/todoActions";
 
-import AddTodo from "../components/AddTodo";
+import AddTodo from "../../components/AddTodo";
 
 function mapStateToProps(initState) {
   let state = initState.todoState;

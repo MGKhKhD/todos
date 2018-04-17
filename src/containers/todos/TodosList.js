@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getTodos } from "../../selectors/todoSelectors";
-import { cancellCommentRequest } from "../../actions/todoActions";
 
 import { filters_constants } from "../../types";
 
 import LiTag from "../../components/todoComponents/LiTag";
-import LiButtons from "../../components/todoComponents/LiButtons";
+import TodoControlTag from "../../components/todoComponents/TodoControlTag";
+import CommentTag from "./CommentTag";
 import BasicComponents from "../../components/BasicComponents";
 
 class TodosList extends Component {
@@ -32,71 +32,8 @@ class TodosList extends Component {
     }
   }
 
-  cancelComment = id => {
-    if (this.props.comment.status !== "" && this.props.comment.id === id) {
-      this.props.cancellCommentRequest();
-    }
-    return;
-  };
-
-  handleBlocking = id => {
-    let { blockStat } = this.state;
-    const isAvailable = blockStat.filter(({ todoId }) => todoId === id);
-    if (isAvailable.length === 0) {
-      this.cancelComment(id);
-      blockStat = [
-        ...blockStat,
-        { blocks: true, blockedBy: false, todoId: id }
-      ];
-      this.setState({ blockStat });
-      return;
-    }
-
-    if (
-      isAvailable.length > 0 &&
-      blockStat.filter(({ todoId, blockedBy }) => todoId === id && blockedBy)
-        .length > 0
-    ) {
-      this.cancelComment(id);
-      blockStat = blockStat.filter(({ todoId }) => todoId !== id);
-      blockStat = [
-        ...blockStat,
-        { blocks: true, blockedBy: false, todoId: id }
-      ];
-      this.setState({ blockStat });
-      return;
-    }
-    return;
-  };
-
-  handleBlockedBy = id => {
-    let { blockStat } = this.state;
-    const isAvailable = blockStat.filter(({ todoId }) => todoId === id);
-    if (isAvailable.length === 0) {
-      this.cancelComment(id);
-      blockStat = [
-        ...blockStat,
-        { blocks: false, blockedBy: true, todoId: id }
-      ];
-      this.setState({ blockStat });
-      return;
-    }
-
-    if (
-      isAvailable.length > 0 &&
-      blockStat.filter(({ todoId, blocks }) => todoId === id && blocks).length >
-        0
-    ) {
-      this.cancelComment(id);
-      blockStat = blockStat.filter(({ todoId }) => todoId !== id);
-      blockStat = [
-        ...blockStat,
-        { blocks: false, blockedBy: true, todoId: id }
-      ];
-      this.setState({ blockStat });
-      return;
-    }
-    return;
+  handleBlocking = blockStat => {
+    this.setState({ blockStat });
   };
 
   render() {
@@ -108,18 +45,18 @@ class TodosList extends Component {
           const todo = todos[idx];
           return (
             <React.Fragment>
-              <LiButtons
+              <TodoControlTag
                 todo={todo}
                 comment={comment}
                 conditionModify={
                   todo.fromWhere === "todosPage" && !todo.archiveId
                 }
-                handleBlockingClick={this.handleBlocking}
-                handleBlockedByClick={this.handleBlockedBy}
+                updateBlockingStateParent={this.handleBlocking}
                 conditionBlocks={
                   !todo.archiveId && filter === filters_constants.ALL
                 }
               />
+              <CommentTag id={todo.id} comment={comment} />
               <LiTag
                 todo={todo}
                 modify={modify}
@@ -152,6 +89,4 @@ function mapStateToProps(initState) {
   };
 }
 
-export default connect(mapStateToProps, {
-  cancellCommentRequest
-})(TodosList);
+export default connect(mapStateToProps)(TodosList);

@@ -1,6 +1,6 @@
 import React from "react";
 
-import AddTodo from "../containers/addTodo";
+import AddTodo from "../containers/todos/addTodo";
 import TodosList from "../containers/todos/TodosList";
 import Footer from "../containers/Footer";
 import BasicComponents from "./BasicComponents";

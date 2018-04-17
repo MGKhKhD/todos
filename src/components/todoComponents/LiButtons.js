@@ -2,25 +2,22 @@ import React from "react";
 
 import ArchiveLinkTodo from "../../containers/todos/ArchiveLinkTodo";
 import DeleteTodoButton from "../../containers/todos/DeleteTodoButton";
-import TodoBlockingButtons from "./TodoBlockingButtons";
+import TodoBlockingButtons from "../../containers/todos/TodoBlockingButtons";
 import ModifyLink from "../../containers/todos/ModifyLink";
-import CommentTag from "../../containers/CommentTag";
 
 const LiButtons = ({
   todo,
   comment,
   conditionModify,
   conditionBlocks,
-  handleBlockedByClick,
-  handleBlockingClick
+  updateBlockingStateParent
 }) => (
   <React.Fragment>
-    <CommentTag id={todo.id} comment={comment} />
+    <span className="float-right">{">>"}</span>
     <ModifyLink id={todo.id} condition={conditionModify} />
     <TodoBlockingButtons
       id={todo.id}
-      onBlockingClick={id => handleBlockingClick(id)}
-      onBlockedByClick={id => handleBlockedByClick(id)}
+      updateBlockingStateParent={state => updateBlockingStateParent(state)}
       condition={conditionBlocks}
     />
     <DeleteTodoButton todo={todo} />

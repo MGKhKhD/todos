@@ -82,11 +82,8 @@ class CommentList extends Component {
     const destinations = this.setOptions(todos, commentManagement);
 
     return (
-      <BasicComponents.ListGroup
-        items={comments}
-        changingComment={changingComment}
-      >
-        {(idx, { items, changingComment }) => {
+      <BasicComponents.ListGroup items={comments}>
+        {(idx, { items }) => {
           const comment = items[idx];
           return (
             <React.Fragment>

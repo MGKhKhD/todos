@@ -16,7 +16,7 @@ function isReactElement(element) {
   return result;
 }
 
-function shallowEqualAllProps(prevProps, nextProps) {
+function shallowCompareAllProps(prevProps, nextProps) {
   let result = false;
   if (prevProps === nextProps) {
     result = true;
@@ -39,7 +39,7 @@ function shallowEqualState(nextState, prevState) {
 function shallowCompare(thisProps, nextProps, thisState, nextState) {
   return (
     !shallowEqualState(nextState, thisState) ||
-    !shallowEqualAllProps(thisProps, nextProps)
+    !shallowCompareAllProps(thisProps, nextProps)
   );
 }
 
