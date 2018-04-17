@@ -39,12 +39,11 @@ class TodosList extends Component {
   render() {
     const { todos, modify, comment, filter } = this.props;
     return (
-      <BasicComponents.ListGroup items={todos}>
-        {(idx, { items }) => {
-          const todos = items;
+      <BasicComponents.List numItems={todos.length}>
+        {idx => {
           const todo = todos[idx];
           return (
-            <React.Fragment>
+            <li className="list-group-item" key={idx}>
               <TodoControlTag
                 todo={todo}
                 comment={comment}
@@ -71,10 +70,10 @@ class TodosList extends Component {
                 }
                 blockStat={this.state.blockStat}
               />
-            </React.Fragment>
+            </li>
           );
         }}
-      </BasicComponents.ListGroup>
+      </BasicComponents.List>
     );
   }
 }

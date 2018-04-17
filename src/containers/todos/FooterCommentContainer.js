@@ -25,12 +25,7 @@ const FooterCommentContainer = props => {
     }
   };
 
-  return (
-    <FooterComment
-      id={props.id}
-      onClick={(item, id) => footerClick(item, id)}
-    />
-  );
+  return <FooterComment onClick={item => footerClick(item, props.id)} />;
 };
 
 export default connect(null, { deleteComment, setCommentModify })(

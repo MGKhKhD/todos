@@ -39,13 +39,15 @@ class TodoBlockingButtons extends Component {
     const isAvailable = blockStat.filter(({ todoId }) => todoId === id);
     if (isAvailable.length === 0) {
       this.cancelComment(id);
-      this.setState({
-        blockStat: this.state.blockStat.push({
-          blocks: name === "blocks",
-          blockedBy: name === "blockedBy",
-          todoId: id
-        })
+      this.state.blockStat.push({
+        blocks: name === "blocks",
+        blockedBy: name === "blockedBy",
+        todoId: id
       });
+      this.setState({
+        blockStat
+      });
+      console.log(this.state);
       return;
     }
 

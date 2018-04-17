@@ -72,8 +72,8 @@ class CommentList extends Component {
     });
   };
 
-  handleSetUnderModification = id => {
-    this.setState({ ...this.state, underModification: id });
+  handleSetUnderModification = index => {
+    this.setState({ underModification: index });
   };
 
   render() {
@@ -82,13 +82,13 @@ class CommentList extends Component {
     const destinations = this.setOptions(todos, commentManagement);
 
     return (
-      <BasicComponents.ListGroup items={comments}>
-        {(idx, { items }) => {
-          const comment = items[idx];
+      <BasicComponents.List numItems={comments.length}>
+        {idx => {
+          const comment = comments[idx];
           return (
-            <React.Fragment>
+            <li className="list-group-item" key={idx}>
               <LocalSpan
-                changingcomment={changingComment}
+                changingComment={changingComment}
                 comment={comment}
                 underModification={this.state.underModification}
               />
@@ -119,10 +119,10 @@ class CommentList extends Component {
                   />
                 </ConditionalFragment>
               </div>
-            </React.Fragment>
+            </li>
           );
         }}
-      </BasicComponents.ListGroup>
+      </BasicComponents.List>
     );
   }
 }
