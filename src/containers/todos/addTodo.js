@@ -8,7 +8,7 @@ import {
   setFilter
 } from "../../actions/todoActions";
 
-import AddTodo from "../../components/AddTodo";
+import AddTodo from "../../components/todoComponents/AddTodo";
 
 function mapStateToProps(initState) {
   let state = initState.todoState;

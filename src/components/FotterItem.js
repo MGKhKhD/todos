@@ -1,5 +1,7 @@
 import React from "react";
 
+import BasicComponents from "./BasicComponents";
+
 const FotterItem = ({ onClick, color, text, clicked }) => {
   let index = text.indexOf("_");
   let print;
@@ -14,14 +16,14 @@ const FotterItem = ({ onClick, color, text, clicked }) => {
       text.substring(index + 2).toLowerCase();
   }
   return (
-    <span
+    <BasicComponents.Span
       style={{ color: color, fontSize: clicked === text ? "1.3rem" : "1rem" }}
       onClick={onClick}
       className="mr-1 ml-1"
     >
       {print}
       {"     "}
-    </span>
+    </BasicComponents.Span>
   );
 };
 

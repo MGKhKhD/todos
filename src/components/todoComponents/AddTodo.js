@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { filters_constants } from "../types";
+import { filters_constants } from "../../types";
 
-import ExternalPagesHeader from "../containers/externalPages/ExternalPagesHeader";
-import BasicComponents from "./BasicComponents";
+import ExternalPagesHeader from "../../containers/externalPages/ExternalPagesHeader";
+import BasicComponents from "../BasicComponents";
 
 class AddTodo extends Component {
   constructor(props) {
@@ -56,6 +56,7 @@ class AddTodo extends Component {
       this.props.cancelErrorTodo();
       this.props.setFilter(filters_constants.ALL);
     }
+    return;
   };
 
   render() {
@@ -72,21 +73,19 @@ class AddTodo extends Component {
             </a>
           </BasicComponents.Message>
         )}
-        <form className="form-inline " onSubmit={this.handleSubmit}>
-          <input
-            ref={this.setInputRef}
-            className="form-control mb-2 mr-sm-2 mb-sm-0"
-            type="text"
-            placeholder="Add todo"
-            name="todo"
-            value={this.state.todo}
-            onChange={this.handleChange}
-          />
-          <button type="submit" className="btn btn-primary mr-1">
-            Add
-          </button>
+        <BasicComponents.FormWithInput
+          inputRef={this.setInputRef}
+          inputClassName="form-control mb-2 mr-sm-2 mb-sm-0"
+          buttonClassName="btn btn-primary mr-1"
+          placeholder="Add todo"
+          name="todo"
+          inputValue={this.state.todo}
+          buttonValue="Add"
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+        >
           <ExternalPagesHeader />
-        </form>
+        </BasicComponents.FormWithInput>
       </div>
     );
   }

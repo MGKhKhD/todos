@@ -2,7 +2,7 @@ import React from "react";
 
 import AddTodo from "../containers/todos/addTodo";
 import TodosList from "../containers/todos/TodosList";
-import Footer from "../containers/Footer";
+import Footer from "./todoComponents/Footer";
 import BasicComponents from "./BasicComponents";
 import TodoBoardMainPage from "../containers/todoBoardPage/TodoBoardMainPage";
 

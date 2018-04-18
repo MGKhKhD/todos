@@ -9,16 +9,6 @@ import FooterCommentContainer from "./FooterCommentContainer";
 import BasicComponents from "../../components/BasicComponents";
 import FilteredCommentDropdown from "../../components/todoComponents/FilteredCommentDropdown";
 
-const LocalSpan = ({ comment, underModification, changingComment }) => (
-  <span
-    style={{
-      color: underModification === comment.id ? "blue" : "black"
-    }}
-  >
-    {underModification === comment.id ? changingComment : comment.comment}
-  </span>
-);
-
 const ConditionalFragment = withCondition(React.Fragment);
 
 class CommentList extends Component {
@@ -87,15 +77,22 @@ class CommentList extends Component {
           const comment = comments[idx];
           return (
             <li className="list-group-item" key={idx}>
-              <LocalSpan
-                changingComment={changingComment}
-                comment={comment}
-                underModification={this.state.underModification}
-              />
+              <BasicComponents.Span
+                style={{
+                  color:
+                    this.state.underModification === comment.id
+                      ? "blue"
+                      : "black"
+                }}
+              >
+                {this.state.underModification === comment.id
+                  ? changingComment
+                  : comment.comment}
+              </BasicComponents.Span>
               <div className="row">
-                <span onClick={() => this.liClick(comment.id)}>
+                <BasicComponents.Span onClick={() => this.liClick(comment.id)}>
                   {this.state.clickedComment === comment.id ? ">>>>" : "<<<<"}
-                </span>
+                </BasicComponents.Span>
                 <ConditionalFragment
                   condition={
                     this.state.clickedComment === comment.id &&

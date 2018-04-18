@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import CommentList from "./todos/CommentList";
 import { connect } from "react-redux";
 import {
   addComment,
@@ -10,6 +9,9 @@ import {
 
 import { getTotalCommentsForTodo } from "../selectors/todoSelectors";
 import { withCondition } from "../components/HOC";
+
+import CommentList from "./todos/CommentList";
+import BasicComponents from "../components/BasicComponents";
 
 class CommentSegment extends Component {
   constructor(props) {
@@ -31,7 +33,7 @@ class CommentSegment extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.commentManagement.status === "needModify") {
       this.focusTextArea();
-      const oldComment = nextProps.comments.filter(
+      const oldComment = this.props.comments.filter(
         comment => comment.id === nextProps.commentManagement.commentId
       );
       this.setState({
@@ -60,29 +62,24 @@ class CommentSegment extends Component {
     return (
       <div>
         {this.props.restricted && (
-          <form className="form-inline" onSubmit={this.handleSubmit}>
-            <textarea
-              ref={this.setTextAreaRef}
-              placeholder="add comment..."
-              name="comment"
-              onChange={e =>
-                this.setState({
-                  ...this.state,
-                  [e.target.name]: e.target.value
-                })
-              }
-              className="form-control col-8"
-              value={this.state.comment}
-            />
-            <input
-              type="submit"
-              className="btn btn-dark ml-1 mr-1 flout-right"
-              value={
-                this.props.commentManagement.status === "needModify"
-                  ? "Modify"
-                  : "Add"
-              }
-            />
+          <BasicComponents.FormWithTextArea
+            onSubmit={this.handleSubmit}
+            textRef={this.setTextAreaRef}
+            placeholder="add comment..."
+            name="comment"
+            onChange={e =>
+              this.setState({
+                ...this.state,
+                [e.target.name]: e.target.value
+              })
+            }
+            textValue={this.state.comment}
+            inputValue={
+              this.props.commentManagement.status === "needModify"
+                ? "Modify"
+                : "Add"
+            }
+          >
             <button
               type="button"
               className="btn btn-danger ml-1 mr-1 flout-right"
@@ -90,7 +87,7 @@ class CommentSegment extends Component {
             >
               Todo board
             </button>
-          </form>
+          </BasicComponents.FormWithTextArea>
         )}
         {!!this.props.comments && (
           <CommentList

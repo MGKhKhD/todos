@@ -1,11 +1,19 @@
 import React from "react";
 
 const BasicComponents = {
-  Repeat: function Repeat({ numItems, children }) {
+  Repeat: function Repeat({ numItems, children, obj }) {
     let rows = [];
-    for (let idx = 0; idx < numItems; idx++) {
-      rows.push(children(idx));
+
+    if (obj) {
+      for (let key in obj) {
+        rows.push(children(obj[key]));
+      }
+    } else {
+      for (let idx = 0; idx < numItems; idx++) {
+        rows.push(children(idx));
+      }
     }
+
     return <React.Fragment>{rows}</React.Fragment>;
   },
 
@@ -95,6 +103,72 @@ const BasicComponents = {
           {children}
         </Tag>
       </div>
+    );
+  },
+
+  Span: function Span({ children, style, onClick, className }) {
+    return (
+      <span style={style} onClick={onClick} className={className}>
+        {children}
+      </span>
+    );
+  },
+
+  FormWithTextArea: function FormWithTextArea({
+    children,
+    onSubmit,
+    onChange,
+    textValue,
+    inputValue,
+    name,
+    placeholder,
+    textRef
+  }) {
+    return (
+      <form className="form-inline" onSubmit={onSubmit}>
+        <textarea
+          placeholder={placeholder}
+          name={name}
+          onChange={onChange}
+          className="form-control col-8"
+          value={textValue}
+          ref={textRef}
+        />
+        <input
+          type="submit"
+          className="btn btn-dark ml-1 mr-1 flout-right"
+          value={inputValue}
+        />
+        {children}
+      </form>
+    );
+  },
+
+  FormWithInput: function FormWithInput({
+    children,
+    onSubmit,
+    onChange,
+    buttonValue,
+    inputValue,
+    name,
+    placeholder,
+    inputRef,
+    buttonClassName,
+    inputClassName
+  }) {
+    return (
+      <form className="form-inline" onSubmit={onSubmit}>
+        <input
+          placeholder={placeholder}
+          name={name}
+          onChange={onChange}
+          className={inputClassName}
+          value={inputValue}
+          ref={inputRef}
+        />
+        <input type="submit" className={buttonClassName} value={buttonValue} />
+        {children}
+      </form>
     );
   }
 };
