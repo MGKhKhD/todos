@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { getTotalCommentsForTodo } from "../../selectors/todoSelectors";
 import { withCondition } from "../../components/HOC";
 
-import CommentList from "./CommentList";
+import CommentList from "../../components/todoComponents/CommentList";
 import CommentForm from "./CommentForm";
 
 class CommentSegment extends Component {

@@ -8,6 +8,7 @@ import { withCondition } from "../../components/HOC";
 import FooterCommentContainer from "./FooterCommentContainer";
 import BasicComponents from "../../components/BasicComponents";
 import FilteredCommentDropdown from "../../components/todoComponents/FilteredCommentDropdown";
+import CommentToggleTag from "../../components/todoComponents/CommentToggleTag";
 
 const ConditionalFragment = withCondition(React.Fragment);
 
@@ -27,17 +28,6 @@ class CommentListChildren extends Component {
       this.props.commentManagement.status === "needModify"
     ) {
       this.setState({ underModification: -1 });
-    }
-  }
-
-  liClick(id) {
-    const { clickedComment } = this.state;
-    if (clickedComment !== id) {
-      this.setState({ clickedComment: id });
-      this.props.registerClickedComment(id);
-    } else if (clickedComment === id) {
-      this.setState({ clickedComment: -1 });
-      this.props.registerClickedComment(-1);
     }
   }
 
@@ -68,10 +58,31 @@ class CommentListChildren extends Component {
     this.setState({ underModification: index });
   };
 
+  setCondition = ({ restricted, mouseInfo, id }) => {
+    return (
+      this.state.clickedComment === id &&
+      restricted &&
+      mouseInfo.commentId === id &&
+      mouseInfo.mouse === "over"
+    );
+  };
+
   render() {
-    const { todos, comment, commentManagement, changingComment } = this.props;
+    const {
+      todos,
+      comment,
+      commentManagement,
+      changingComment,
+      mouseInfo,
+      restricted
+    } = this.props;
 
     const destinations = this.setOptions(todos, commentManagement);
+    const conditionComment = this.setCondition({
+      mouseInfo,
+      restricted,
+      id: comment.id
+    });
 
     return (
       <React.Fragment>
@@ -86,14 +97,15 @@ class CommentListChildren extends Component {
             : comment.comment}
         </BasicComponents.Span>
         <div className="row">
-          <BasicComponents.Span onClick={() => this.liClick(comment.id)}>
-            {this.state.clickedComment === comment.id ? ">>>>" : "<<<<"}
-          </BasicComponents.Span>
-          <ConditionalFragment
-            condition={
-              this.state.clickedComment === comment.id && this.props.restricted
-            }
-          >
+          <CommentToggleTag
+            mouseInfo={mouseInfo}
+            restricted={restricted}
+            id={comment.id}
+            setClickedComment={id => {
+              this.setState({ clickedComment: id });
+            }}
+          />
+          <ConditionalFragment condition={conditionComment}>
             <br />
             <FooterCommentContainer
               id={comment.id}
