@@ -10,7 +10,7 @@ import {
 } from "../../actions/todoActions";
 
 import TodoModifyInput from "../../components/todoComponents/TodoModifyInput";
-import TodoClick from "../../components/todoComponents/TodoClick";
+import TodoToolTip from "../../components/todoComponents/TodoToolTip";
 
 const TodoLiTag = ({ todo, modify, todos, blockingInfo, dispatch }) => {
   const boundedActions = bindActionCreators(
@@ -22,7 +22,7 @@ const TodoLiTag = ({ todo, modify, todos, blockingInfo, dispatch }) => {
     dispatch
   );
 
-  const Branch = withBranch(TodoModifyInput, TodoClick);
+  const Branch = withBranch(TodoModifyInput, TodoToolTip);
 
   return (
     <Branch

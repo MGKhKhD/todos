@@ -1,4 +1,5 @@
-import React from "react";
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
 
 const BasicComponents = {
   Repeat: function Repeat({ numItems, children, obj }) {
@@ -174,3 +175,22 @@ const BasicComponents = {
 };
 
 export default BasicComponents;
+
+export class BasicPortal extends Component {
+  constructor(props) {
+    super(props);
+    this.portalElement = document.createElement("div");
+  }
+
+  componentDidMount() {
+    document.body.appendChild(this.portalElement);
+  }
+
+  componentWillUnmount() {
+    document.body.removeChild(this.portalElement);
+  }
+
+  render() {
+    return ReactDOM.createPortal(this.props.children, this.portalElement);
+  }
+}
