@@ -1,7 +1,7 @@
 import React from "react";
 
 import TodoLiTag from "../../containers/todos/TodoLiTag";
-import CommentSegment from "../../containers/CommentSegment";
+import CommentSegment from "../../containers/todos/CommentSegment";
 import BlocksTodoList from "../BlocksTodoList";
 
 const LiTag = ({

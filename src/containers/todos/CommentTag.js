@@ -5,6 +5,8 @@ import {
   cancellCommentRequest
 } from "../../actions/todoActions";
 
+import BasicComponents from "../../components/BasicComponents";
+
 const CommentTag = ({
   comment,
   commentManagement,
@@ -25,11 +27,11 @@ const CommentTag = ({
   };
 
   return (
-    <span className="float-left" onClick={() => handleClick()}>
+    <BasicComponents.Span className="float-left" onClick={() => handleClick()}>
       {comment.status === "requested" && commentManagement.id === id
         ? "V"
         : "^"}
-    </span>
+    </BasicComponents.Span>
   );
 };
 

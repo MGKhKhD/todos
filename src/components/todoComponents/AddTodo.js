@@ -3,6 +3,7 @@ import { filters_constants } from "../../types";
 
 import ExternalPagesHeader from "../../containers/externalPages/ExternalPagesHeader";
 import BasicComponents from "../BasicComponents";
+import TodoMessage from "./TodoMessage";
 
 class AddTodo extends Component {
   constructor(props) {
@@ -50,29 +51,15 @@ class AddTodo extends Component {
     }
   };
 
-  handleClick = e => {
-    e.preventDefault();
-    if (this.props.errorMessage !== "") {
-      this.props.cancelErrorTodo();
-      this.props.setFilter(filters_constants.ALL);
-    }
-    return;
-  };
-
   render() {
     return (
       <div>
-        {this.props.errorMessage !== "" && (
-          <BasicComponents.Message
-            alert="danger"
-            message={this.props.errorMessage}
-            tag="h4"
-          >
-            <a className="float-right" href="" onClick={this.handleClick}>
-              X
-            </a>
-          </BasicComponents.Message>
-        )}
+        <TodoMessage
+          condition={this.props.errorMessage !== ""}
+          errorMessage={this.props.errorMessage}
+          setFilter={this.props.setFilter}
+          cancelErrorTodo={this.props.cancelErrorTodo}
+        />
         <BasicComponents.FormWithInput
           inputRef={this.setInputRef}
           inputClassName="form-control mb-2 mr-sm-2 mb-sm-0"
