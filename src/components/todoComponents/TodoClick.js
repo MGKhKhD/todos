@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import BasicComponents from "../BasicComponents";
 
 class TodoClick extends Component {
   constructor(props) {
@@ -78,7 +77,7 @@ class TodoClick extends Component {
   };
 
   render() {
-    const { todos, blockingInfo, todo, todoClick } = this.props;
+    const { todo } = this.props;
     return (
       <span
         className="btn btn-link"

@@ -137,7 +137,7 @@ const BasicComponents = {
         />
         <input
           type="submit"
-          className="btn btn-dark ml-1 mr-1 flout-right"
+          className="btn btn-blue btn-sm ml-1 mr-1 flout-right"
           value={inputValue}
         />
         {children}
@@ -192,5 +192,26 @@ export class BasicPortal extends Component {
 
   render() {
     return ReactDOM.createPortal(this.props.children, this.portalElement);
+  }
+}
+
+const modalRoot = document.getElementById("modal-root");
+
+export class BasicModal extends Component {
+  constructor(props) {
+    super(props);
+    this.modal = document.createElement("div");
+  }
+
+  componentDidMount() {
+    modalRoot.appendChild(this.modal);
+  }
+
+  componentWillUnmount() {
+    modalRoot.removeChild(this.modal);
+  }
+
+  render() {
+    return ReactDOM.createPortal(this.props.children, this.modal);
   }
 }

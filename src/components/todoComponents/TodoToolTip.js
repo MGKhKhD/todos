@@ -12,6 +12,22 @@ const toolTipStyle = {
 };
 
 class TodoToolTip extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { showingTooltip: true };
+  }
+
+  componentDidMount() {
+    this.timeOut = setTimeout(
+      () => this.setState({ showingTooltip: false }),
+      5000
+    );
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeOut);
+  }
+
   render() {
     const { todos, blockingInfo, todo, todoClick } = this.props;
     return (
@@ -30,13 +46,14 @@ class TodoToolTip extends Component {
                   ? todo.todo.substring(0, 20).concat("...")
                   : todo.todo}
               </strong>
-              {clicked && (
-                <BasicPortal>
-                  <div style={style}>
-                    {`This task is blocked, not possible to complete without cmpleting blocking todos first.`}
-                  </div>
-                </BasicPortal>
-              )}
+              {clicked &&
+                this.state.showingTooltip && (
+                  <BasicPortal>
+                    <div style={style}>
+                      {`This task is blocked, not possible to complete without cmpleting blocking todos first.`}
+                    </div>
+                  </BasicPortal>
+                )}
             </React.Fragment>
           );
         }}

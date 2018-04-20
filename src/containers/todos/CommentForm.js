@@ -10,6 +10,7 @@ import {
 import { withCondition } from "../../components/HOC";
 
 import BasicComponents from "../../components/BasicComponents";
+import CommentModal from "../../components/todoComponents/CommentModal";
 
 class CommentForm extends Component {
   constructor(props) {
@@ -51,7 +52,10 @@ class CommentForm extends Component {
       );
       this.props.cancelModifyComment();
     } else {
-      this.props.addComment(this.state.comment.trim(), this.props.id);
+      this.props.addComment(
+        this.state.comment.trim(),
+        this.props.commentManagement.id
+      );
     }
     this.setState({ comment: "" });
     e.target.value = "";
@@ -82,9 +86,13 @@ class CommentForm extends Component {
           textValue={this.state.comment}
           inputValue={inputValue}
         >
+          <CommentModal
+            comments={this.props.comments}
+            condition={this.props.comments.length > 2}
+          />
           <button
             type="button"
-            className="btn btn-danger ml-1 mr-1 flout-right"
+            className="btn btn-danger btn-sm ml-1 mr-1 flout-right"
             onClick={() => this.props.openTodoBoard(this.props.id)}
           >
             Todo board
