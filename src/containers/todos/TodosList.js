@@ -37,7 +37,7 @@ class TodosList extends Component {
   };
 
   render() {
-    const { todos, modify, comment, filter } = this.props;
+    const { todos, modify, comment, filter, todoBoard } = this.props;
     return (
       <BasicComponents.List numItems={todos.length}>
         {idx => {
@@ -66,9 +66,17 @@ class TodosList extends Component {
                   comment.status !== "" && comment.id === todo.id
                 }
                 conditionBlocks={
-                  comment.id !== todo.id && filter === filters_constants.ALL
+                  comment.id !== todo.id &&
+                  filter === filters_constants.ALL &&
+                  todoBoard.todoId === -1
                 }
                 blockStat={this.state.blockStat}
+                conditionSubTodo={
+                  todoBoard.todoId !== -1 &&
+                  todoBoard.todoId === todo.id &&
+                  comment.status === ""
+                }
+                todoBoard={todoBoard}
               />
             </li>
           );
@@ -84,6 +92,7 @@ function mapStateToProps(initState) {
     todos: getTodos(initState),
     modify: state.modify,
     comment: state.commentManagement,
+    todoBoard: state.todoBoard,
     filter: state.filter
   };
 }

@@ -29,7 +29,8 @@ import {
   MOVE_COMMENT,
   ADD_TO_BLOCK_LIST_OF_TODO,
   DELETE_TODO_FROM_BLOCKING_ENTRY,
-  DELETE_TODO_FROM_BLOCKEDBY_LIST_OF_TODO
+  DELETE_TODO_FROM_BLOCKEDBY_LIST_OF_TODO,
+  CLOSE_TODO_BOARD
 } from "../types";
 
 import { initialTodoState, initialCommentState } from "../mockedData";
@@ -296,6 +297,11 @@ export function todoBoard(state = { todoId: -1 }, action) {
   switch (action.type) {
     case OPENED_TODO_BOARD:
       return { todoId: action.todoId };
+    case CLOSE_TODO_BOARD:
+      return {
+        ...state,
+        todoId: -1
+      };
     default:
       return state;
   }

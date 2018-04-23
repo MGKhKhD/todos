@@ -4,11 +4,10 @@ import AddTodo from "../containers/todos/addTodo";
 import TodosList from "../containers/todos/TodosList";
 import Footer from "./todoComponents/Footer";
 import BasicComponents from "./BasicComponents";
-import TodoBoardMainPage from "../containers/todoBoardPage/TodoBoardMainPage";
 
 import { filters_constants } from "../types";
 
-const TodoHeader = ({ todoCount, todoBoard, filter }) => {
+const TodoHeader = ({ todoCount, filter }) => {
   const setMessage = filterType => {
     let message;
     if (
@@ -21,27 +20,23 @@ const TodoHeader = ({ todoCount, todoBoard, filter }) => {
     return message || "No todo to list";
   };
 
-  if (todoBoard.todoId === -1) {
-    return (
-      <div>
-        <div className="card-header">
-          <AddTodo />
-        </div>
-        <div className="card-block">
-          <Footer />
-          {todoCount > 0 && <TodosList />}
-          {todoCount === 0 && (
-            <BasicComponents.Message
-              message={setMessage(filter)}
-              alert="danger"
-            />
-          )}
-        </div>
+  return (
+    <div>
+      <div className="card-header">
+        <AddTodo />
       </div>
-    );
-  } else {
-    return <TodoBoardMainPage id={todoBoard.todoId} />;
-  }
+      <div className="card-block">
+        <Footer />
+        {todoCount > 0 && <TodosList />}
+        {todoCount === 0 && (
+          <BasicComponents.Message
+            message={setMessage(filter)}
+            alert="danger"
+          />
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default TodoHeader;

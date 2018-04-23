@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import {
   addComment,
   modifyComment,
-  cancelModifyComment,
-  openTodoBoard
+  cancelModifyComment
 } from "../../actions/todoActions";
 
 import { withCondition } from "../../components/HOC";
@@ -90,13 +89,6 @@ class CommentForm extends Component {
             comments={this.props.comments}
             condition={this.props.comments.length > 2}
           />
-          <button
-            type="button"
-            className="btn btn-danger btn-sm ml-1 mr-1 flout-right"
-            onClick={() => this.props.openTodoBoard(this.props.id)}
-          >
-            Todo board
-          </button>
         </BasicComponents.FormWithTextArea>
       </div>
     );
@@ -107,7 +99,6 @@ export default withCondition(
   connect(null, {
     addComment,
     modifyComment,
-    cancelModifyComment,
-    openTodoBoard
+    cancelModifyComment
   })(CommentForm)
 );

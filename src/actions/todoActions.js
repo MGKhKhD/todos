@@ -27,7 +27,8 @@ import {
   MOVE_COMMENT,
   ADD_TO_BLOCK_LIST_OF_TODO,
   DELETE_TODO_FROM_BLOCKING_ENTRY,
-  DELETE_TODO_FROM_BLOCKEDBY_LIST_OF_TODO
+  DELETE_TODO_FROM_BLOCKEDBY_LIST_OF_TODO,
+  CLOSE_TODO_BOARD
 } from "../types";
 
 import { unBookmarkArticle } from "./newsPagesActions";
@@ -458,6 +459,12 @@ export function openTodoBoard(todoId) {
   return {
     type: OPENED_TODO_BOARD,
     todoId
+  };
+}
+
+export function cancelTodoBoard() {
+  return {
+    type: CLOSE_TODO_BOARD
   };
 }
 

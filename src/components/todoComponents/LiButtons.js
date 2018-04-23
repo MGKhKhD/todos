@@ -1,6 +1,7 @@
 import React from "react";
 
 import ArchiveLinkTodo from "../../containers/todos/ArchiveLinkTodo";
+import SubTasksLinkTodo from "../../containers/todos/SubTasksLinkTodo";
 import DeleteTodoButton from "../../containers/todos/DeleteTodoButton";
 import TodoBlockingButtons from "../../containers/todos/TodoBlockingButtons";
 import ModifyLink from "../../containers/todos/ModifyLink";
@@ -22,6 +23,7 @@ const LiButtons = ({
     />
     <DeleteTodoButton todo={todo} />
     <ArchiveLinkTodo todo={todo} />
+    <SubTasksLinkTodo todo={todo} />
   </React.Fragment>
 );
 

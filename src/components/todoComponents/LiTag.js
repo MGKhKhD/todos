@@ -3,6 +3,7 @@ import React from "react";
 import TodoLiTag from "../../containers/todos/TodoLiTag";
 import CommentSegment from "../../containers/todos/CommentSegment";
 import BlocksTodoList from "../BlocksTodoList";
+import SubTodoSegment from "./SubTodoSegment";
 
 const LiTag = ({
   todo,
@@ -12,7 +13,9 @@ const LiTag = ({
   restricted,
   conditionComment,
   conditionBlocks,
-  blockStat
+  blockStat,
+  conditionSubTodo,
+  todoBoard
 }) => {
   return (
     <React.Fragment>
@@ -28,6 +31,7 @@ const LiTag = ({
         restricted={!todo.archiveId}
         condition={conditionComment}
       />
+      <SubTodoSegment condition={conditionSubTodo} todoBoard={todoBoard} />
     </React.Fragment>
   );
 };

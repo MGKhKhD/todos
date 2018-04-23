@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { cancellCommentRequest } from "../../actions/todoActions";
+import {
+  cancellCommentRequest,
+  cancelTodoBoard
+} from "../../actions/todoActions";
 import { withCondition } from "../../components/HOC";
 
 class TodoBlockingButtons extends Component {
@@ -34,11 +37,18 @@ class TodoBlockingButtons extends Component {
     return;
   };
 
+  cancelSubTask = id => {
+    // TODO befor cancelling it saving whatever inputted
+    if (this.props.todoBoard.todoId !== -1) this.props.cancelTodoBoard();
+    return;
+  };
+
   handleBlocking = (id, name) => {
     let { blockStat } = this.state;
     const isAvailable = blockStat.filter(({ todoId }) => todoId === id);
     if (isAvailable.length === 0) {
       this.cancelComment(id);
+      this.cancelSubTask(id);
       this.state.blockStat.push({
         blocks: name === "blocks",
         blockedBy: name === "blockedBy",
@@ -47,7 +57,6 @@ class TodoBlockingButtons extends Component {
       this.setState({
         blockStat
       });
-      console.log(this.state);
       return;
     }
 
@@ -117,8 +126,9 @@ class TodoBlockingButtons extends Component {
 export default withCondition(
   connect(
     state => ({
-      comment: state.todoState.commentManagement
+      comment: state.todoState.commentManagement,
+      todoBoard: state.todoState.todoBoard
     }),
-    { cancellCommentRequest }
+    { cancellCommentRequest, cancelTodoBoard }
   )(TodoBlockingButtons)
 );
