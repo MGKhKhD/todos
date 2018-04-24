@@ -1,5 +1,21 @@
 import React from "react";
+import { connect } from "react-redux";
+import { getSubTasksOfTodo } from "../../selectors/todoSelectors";
 
-const SubTodoList = ({ todoBoard }) => <span>Sub todo List</span>;
+import BasicComponents from "../../components/BasicComponents";
+import SubTodoElement from "./SubTodoElement";
 
-export default SubTodoList;
+const SubTodoList = ({ todoBoard, subTasks }) => (
+  <BasicComponents.Repeat numItems={subTasks.length}>
+    {idx => <SubTodoElement subTask={subTasks[idx]} />}
+  </BasicComponents.Repeat>
+);
+
+function mapStateToProps(state, ownProps) {
+  const subTasks = getSubTasksOfTodo(state.todoState, ownProps.todoBoard);
+  return {
+    subTasks
+  };
+}
+
+export default connect(mapStateToProps)(SubTodoList);

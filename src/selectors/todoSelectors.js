@@ -121,14 +121,15 @@ export const getAllTodosByFilter = ({ todos, archiveTodos }, filter) => {
   }
 };
 
-export const getSubTask = (initState, todoBoard) => {
+export const getSubTasksOfTodo = (initState, todoBoard) => {
   const state = initState.subTasks;
+  let result = [];
   if (state !== {} && todoBoard.todoId !== -1) {
     for (let key in state) {
       if (state[key].todoId === todoBoard.todoId) {
-        return state[key];
+        result.push(state[key]);
       }
     }
   }
-  return {};
+  return result;
 };

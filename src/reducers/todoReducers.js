@@ -313,6 +313,7 @@ export function subTasks(state = {}, action) {
   switch (action.type) {
     case ADD_SUBTASK:
       return {
+        ...state,
         subTaskIds: !state.subTaskIds
           ? [action.id]
           : [...state.subTaskIds, action.id],
@@ -326,7 +327,6 @@ export function subTasks(state = {}, action) {
         }
       };
     case UPDATE_SUBTASK: {
-      console.log(action);
       return {
         ...state,
         [`${action.id}`]: {

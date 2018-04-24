@@ -11,11 +11,13 @@ const SubTodoTitleInput = ({
   cbFn
 }) => {
   const handleCallBack = text => {
-    addSubTask({
-      text,
-      parentId: todoBoard.todoId
-    });
-    closeTitleClick(text);
+    if (title === "+ add new sub task" && text !== "") {
+      addSubTask({
+        text,
+        parentId: todoBoard.todoId
+      });
+      closeTitleClick(text);
+    }
   };
 
   return <InlineInput inputText={title} cbFn={handleCallBack} />;

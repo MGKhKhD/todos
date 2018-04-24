@@ -5,10 +5,9 @@ import SubTodoAddButton from "../../containers/todos/SubTodoAddButton";
 import SubTodoList from "../../containers/todos/SubTodoList";
 
 const SubTodoSegment = ({ todoBoard }) => (
-  <div>
+  <div className="row">
     <hr />
     <SubTodoAddButton todoBoard={todoBoard} />
-    <br />
     <SubTodoList todoBoard={todoBoard} />
   </div>
 );

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getSubTask } from "../../selectors/todoSelectors";
 import { updateSubTask } from "../../actions/todoActions";
 
 import BasicComponents from "../../components/BasicComponents";
@@ -11,11 +10,8 @@ class SubTodoAddButton extends Component {
     super(props);
     this.state = {
       initiated: false,
-      status: "active",
       cardColor: "light",
-      header: "due date",
-      title: "+ add new sub task",
-      description: "description of task..."
+      title: "+ add new sub task"
     };
   }
 
@@ -26,57 +22,17 @@ class SubTodoAddButton extends Component {
     }
   };
 
-  toggleSubTask = () => {
-    this.setState(
-      prevState => ({
-        ...prevState,
-        status: prevState.status === "completed" ? "active" : "completed",
-        cardColor: prevState.status === "active" ? "success" : "danger"
-      }),
-      () => {
-        if (this.props.subTask !== {}) {
-          this.props.updateSubTask({
-            status: this.state.status,
-            id: this.props.subTask.id
-          });
-          return;
-        }
-        return;
-      }
-    );
-  };
-
   closeTitleClick = title => {
     this.setState({
-      ...this.state,
-      title: title,
-      cardColor: "danger",
-      status: "active"
+      initiated: false,
+      title: "+ add new sub task",
+      cardColor: "light"
     });
-  };
-
-  headerClick = () => {
-    console.log("header");
-  };
-
-  deleteClick = () => {
-    this.setState({ initiated: false, cardColor: "light" });
-  };
-
-  descriptionClick = () => {
-    console.log("description");
   };
 
   render() {
     const { todoBoard, subTask } = this.props;
-    const {
-      cardColor,
-      header,
-      title,
-      description,
-      status,
-      initiated
-    } = this.state;
+    const { cardColor, title, initiated } = this.state;
     return (
       <div
         className={`card border-${cardColor} mb-3`}
@@ -85,15 +41,7 @@ class SubTodoAddButton extends Component {
         {initiated &&
           title !== "+ add new sub task" && (
             <div className="card-header">
-              <BasicComponents.Span onClick={this.headerClick}>
-                {header}
-              </BasicComponents.Span>
-              <BasicComponents.Span
-                onClick={this.deleteClick}
-                className="float-right"
-              >
-                X
-              </BasicComponents.Span>
+              <BasicComponents.Span>due date</BasicComponents.Span>
             </div>
           )}
         <div
@@ -104,7 +52,7 @@ class SubTodoAddButton extends Component {
           <SubTodoTitle
             title={title}
             handleTitleClick={this.titleClick}
-            toggleSubTask={this.toggleSubTask}
+            toggleSubTask={() => {}}
             closeTitleClick={this.closeTitleClick}
             test={initiated && title === "+ add new sub task"}
             todoBoard={todoBoard}
@@ -112,7 +60,7 @@ class SubTodoAddButton extends Component {
           {initiated &&
             title !== "+ add new sub task" && (
               <p className="card-text" onClick={this.descriptionClick}>
-                {description}
+                description of task...
               </p>
             )}
         </div>
@@ -121,11 +69,4 @@ class SubTodoAddButton extends Component {
   }
 }
 
-function mapStateToProps(state, ownProps) {
-  const subTask = getSubTask(state.todoState, ownProps.todoBoard);
-  return {
-    subTask
-  };
-}
-
-export default connect(mapStateToProps, { updateSubTask })(SubTodoAddButton);
+export default connect(null, { updateSubTask })(SubTodoAddButton);
