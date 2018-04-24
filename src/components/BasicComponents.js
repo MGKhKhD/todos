@@ -176,6 +176,51 @@ const BasicComponents = {
 
 export default BasicComponents;
 
+export class InlineInput extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { inputText: this.props.inputText };
+
+    this.input = null;
+    this.setInputRef = element => {
+      this.input = element;
+    };
+    this.setFocus = () => {
+      if (this.input) {
+        this.input.focus();
+        this.input.select();
+      }
+    };
+  }
+
+  componentDidMount() {
+    this.setFocus();
+  }
+
+  handleKeyPress = e => {
+    const text = this.state.inputText.trim();
+    if (e.key === "Enter") {
+      this.props.cbFn(text);
+      this.setState({ inputText: "" });
+    }
+  };
+
+  render() {
+    return (
+      <input
+        type="text"
+        name="inputText"
+        value={this.state.inputText}
+        ref={this.setInputRef}
+        onChange={e =>
+          this.setState({ ...this.state, [e.target.name]: e.target.value })
+        }
+        onKeyPress={this.handleKeyPress}
+      />
+    );
+  }
+}
+
 export class BasicPortal extends Component {
   constructor(props) {
     super(props);

@@ -30,7 +30,9 @@ import {
   ADD_TO_BLOCK_LIST_OF_TODO,
   DELETE_TODO_FROM_BLOCKING_ENTRY,
   DELETE_TODO_FROM_BLOCKEDBY_LIST_OF_TODO,
-  CLOSE_TODO_BOARD
+  CLOSE_TODO_BOARD,
+  ADD_SUBTASK,
+  UPDATE_SUBTASK
 } from "../types";
 
 import { initialTodoState, initialCommentState } from "../mockedData";
@@ -307,6 +309,46 @@ export function todoBoard(state = { todoId: -1 }, action) {
   }
 }
 
+export function subTasks(state = {}, action) {
+  switch (action.type) {
+    case ADD_SUBTASK:
+      return {
+        subTaskIds: !state.subTaskIds
+          ? [action.id]
+          : [...state.subTaskIds, action.id],
+        [`${action.id}`]: {
+          id: action.id,
+          subTask: action.subTask,
+          todoId: action.todoId,
+          description: action.description,
+          status: action.status,
+          dueDate: action.dueDate
+        }
+      };
+    case UPDATE_SUBTASK: {
+      console.log(action);
+      return {
+        ...state,
+        [`${action.id}`]: {
+          ...state[`${action.id}`],
+          subTask: !action.subTask
+            ? state[`${action.id}`].subTask
+            : action.subTask,
+          description: !action.description
+            ? state[`${action.id}`].description
+            : action.description,
+          status: !action.status ? state[`${action.id}`].status : action.status,
+          dueDate: !action.dueDate
+            ? state[`${action.id}`].dueDate
+            : action.dueDate
+        }
+      };
+    }
+    default:
+      return state;
+  }
+}
+
 export function blockingInfo(state = {}, action) {
   switch (action.type) {
     case ADD_TO_BLOCK_LIST_OF_TODO:
@@ -352,6 +394,7 @@ const todoReducers = combineReducers({
   archiveTodos,
   archiveComments,
   todoBoard,
+  subTasks,
   blockingInfo
 });
 

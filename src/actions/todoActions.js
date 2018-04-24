@@ -28,7 +28,9 @@ import {
   ADD_TO_BLOCK_LIST_OF_TODO,
   DELETE_TODO_FROM_BLOCKING_ENTRY,
   DELETE_TODO_FROM_BLOCKEDBY_LIST_OF_TODO,
-  CLOSE_TODO_BOARD
+  CLOSE_TODO_BOARD,
+  ADD_SUBTASK,
+  UPDATE_SUBTASK
 } from "../types";
 
 import { unBookmarkArticle } from "./newsPagesActions";
@@ -465,6 +467,31 @@ export function openTodoBoard(todoId) {
 export function cancelTodoBoard() {
   return {
     type: CLOSE_TODO_BOARD
+  };
+}
+
+let subTaskId = 0;
+
+export function addSubTask({ text, parentId, description, dueDate, status }) {
+  return {
+    type: ADD_SUBTASK,
+    subTask: text,
+    id: subTaskId++,
+    todoId: parentId,
+    description: description || "",
+    status: status || "active",
+    dueDate: dueDate || 0
+  };
+}
+
+export function updateSubTask({ id, text, description, dueDate, status }) {
+  return {
+    type: UPDATE_SUBTASK,
+    id,
+    subTask: !!text ? text : null,
+    description: !!description ? description : null,
+    dueDate: !!dueDate ? dueDate : null,
+    status: !!status ? status : null
   };
 }
 
