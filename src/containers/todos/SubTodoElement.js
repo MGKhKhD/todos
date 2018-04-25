@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { updateSubTask } from "../../actions/todoActions";
+import { updateSubTask, deleteOneSubTask } from "../../actions/todoActions";
 
 import BasicComponents from "../../components/BasicComponents";
 import SubTodoTitle from "../../components/todoComponents/SubTodoTitle";
+import SubTaskTodoHeader from "../../components/todoComponents/SubTaskTodoHeader";
 
 class SubTodoElement extends Component {
   constructor(props) {
@@ -59,7 +60,7 @@ class SubTodoElement extends Component {
   };
 
   deleteClick = () => {
-    this.setState({ initiated: false, cardColor: "light" });
+    this.props.deleteOneSubTask(this.props.subTask.id);
   };
 
   descriptionClick = () => {
@@ -81,20 +82,12 @@ class SubTodoElement extends Component {
         className={`card border-${cardColor} mb-3`}
         style={{ maxWidth: "15rem" }}
       >
-        {initiated &&
-          title !== "+ add new sub task" && (
-            <div className="card-header">
-              <BasicComponents.Span onClick={this.headerClick}>
-                {header}
-              </BasicComponents.Span>
-              <BasicComponents.Span
-                onClick={this.deleteClick}
-                className="float-right"
-              >
-                X
-              </BasicComponents.Span>
-            </div>
-          )}
+        <SubTaskTodoHeader
+          condition={initiated && title !== "+ add new sub task"}
+          dueDate={header}
+          deleteClick={this.deleteClick}
+          headerClick={this.headerClick}
+        />
         <div
           className={`card-body text-${
             cardColor === "light" ? "primary" : cardColor
@@ -120,4 +113,6 @@ class SubTodoElement extends Component {
   }
 }
 
-export default connect(null, { updateSubTask })(SubTodoElement);
+export default connect(null, { updateSubTask, deleteOneSubTask })(
+  SubTodoElement
+);

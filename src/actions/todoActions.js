@@ -30,11 +30,16 @@ import {
   DELETE_TODO_FROM_BLOCKEDBY_LIST_OF_TODO,
   CLOSE_TODO_BOARD,
   ADD_SUBTASK,
-  UPDATE_SUBTASK
+  UPDATE_SUBTASK,
+  DELETE_A_SUBTASK,
+  ARCHIVE_SUBTASKS
 } from "../types";
 
 import { unBookmarkArticle } from "./newsPagesActions";
-import { getAllTodosByFilter } from "../selectors/todoSelectors";
+import {
+  getAllTodosByFilter,
+  getSubTasksOfTodo
+} from "../selectors/todoSelectors";
 
 let commentIndex = 4; //based on mockdata
 let todoId = 2; //based on mock data
@@ -206,6 +211,16 @@ const persistWithBlockState = (dispatch, getState, id) => {
   }
 };
 
+const deleteAllSubTasksOfTodo = (dispatch, getState, todoId) => {
+  const state = getState().todoState;
+  const subTasks = getSubTasksOfTodo(state, todoId);
+  if (subTaskId.length === 0) return;
+
+  subTasks.forEach(({ id }) => {
+    dispatch(deleteOneSubTask(id));
+  });
+};
+
 export const deleteTodo = (id, fromWhere, archiveId) => (
   dispatch,
   getState
@@ -245,6 +260,9 @@ export const deleteTodo = (id, fromWhere, archiveId) => (
       }
       // make sure todo is removed from blockingInfo state too
       persistWithBlockState(dispatch, getState, id);
+
+      //deleting all subtasks of todo
+      deleteAllSubTasksOfTodo(dispatch, getState, id);
     }
   } else {
     // delete from archived todos
@@ -414,10 +432,22 @@ export const archiveTodo = id => (dispatch, getState) => {
   if (commentsForTodo.length > 0)
     dispatch(makeArchiveCommentsOfTodo(id, commentsForTodo, archiveId));
 
+  const subTasks = getSubTasksOfTodo(state, todoId);
+  if (subTasks.length > 0)
+    dispatch(makeArchiveSubTasksOfTodo(subTasks, archiveId));
+
   const todo = state.todos.todos.filter(todo => todo.id === id);
   dispatch(makeArchiveTodo(todo[0], archiveId));
   dispatch(deleteTodo(id, todo[0].fromWhere));
   persistWithBlockState(dispatch, getState, id);
+};
+
+const makeArchiveSubTasksOfTodo = (subTasks, archiveId) => {
+  return {
+    type: ARCHIVE_SUBTASKS,
+    archiveId,
+    subTasks
+  };
 };
 
 export const reactivateTodo = ({ todo, fromWhere, completed, archiveId }) => (
@@ -492,6 +522,13 @@ export function updateSubTask({ id, text, description, dueDate, status }) {
     description: !!description ? description : null,
     dueDate: !!dueDate ? dueDate : null,
     status: !!status ? status : null
+  };
+}
+
+export function deleteOneSubTask(id) {
+  return {
+    type: DELETE_A_SUBTASK,
+    id
   };
 }
 

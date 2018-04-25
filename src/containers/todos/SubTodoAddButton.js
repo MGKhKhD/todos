@@ -35,7 +35,7 @@ class SubTodoAddButton extends Component {
     const { cardColor, title, initiated } = this.state;
     return (
       <div
-        className={`card border-${cardColor} mb-3`}
+        className={`card border-${cardColor} mt-3 float-right`}
         style={{ maxWidth: "15rem" }}
       >
         {initiated &&

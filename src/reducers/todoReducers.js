@@ -32,7 +32,9 @@ import {
   DELETE_TODO_FROM_BLOCKEDBY_LIST_OF_TODO,
   CLOSE_TODO_BOARD,
   ADD_SUBTASK,
-  UPDATE_SUBTASK
+  UPDATE_SUBTASK,
+  DELETE_A_SUBTASK,
+  ARCHIVE_SUBTASKS
 } from "../types";
 
 import { initialTodoState, initialCommentState } from "../mockedData";
@@ -344,6 +346,39 @@ export function subTasks(state = {}, action) {
         }
       };
     }
+    case DELETE_A_SUBTASK: {
+      let newState = {};
+      for (let key in state) {
+        if (state[key].id !== action.id) {
+          newState = { ...newState, [key]: state[key] };
+        }
+      }
+      return {
+        ...newState,
+        subTaskIds: state.subTaskIds.filter(idx => idx !== action.id)
+      };
+    }
+    default:
+      return state;
+  }
+}
+
+export function archiveSubTasks(
+  state = { archiveIds: [], subTasks: [] },
+  action
+) {
+  switch (action.type) {
+    case ARCHIVE_SUBTASKS: {
+      let archives = action.subTasks.map(subTask => ({
+        ...subTask,
+        archiveId: action.archiveId
+      }));
+      return {
+        ...state,
+        archiveIds: [...state.archiveIds, action.archiveId],
+        subTasks: [...state.subTasks, ...archives]
+      };
+    }
     default:
       return state;
   }
@@ -395,6 +430,7 @@ const todoReducers = combineReducers({
   archiveComments,
   todoBoard,
   subTasks,
+  archiveSubTasks,
   blockingInfo
 });
 

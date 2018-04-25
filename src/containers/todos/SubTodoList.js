@@ -7,12 +7,15 @@ import SubTodoElement from "./SubTodoElement";
 
 const SubTodoList = ({ todoBoard, subTasks }) => (
   <BasicComponents.Repeat numItems={subTasks.length}>
-    {idx => <SubTodoElement subTask={subTasks[idx]} />}
+    {idx => <SubTodoElement subTask={subTasks[idx]} key={idx} />}
   </BasicComponents.Repeat>
 );
 
 function mapStateToProps(state, ownProps) {
-  const subTasks = getSubTasksOfTodo(state.todoState, ownProps.todoBoard);
+  const subTasks = getSubTasksOfTodo(
+    state.todoState,
+    ownProps.todoBoard.todoId
+  );
   return {
     subTasks
   };
