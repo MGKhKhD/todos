@@ -32,7 +32,8 @@ import {
   ADD_SUBTASK,
   UPDATE_SUBTASK,
   DELETE_A_SUBTASK,
-  ARCHIVE_SUBTASKS
+  ARCHIVE_SUBTASKS,
+  DELETE_ARCHIVE_SUBTASKS_OF_TODO
 } from "../types";
 
 import { unBookmarkArticle } from "./newsPagesActions";
@@ -432,7 +433,7 @@ export const archiveTodo = id => (dispatch, getState) => {
   if (commentsForTodo.length > 0)
     dispatch(makeArchiveCommentsOfTodo(id, commentsForTodo, archiveId));
 
-  const subTasks = getSubTasksOfTodo(state, todoId);
+  const subTasks = getSubTasksOfTodo(state, id);
   if (subTasks.length > 0)
     dispatch(makeArchiveSubTasksOfTodo(subTasks, archiveId));
 
@@ -450,6 +451,14 @@ const makeArchiveSubTasksOfTodo = (subTasks, archiveId) => {
   };
 };
 
+const findSubTasksForArchivedTodo = (todoId, archives) => {
+  let subTasks = [];
+  if (archives.length > 0)
+    subTasks = archives.filter(subTask => subTask.todoId === todoId);
+
+  return subTasks;
+};
+
 export const reactivateTodo = ({ todo, fromWhere, completed, archiveId }) => (
   dispatch,
   getState
@@ -463,6 +472,10 @@ export const reactivateTodo = ({ todo, fromWhere, completed, archiveId }) => (
   const commentsForTodo = findCommentsForTodo(
     todoId,
     state.archiveComments.comments
+  );
+  const subTasksForTodo = findSubTasksForArchivedTodo(
+    todoId,
+    state.archiveSubTasks.subTasks
   );
 
   dispatch(makeDeleteArchiveTodo(archiveId));
@@ -478,11 +491,33 @@ export const reactivateTodo = ({ todo, fromWhere, completed, archiveId }) => (
     });
     dispatch(deleteArchiveCommentsOfTodo(archiveId));
   }
+
+  if (subTasksForTodo.length > 0) {
+    subTasksForTodo.forEach(subTask => {
+      dispatch(
+        addSubTask({
+          text: subTask.subTask,
+          parentId: newTodoId,
+          description: subTask.description,
+          dueDate: subTask.dueDate,
+          status: subTask.status
+        })
+      );
+    });
+    dispatch(deleteArchiveSubTasksOfTodo(archiveId));
+  }
 };
 
 export function deleteArchiveCommentsOfTodo(archiveId) {
   return {
     type: DELETE_ARCHIVE_COMMENTS_OF_TODO,
+    archiveId
+  };
+}
+
+export function deleteArchiveSubTasksOfTodo(archiveId) {
+  return {
+    type: DELETE_ARCHIVE_SUBTASKS_OF_TODO,
     archiveId
   };
 }

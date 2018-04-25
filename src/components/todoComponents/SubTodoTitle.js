@@ -1,6 +1,6 @@
 import { withBranch } from "../HOC";
 
-import SubTodoTitleInput from "./SubTodoTitleInput";
+import SubTodoTitleInput from "../../containers/todos/SubTodoTitleInput";
 import SubTodoTitleH from "./SubTodoTitleH";
 
 const SubTodoTitle = withBranch(SubTodoTitleInput, SubTodoTitleH);

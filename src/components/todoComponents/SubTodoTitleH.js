@@ -1,19 +1,26 @@
 import React from "react";
+import { mapProps, compose, withHandlers } from "recompose";
+import _ from "lodash";
 
-const SubTodoTitleH = ({ handleTitleClick, title, toggleSubTask }) => {
-  const titleClick = () => {
-    if (title === "+ add new sub task") {
-      handleTitleClick();
-    } else {
-      toggleSubTask();
+const enhance = compose(
+  mapProps(props =>
+    _.pick(props, ["handleTitleClick", "title", "toggleSubTask"])
+  ),
+  withHandlers({
+    titleClick: props => () => {
+      if (props.title === "+ add new sub task") {
+        props.handleTitleClick();
+      } else {
+        props.toggleSubTask();
+      }
     }
-  };
+  })
+);
 
-  return (
-    <h5 className="card-title" onClick={titleClick}>
-      {title}
-    </h5>
-  );
-};
+const SubTodoTitleH = enhance(props => (
+  <h5 className="card-title" onClick={props.titleClick}>
+    {props.title}
+  </h5>
+));
 
 export default SubTodoTitleH;

@@ -1,17 +1,15 @@
 import React from "react";
-
+import { withHandlers } from "recompose";
 import BasicComponents from "../BasicComponents";
 
-const SubTaskDelete = ({ deleteClick }) => {
-  const click = () => {
-    deleteClick();
-  };
+const enhance = withHandlers({
+  deleteClick: props => () => props.deleteClick()
+});
 
-  return (
-    <BasicComponents.Span onClick={click} className="float-right">
-      X
-    </BasicComponents.Span>
-  );
-};
+const SubTaskDelete = enhance(({ deleteClick }) => (
+  <BasicComponents.Span onClick={deleteClick} className="float-right">
+    X
+  </BasicComponents.Span>
+));
 
 export default SubTaskDelete;

@@ -34,7 +34,8 @@ import {
   ADD_SUBTASK,
   UPDATE_SUBTASK,
   DELETE_A_SUBTASK,
-  ARCHIVE_SUBTASKS
+  ARCHIVE_SUBTASKS,
+  DELETE_ARCHIVE_SUBTASKS_OF_TODO
 } from "../types";
 
 import { initialTodoState, initialCommentState } from "../mockedData";
@@ -377,6 +378,14 @@ export function archiveSubTasks(
         ...state,
         archiveIds: [...state.archiveIds, action.archiveId],
         subTasks: [...state.subTasks, ...archives]
+      };
+    }
+    case DELETE_ARCHIVE_SUBTASKS_OF_TODO: {
+      return {
+        archiveIds: state.archiveIds.filter(idx => idx !== action.archiveId),
+        subTasks: state.subTasks.filter(
+          subTask => subTask.archiveId !== action.archiveId
+        )
       };
     }
     default:
