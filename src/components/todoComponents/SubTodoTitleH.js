@@ -1,10 +1,10 @@
 import React from "react";
 import { mapProps, compose, withHandlers } from "recompose";
-import _ from "lodash";
+import { pickKeys } from "../../utils";
 
 const enhance = compose(
   mapProps(props =>
-    _.pick(props, ["handleTitleClick", "title", "toggleSubTask"])
+    pickKeys(props, ["handleTitleClick", "title", "toggleSubTask"])
   ),
   withHandlers({
     titleClick: props => () => {

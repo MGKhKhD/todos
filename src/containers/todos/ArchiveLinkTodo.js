@@ -1,25 +1,32 @@
 import React from "react";
 import { connect } from "react-redux";
-
+import { compose, withHandlers } from "recompose";
 import { archiveTodo, reactivateTodo } from "../../actions/todoActions";
 
-const ArchiveLinkTodo = ({ todo, archiveTodo, reactivateTodo }) => (
+const enhance = compose(
+  connect(null, {
+    archiveTodo,
+    reactivateTodo
+  }),
+  withHandlers({
+    handleClick: props => () => {
+      if (!props.todo.archiveId) {
+        props.archiveTodo(props.todo.id);
+      } else if (!!props.todo.archiveId) {
+        props.reactivateTodo(props.todo);
+      }
+    }
+  })
+);
+
+const ArchiveLinkTodo = enhance(({ todo, handleClick }) => (
   <button
     type="button"
     className="btn btn-link float-right"
-    onClick={() => {
-      if (!todo.archiveId) {
-        archiveTodo(todo.id);
-      } else if (!!todo.archiveId) {
-        reactivateTodo(todo);
-      }
-    }}
+    onClick={handleClick}
   >
     {!todo.archiveId ? "archive" : "reactivate"}
   </button>
-);
+));
 
-export default connect(null, {
-  archiveTodo,
-  reactivateTodo
-})(ArchiveLinkTodo);
+export default ArchiveLinkTodo;

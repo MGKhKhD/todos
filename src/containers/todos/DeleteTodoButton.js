@@ -1,18 +1,24 @@
 import React from "react";
 import { connect } from "react-redux";
-
+import { withHandlers, compose } from "recompose";
 import { deleteTodo } from "../../actions/todoActions";
 
-const DeleteTodoButton = ({ deleteTodo, todo }) => (
+const enhance = compose(
+  connect(null, { deleteTodo }),
+  withHandlers({
+    deleteTodo: props => () =>
+      props.deleteTodo(props.todo.id, "todosPage", props.todo.archiveId)
+  })
+);
+
+const DeleteTodoButton = enhance(({ deleteTodo }) => (
   <button
     type="button"
     className="btn btn-link float-right"
-    onClick={() => {
-      deleteTodo(todo.id, "todosPage", todo.archiveId);
-    }}
+    onClick={deleteTodo}
   >
     delete
   </button>
-);
+));
 
-export default connect(null, { deleteTodo })(DeleteTodoButton);
+export default DeleteTodoButton;

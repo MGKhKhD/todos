@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { compose, withHandlers } from "recompose";
 import {
   commentRequest,
   cancellCommentRequest
@@ -7,40 +8,39 @@ import {
 
 import BasicComponents from "../../components/BasicComponents";
 
-const CommentTag = ({
-  comment,
-  commentManagement,
-  cancellCommentRequest,
-  commentRequest,
-  id
-}) => {
-  const handleClick = () => {
-    if (comment.status === "requested") {
-      if (commentManagement.id === id) {
-        cancellCommentRequest();
-      } else {
-        commentRequest(id);
-      }
-    } else {
-      commentRequest(id);
+const enhance = compose(
+  connect(
+    state => ({
+      commentManagement: state.todoState.commentManagement
+    }),
+    {
+      commentRequest,
+      cancellCommentRequest
     }
-  };
+  ),
+  withHandlers({
+    handleClick: props => () => {
+      if (props.comment.status === "requested") {
+        if (props.commentManagement.id === props.id) {
+          props.cancellCommentRequest();
+        } else {
+          props.commentRequest(props.id);
+        }
+      } else {
+        props.commentRequest(props.id);
+      }
+    }
+  })
+);
 
-  return (
-    <BasicComponents.Span className="float-left" onClick={() => handleClick()}>
+const CommentTag = enhance(
+  ({ comment, commentManagement, handleClick, id }) => (
+    <BasicComponents.Span className="float-left" onClick={handleClick}>
       {comment.status === "requested" && commentManagement.id === id
         ? "V"
         : "^"}
     </BasicComponents.Span>
-  );
-};
+  )
+);
 
-export default connect(
-  state => ({
-    commentManagement: state.todoState.commentManagement
-  }),
-  {
-    commentRequest,
-    cancellCommentRequest
-  }
-)(CommentTag);
+export default CommentTag;

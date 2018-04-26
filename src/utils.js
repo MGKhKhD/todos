@@ -46,3 +46,18 @@ function shallowCompare(thisProps, nextProps, thisState, nextState) {
 export function shallowCompareStateAndPropsForUpdate(nextProps, nextState) {
   return shallowCompare(this.props, nextProps, this.state, nextState);
 }
+
+export function pickKeys(obj, keys) {
+  if (!Array.isArray(keys)) {
+    throw new Error("keys must be array of keys");
+  }
+
+  let result = {};
+  keys.forEach(key => {
+    if (obj.hasOwnProperty(key)) {
+      result[key] = obj[key];
+    }
+  });
+
+  return result;
+}
