@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { updateSubTask, deleteOneSubTask } from "../../actions/todoActions";
 
-import BasicComponents from "../../components/BasicComponents";
 import SubTodoTitle from "../../components/todoComponents/SubTodoTitle";
 import SubTaskTodoHeader from "../../components/todoComponents/SubTaskTodoHeader";
+import SubTodoDescription from "../../components/todoComponents/SubTodoDescription";
 
 class SubTodoElement extends Component {
   constructor(props) {
@@ -12,16 +12,14 @@ class SubTodoElement extends Component {
     this.state = {
       initiated: true,
       status: this.props.subTask.status || "active",
-      cardColor: this.props.subTask.status === "active" ? "danger" : "success",
-      header: this.props.subTask.dueDate || "due date",
-      title: this.props.subTask.subTask,
-      description: this.props.subTask.description || "description of task..."
+      descriptionUpdate: false,
+      dateUpdate: false
     };
   }
 
   titleClick = () => {
     if (!this.state.initiated) {
-      this.setState({ ...this.state, initiated: true, cardColor: "primary" });
+      this.setState({ ...this.state, initiated: true });
       return;
     }
   };
@@ -30,14 +28,13 @@ class SubTodoElement extends Component {
     this.setState(
       prevState => ({
         ...prevState,
-        status: prevState.status === "completed" ? "active" : "completed",
-        cardColor: prevState.status === "active" ? "success" : "danger"
+        status: prevState.status === "completed" ? "active" : "completed"
       }),
       () => {
         if (this.props.subTask !== {}) {
           this.props.updateSubTask({
-            status: this.state.status,
-            id: this.props.subTask.id
+            ...this.props.subTask,
+            status: this.state.status
           });
           return;
         }
@@ -46,17 +43,15 @@ class SubTodoElement extends Component {
     );
   };
 
-  closeTitleClick = title => {
+  closeTitleClick = () => {
     this.setState({
       ...this.state,
-      title: title,
-      cardColor: "danger",
       status: "active"
     });
   };
 
   headerClick = () => {
-    console.log("header");
+    this.setState({ ...this.state, dateUpdate: true });
   };
 
   deleteClick = () => {
@@ -64,19 +59,28 @@ class SubTodoElement extends Component {
   };
 
   descriptionClick = () => {
-    console.log("description");
+    this.setState({ ...this.state, descriptionUpdate: true });
+  };
+
+  closeDescriptionClick = () => {
+    this.setState({ ...this.state, descriptionUpdate: false });
+  };
+
+  setColor = () => {
+    if (!this.state.initiated) {
+      return "primary";
+    }
+    return this.props.subTask.status === "active" ? "danger" : "success";
   };
 
   render() {
     const { todoBoard, subTask } = this.props;
-    const {
-      cardColor,
-      header,
-      title,
-      description,
-      status,
-      initiated
-    } = this.state;
+    const { initiated, descriptionUpdate, dateUpdate } = this.state;
+    const header = subTask.dueDate || "due date";
+    const title = subTask.subTask || "+ add new sub task";
+    const description = subTask.description || "description of task...";
+
+    const cardColor = this.setColor();
     return (
       <div
         className={`card border-${cardColor} mb-3`}
@@ -84,6 +88,7 @@ class SubTodoElement extends Component {
       >
         <SubTaskTodoHeader
           condition={initiated && title !== "+ add new sub task"}
+          dateUpdate={dateUpdate}
           dueDate={header}
           deleteClick={this.deleteClick}
           headerClick={this.headerClick}
@@ -101,12 +106,16 @@ class SubTodoElement extends Component {
             test={initiated && title === "+ add new sub task"}
             todoBoard={todoBoard}
           />
-          {initiated &&
-            title !== "+ add new sub task" && (
-              <p className="card-text" onClick={this.descriptionClick}>
-                {description}
-              </p>
-            )}
+          <SubTodoDescription
+            test={
+              initiated && title !== "+ add new sub task" && descriptionUpdate
+            }
+            handleDescriptionClick={this.descriptionClick}
+            closeDescriptionClick={this.closeDescriptionClick}
+            subTask={subTask}
+            title={title}
+            description={description}
+          />
         </div>
       </div>
     );

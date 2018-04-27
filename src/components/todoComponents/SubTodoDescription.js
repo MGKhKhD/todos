@@ -1,7 +1,7 @@
 import { withBranch } from "../HOC";
 
-import SubTodoDescriptionInput from "./SubTodoDescriptionInput";
-import SubTodoDescriptionH from "./SubTodoDescriptionP";
+import SubTodoDescriptionInput from "../../containers/todos/SubTodoDescriptionInput";
+import SubTodoDescriptionP from "./SubTodoDescriptionP";
 
 const SubTodoDescription = withBranch(
   SubTodoDescriptionInput,

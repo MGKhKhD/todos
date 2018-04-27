@@ -21,7 +21,7 @@ const enhance = compose(
           text,
           parentId: todoBoard.todoId
         });
-        closeTitleClick(text);
+        closeTitleClick();
       }
     }
   })

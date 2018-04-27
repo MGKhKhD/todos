@@ -1,19 +1,20 @@
 import React from "react";
+import { withHandlers } from "recompose";
 
-const SubTodoDescriptionP = ({ handleDescriptionClick, title }) => {
-  const descriptionClick = () => {
-    if (title !== "+ add new sub task") {
-      handleDescriptionClick();
+const enhance = withHandlers({
+  descriptionClick: props => () => {
+    if (props.title !== "+ add new sub task") {
+      props.handleDescriptionClick();
       return;
     }
     return;
-  };
+  }
+});
 
-  return (
-    <p className="card-text" onClick={this.descriptionClick}>
-      {description}
-    </p>
-  );
-};
+const SubTodoDescriptionP = enhance(({ description, descriptionClick }) => (
+  <p className="card-text" onClick={descriptionClick}>
+    {description}
+  </p>
+));
 
 export default SubTodoDescriptionP;

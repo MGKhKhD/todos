@@ -31,7 +31,7 @@ class SubTodoAddButton extends Component {
   };
 
   render() {
-    const { todoBoard, subTask } = this.props;
+    const { todoBoard } = this.props;
     const { cardColor, title, initiated } = this.state;
     return (
       <div

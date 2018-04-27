@@ -549,14 +549,22 @@ export function addSubTask({ text, parentId, description, dueDate, status }) {
   };
 }
 
-export function updateSubTask({ id, text, description, dueDate, status }) {
+export function updateSubTask({
+  id,
+  subTask,
+  description,
+  dueDate,
+  status,
+  todoId
+}) {
   return {
     type: UPDATE_SUBTASK,
     id,
-    subTask: !!text ? text : null,
+    subTask: !!subTask ? subTask : null,
     description: !!description ? description : null,
     dueDate: !!dueDate ? dueDate : null,
-    status: !!status ? status : null
+    status: !!status ? status : null,
+    todoId: !!todoId ? todoId : null
   };
 }
 
