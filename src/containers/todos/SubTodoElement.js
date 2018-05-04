@@ -51,7 +51,10 @@ class SubTodoElement extends Component {
   };
 
   headerClick = () => {
-    this.setState({ ...this.state, dateUpdate: true });
+    this.setState(prevState => ({
+      ...prevState,
+      dateUpdate: !prevState.dateUpdate
+    }));
   };
 
   deleteClick = () => {
@@ -92,6 +95,7 @@ class SubTodoElement extends Component {
           dueDate={header}
           deleteClick={this.deleteClick}
           headerClick={this.headerClick}
+          subTask={subTask}
         />
         <div
           className={`card-body text-${

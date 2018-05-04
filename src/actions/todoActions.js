@@ -545,7 +545,7 @@ export function addSubTask({ text, parentId, description, dueDate, status }) {
     todoId: parentId,
     description: description || "",
     status: status || "active",
-    dueDate: dueDate || 0
+    dueDate: dueDate || "due date"
   };
 }
 

@@ -3,15 +3,16 @@ import { withCondition } from "../HOC";
 import SubTaskDate from "./SubTaskDate";
 import SubTaskDelete from "./SubTaskDelete";
 import SubTaskDateUpdate from "../../containers/todos/SubTaskDateUpdate";
+import { pickKeys } from "../../utils";
 
 const Composed = props => (
   <div className="card-header">
     {props.dateUpdate ? (
       <SubTaskDateUpdate {...props} />
     ) : (
-      <SubTaskDate {...props} />
+      <SubTaskDate {...pickKeys(props, ["dueDate", "headerClick"])} />
     )}
-    <SubTaskDelete {...props} />
+    <SubTaskDelete {...pickKeys(props, ["deleteClick"])} />
   </div>
 );
 const SubTaskTodoHeader = withCondition(Composed);

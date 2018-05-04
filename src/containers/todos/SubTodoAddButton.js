@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { updateSubTask } from "../../actions/todoActions";
 
-import BasicComponents from "../../components/BasicComponents";
 import SubTodoTitle from "../../components/todoComponents/SubTodoTitle";
 
 class SubTodoAddButton extends Component {
@@ -38,12 +37,6 @@ class SubTodoAddButton extends Component {
         className={`card border-${cardColor} mt-3 float-right`}
         style={{ maxWidth: "15rem" }}
       >
-        {initiated &&
-          title !== "+ add new sub task" && (
-            <div className="card-header">
-              <BasicComponents.Span>due date</BasicComponents.Span>
-            </div>
-          )}
         <div
           className={`card-body text-${
             cardColor === "light" ? "primary" : cardColor
@@ -57,12 +50,6 @@ class SubTodoAddButton extends Component {
             test={initiated && title === "+ add new sub task"}
             todoBoard={todoBoard}
           />
-          {initiated &&
-            title !== "+ add new sub task" && (
-              <p className="card-text" onClick={this.descriptionClick}>
-                description of task...
-              </p>
-            )}
         </div>
       </div>
     );

@@ -208,8 +208,10 @@ export class InlineInput extends Component {
   render() {
     return (
       <input
-        type="text"
+        type={`${this.props.type}` || "text"}
         name="inputText"
+        maxLength={this.props.maxLength}
+        placeholder={this.props.placeholder}
         value={this.state.inputText}
         ref={this.setInputRef}
         onChange={e =>
