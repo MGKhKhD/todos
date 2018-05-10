@@ -5,16 +5,19 @@ import SubTaskDelete from "./SubTaskDelete";
 import SubTaskDateUpdate from "../../containers/todos/SubTaskDateUpdate";
 import { pickKeys } from "../../utils";
 
-const Composed = props => (
-  <div className="card-header">
-    {props.dateUpdate ? (
-      <SubTaskDateUpdate {...props} />
-    ) : (
-      <SubTaskDate {...pickKeys(props, ["dueDate", "headerClick"])} />
-    )}
-    <SubTaskDelete {...pickKeys(props, ["deleteClick"])} />
-  </div>
-);
+const Composed = props => {
+  console.log(props.dateUpdate);
+  return (
+    <div className="card-header">
+      {props.dateUpdate ? (
+        <SubTaskDateUpdate {...props} />
+      ) : (
+        <SubTaskDate {...pickKeys(props, ["dueDate", "headerClick"])} />
+      )}
+      <SubTaskDelete {...pickKeys(props, ["deleteClick"])} />
+    </div>
+  );
+};
 const SubTaskTodoHeader = withCondition(Composed);
 
 export default SubTaskTodoHeader;

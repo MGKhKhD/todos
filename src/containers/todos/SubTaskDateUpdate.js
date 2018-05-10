@@ -25,6 +25,10 @@ class SubTaskDateUpdate extends Component {
     if (!this.state.showingTooltip && nextProps.dateUpdate) {
       this.setState({ showingTooltip: true });
     }
+
+    if (this.state.showingTooltip) {
+      this.props.toolTipStatus();
+    }
   }
 
   handleSetDate = date => {
@@ -35,6 +39,7 @@ class SubTaskDateUpdate extends Component {
       });
     }
     this.setState({ showingTooltip: false });
+    this.props.cancelHeaderClick();
   };
 
   render() {

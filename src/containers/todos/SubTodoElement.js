@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { updateSubTask, deleteOneSubTask } from "../../actions/todoActions";
+import { shallowCompareStateAndPropsForUpdate } from "../../utils";
 
 import SubTodoTitle from "../../components/todoComponents/SubTodoTitle";
 import SubTaskTodoHeader from "../../components/todoComponents/SubTaskTodoHeader";
@@ -15,6 +16,14 @@ class SubTodoElement extends Component {
       descriptionUpdate: false,
       dateUpdate: false
     };
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shallowCompareStateAndPropsForUpdate.call(
+      this,
+      nextProps,
+      nextState
+    );
   }
 
   titleClick = () => {
@@ -51,10 +60,19 @@ class SubTodoElement extends Component {
   };
 
   headerClick = () => {
-    this.setState(prevState => ({
-      ...prevState,
-      dateUpdate: !prevState.dateUpdate
-    }));
+    this.setState({ dateUpdate: true });
+  };
+
+  cancelHeaderClick = () => {
+    this.setState({ dateUpdate: false });
+  };
+
+  toolTipStatus = () => {
+    if (this.state.dateUpdate) {
+      this.setState({ dateUpdate: false });
+      return;
+    }
+    return;
   };
 
   deleteClick = () => {
@@ -96,6 +114,8 @@ class SubTodoElement extends Component {
           deleteClick={this.deleteClick}
           headerClick={this.headerClick}
           subTask={subTask}
+          cancelHeaderClick={this.cancelHeaderClick}
+          toolTipStatus={this.toolTipStatus}
         />
         <div
           className={`card-body text-${
